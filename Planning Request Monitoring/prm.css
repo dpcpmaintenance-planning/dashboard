@@ -15,29 +15,56 @@ input[type="text"] {
   margin-bottom: 15px;
 }
 
+/* Table Container (optional for scrolling) */
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: left;
-}
-
+/* Header Styling */
 th {
-  background-color: #f4f4f4;
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  font-weight: 600;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  font-size: 12px;
 }
 
+/* Body Cells */
+td {
+  padding: 12px;
+  border-top: 1px solid #eee;
+  transition: background-color 0.3s ease;
+  font-size: 12px;
+}
+
+/* Alternate row colors */
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Badges (keep your current ones, but refine spacing if needed) */
 .badge {
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 20px;
-  font-weight: bold;
-  font-size: 0.9em;
-  color: white;
+  font-size: 0.85em;
+  font-weight: 600;
   display: inline-block;
+  text-transform: capitalize;
+}
+
+/* Optional: Smooth transition for filter results */
+tbody {
+  transition: all 0.3s ease;
 }
 
 .badge.done {
@@ -61,7 +88,7 @@ th {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 10px 18px;
+  padding: 5px 18px;
   font-size: 0.9em;
   border-radius: 30px;
   cursor: pointer;
@@ -69,7 +96,6 @@ th {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s;
 }
-
 .back-button:hover {
   background-color: #0056b3;
 }
