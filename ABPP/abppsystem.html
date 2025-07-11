@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Status Diagram</title>
+    <link rel="stylesheet" href="abppsystem.css" />
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="footer.css" />
+    <!-- TomSelect CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css"
+      rel="stylesheet"
+    />
+
+    <!-- TomSelect JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <header>
+      <div class="navbar" id="navbar">
+        <div class="nav-left">
+          <!-- Hamburger Menu Icon -->
+          <div class="hamburger" id="hamburger">
+            &#9776;
+            <!-- Unicode hamburger icon -->
+          </div>
+          <a href="index.html">
+            <img
+              src="https://www.dmciholdings.com/storage/app/media/2023/Investment/New/fdmci-powertransparentnew0331.png"
+              alt="logo"
+            />
+          </a>
+          <span>PALAWAN MAINTENANCE</span>
+        </div>
+
+        <!-- Navbar Items -->
+        <div class="nav-right">
+          <div class="nav-item">
+            <a href="index.html" class="nav-item">Home</a>
+          </div>
+
+          <div class="nav-item dropdown-wrapper">
+            <a class="nav-item" href="#">NARRA THERMAL 1 ▼</a>
+            <div class="dropdown">
+              <p>
+                <a class="nav-item" href="equipment-status.html"
+                  >Equipment Status</a
+                >
+              </p>
+              <p><a class="nav-item" href="#=">Maintenance Schedule</a></p>
+              <p><a class="nav-item" href="history.html">History Records</a></p>
+              <p>
+                <a class="nav-item" href="techinfo.html"
+                  >Technical Information</a
+                >
+              </p>
+              <p><a class="nav-item" href="#">DPTPP PMS 2025</a></p>
+            </div>
+          </div>
+
+          <div class="nav-item">
+            <a class="nav-item" href="aborlan-bunker1.html">ABORLAN BUNKER 1</a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-item" href="hs-diesel.html">HS DIESEL PP</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Title -->
+    <div class="page-title">ABORLAN BUNKER 1 EQUIPMENT STATUS</div>
+
+    <!-- Tabs Container -->
+    <div class="tabs" id="tabs-container"></div>
+
+    <!-- Diagram or Equipment Table will go here -->
+    <div class="diagram-container" id="diagram"></div>
+
+    <!-- Equipment List Modal -->
+    <div id="equipment-modal" class="modal hidden">
+      <div class="modal-content">
+        <span id="equipment-modal-close" class="close">&times;</span>
+        <div class="filter-container">
+          <h2>EQUIPMENT LIST</h2>
+          <label><select id="system-filter"></select></label>
+          <label><select id="equipment-filter"></select></label>
+          <div class="status-toggle-buttons">
+            <button id="pending-btn" class="filter-btn">Pending</button>
+            <button id="done-btn" class="filter-btn">Done</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="equipment-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Work Order Num</th>
+                <th>Equipment</th>
+                <th>Sub-Component</th>
+                <th>Brief Description</th>
+                <th>Detailed Description</th>
+                <th>Severity</th>
+                <th>Planning Remarks</th>
+                <th>WR Status</th>
+                <th>Image</th>
+              </tr>
+            </thead>
+            <tbody id="equipment-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagram Equipment Modal -->
+    <div id="diagram-modal" class="modal hidden">
+      <div class="modal-content">
+        <span id="diagram-modal-close" class="close">&times;</span>
+        <div class="status-toggle-buttons">
+          <h2 id="diagram-modal-title"></h2>
+          <button id="diagram-pending-btn" class="filter-btn">Pending</button>
+          <button id="diagram-done-btn" class="filter-btn">Done</button>
+        </div>
+        <div class="table-container">
+          <table class="status-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Work Order No.</th>
+                <th>Equipment</th>
+                <th>Sub-Component</th>
+                <th>Brief Description</th>
+                <th>Detailed Description</th>
+                <th>Severity</th>
+                <th>Planning Remarks</th>
+                <th>WR Status</th>
+                <th>Images</th>
+              </tr>
+            </thead>
+            <tbody id="diagram-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="modal hidden">
+      <div class="modal-content image-modal-content">
+        <span id="image-modal-close" class="close">&times;</span>
+        <img id="image-modal-img" src="" alt="Image Preview" />
+      </div>
+    </div>
+    <script src="header.js"></script>
+    <script src="javascript/config.js"></script>
+    <script src="javascript/utils.js"></script>
+    <script src="javascript/diagram.js"></script>
+    <script src="javascript/main.js"></script>
+    <!-- Tab Button Script + Main App Script -->
+    <!-- Optional: Initialize tabs only once -->
+    <script>
+      const tabs = [
+        ["equipments", "Equipment List"],
+        ["cs", "Cooling System"],
+        ["es", "Exhaust System"],
+        ["fos1", "Fuel Oil System 1"],
+        ["fos2", "Fuel Oil System 2"],
+        ["fos3", "Fuel Oil System 3"],
+        ["los", "Lube Oil System"],
+      ];
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("tabs-container");
+        container.innerHTML = tabs
+          .map(
+            ([id, label], i) =>
+              `<button class="tab-button${
+                i === 0 ? " active" : ""
+              }" onclick="showTab(event, '${id}')">${label}</button>`
+          )
+          .join("");
+      });
+    </script>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <h3>Palawan Maintenance</h3>
+          <p>Narra Thermal 1, Aborlan Bunker 1, HS Diesel PP</p>
+          <p>DMCI Power Corporation – Palawan Operations</p>
+        </div>
+
+        <div class="footer-center">
+          <p><strong>Email:</strong> maintenance@dmcipower.com</p>
+          <p><strong>Phone:</strong> +63 (48) 123-4567</p>
+          <p><strong>Office Hours:</strong> Mon–Fri, 8:00AM–5:00PM</p>
+        </div>
+
+        <div class="footer-right">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="equipment-status.html">Equipment Status</a></li>
+            <li><a href="#">Maintenance Schedule</a></li>
+            <li><a href="#">History Records</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Palawan Maintenance. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
