@@ -1,21 +1,28 @@
-// === systemChart.js ===
 function groupBySystemAndMaintenance(data) {
   const result = {};
   data.forEach((entry) => {
-    const system = entry["SYSTEM"] || "SYSTEM";
-    const type = (entry["TYPE OF MAINTENANCE"] || "").toLowerCase();
+    const system = (entry["SYSTEM"] || "Unknown System").trim();
+    const rawType = (entry["TYPE OF MAINTENANCE"] || "").toLowerCase().trim();
+
     if (!result[system]) {
       result[system] = { Preventive: 0, Corrective: 0, Modification: 0 };
     }
-    if (type.includes("preventive")) result[system].Preventive++;
-    else if (type.includes("corrective")) result[system].Corrective++;
-    else if (type.includes("modification")) result[system].Modification++;
+
+    if (rawType.includes("preventive") || rawType.includes("pms")) {
+      result[system].Preventive++;
+    } else if (rawType.includes("corrective")) {
+      result[system].Corrective++;
+    } else if (rawType.includes("modification")) {
+      result[system].Modification++;
+    }
   });
+
   return result;
 }
 
 function renderGroupedChart(groupedData) {
   const selectedSystems = getSelectedValues("filter-system");
+
   const allData = Object.entries(groupedData)
     .filter(([system]) => selectedSystems.length === 0 || selectedSystems.includes(system))
     .map(([system, counts]) => ({
@@ -32,7 +39,10 @@ function renderGroupedChart(groupedData) {
   ];
 
   const priority = [], others = [];
-  allData.forEach(item => (prioritySystems.includes(item.system) ? priority : others).push(item));
+  allData.forEach(item =>
+    (prioritySystems.includes(item.system) ? priority : others).push(item)
+  );
+
   priority.sort((a, b) => b.Preventive - a.Preventive);
   others.sort((a, b) => b.Preventive - a.Preventive);
 
@@ -50,47 +60,62 @@ function renderGroupedChart(groupedData) {
     data: {
       labels: systems,
       datasets: [
-  {
-    label: "Preventive",
-    data: preventiveData,
-    backgroundColor: "#4caf50",      // Green fill
-    borderColor: "#388e3c",          // Darker green border
-    borderWidth: 1,
-    borderRadius: 6
-  },
-  {
-    label: "Corrective",
-    data: correctiveData,
-    backgroundColor: "#FF0000",      // Red fill
-    borderColor: "#d32f2f",          // Darker red border
-    borderWidth: 1,
-    borderRadius: 6
-  },
-  {
-    label: "Modification",
-    data: modificationData,
-    backgroundColor: "#2196f3",      // Blue fill
-    borderColor: "#1976d2",          // Darker blue border
-    borderWidth: 1,
-    borderRadius: 6
-  }
-]
-
-
+        {
+          label: "Preventive",
+          data: preventiveData,
+          backgroundColor: "#4caf50",
+          borderColor: "#388e3c",
+          borderWidth: 1,
+          borderRadius: 6,
+        },
+        {
+          label: "Corrective",
+          data: correctiveData,
+          backgroundColor: "#FF0000",
+          borderColor: "#d32f2f",
+          borderWidth: 1,
+          borderRadius: 6,
+        },
+        {
+          label: "Modification",
+          data: modificationData,
+          backgroundColor: "#2196f3",
+          borderColor: "#1976d2",
+          borderWidth: 1,
+          borderRadius: 6,
+        },
+      ],
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { position: "top", labels: { font: { size: 13, family: "monospace" }, padding: 10 } },
-        title: { display: true, text: `History Records`, font: { size: 18, family: "Oswald" }, padding: { top: 10, bottom: 20 } },
+        legend: {
+          position: "top",
+          labels: { font: { size: 13, family: "monospace" }, padding: 10 },
+        },
+        title: {
+          display: true,
+          text: `History Records`,
+          font: { size: 18, family: "Oswald" },
+          padding: { top: 10, bottom: 20 },
+        },
         datalabels: {
-          color: "#fff", anchor: "center", align: "center", font: { weight: "bold", size: 12, family: "monospace" },
+          color: "#fff",
+          anchor: "center",
+          align: "center",
+          font: { weight: "bold", size: 12, family: "monospace" },
           formatter: Math.round,
         },
       },
       scales: {
-        y: { beginAtZero: true, ticks: {  }, grid: { color: "#eee" } },
-        x: { grid: { display: false } },
+        y: {
+          beginAtZero: true,
+          ticks: {},
+          grid: { color: "#eee" },
+        },
+        x: {
+          grid: { display: false },
+        },
       },
     },
     plugins: [ChartDataLabels],

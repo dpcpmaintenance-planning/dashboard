@@ -1,22 +1,46 @@
-function groupByYearAndMaintenance(data) {
+function groupByYearAndQuarter(data) {
   const result = {};
 
   data.forEach((entry) => {
-    const dateStr = entry["DATE STARTED"];
-    const dateObj = new Date(dateStr);
-    const type = (entry["TYPE OF MAINTENANCE"] || "").toLowerCase();
+    const dateStr = entry["DATE FINISHED"];
+    const typeRaw = entry["TYPE OF MAINTENANCE"] || "";
+    const type = typeRaw.toLowerCase();
+    const date = new Date(dateStr);
 
-    if (isNaN(dateObj.getTime())) return; // Skip invalid dates
+    if (isNaN(date.getTime())) return;
 
-    const year = dateObj.getFullYear();
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0 = Jan, 11 = Dec
+    let quarter = "Q1";
+    if (month >= 3 && month <= 5) quarter = "Q2";
+    else if (month >= 6 && month <= 8) quarter = "Q3";
+    else if (month >= 9 && month <= 11) quarter = "Q4";
 
     if (!result[year]) {
-      result[year] = { Preventive: 0, Corrective: 0, Modification: 0 };
+      result[year] = {
+        Preventive: 0,
+        Corrective: 0,
+        Modification: 0,
+        quarters: {
+          Preventive: { Q1: 0, Q2: 0, Q3: 0, Q4: 0 },
+          Corrective: { Q1: 0, Q2: 0, Q3: 0, Q4: 0 },
+          Modification: { Q1: 0, Q2: 0, Q3: 0, Q4: 0 },
+        },
+      };
     }
 
-    if (type.includes("preventive")) result[year].Preventive++;
-    else if (type.includes("corrective")) result[year].Corrective++;
-    else if (type.includes("modification")) result[year].Modification++;
+    const yearData = result[year];
+
+    if (type.includes("preventive") || type.includes("pms")) {
+      yearData.Preventive++;
+      yearData.quarters.Preventive[quarter]++;
+    } else if (type.includes("corrective")) {
+      yearData.Corrective++;
+      yearData.quarters.Corrective[quarter]++;
+    } else if (type.includes("modification")) {
+      yearData.Modification++;
+      yearData.quarters.Modification[quarter]++;
+    }
   });
 
   return result;
@@ -24,7 +48,7 @@ function groupByYearAndMaintenance(data) {
 
 function renderYearlyTrendChart(filteredData) {
   const selectedYears = getSelectedValues("filter-year");
-  const yearCounts = groupByYearAndMaintenance(filteredData);
+  const yearCounts = groupByYearAndQuarter(filteredData);
 
   let years = Object.keys(yearCounts).sort();
   if (selectedYears.length > 0) {
@@ -43,35 +67,34 @@ function renderYearlyTrendChart(filteredData) {
     data: {
       labels: years,
       datasets: [
-  {
-    label: "Preventive",
-    data: preventive,
-    backgroundColor: "#4caf50",      // Green
-    borderColor: "#388e3c",
-    borderWidth: 1,
-    borderRadius: 8,
-    borderSkipped: false,
-  },
-  {
-    label: "Corrective",
-    data: corrective,
-    backgroundColor: "#FF0000",      // Red
-    borderColor: "#d32f2f",
-    borderWidth: 1,
-    borderRadius: 8,
-    borderSkipped: false,
-  },
-  {
-    label: "Modification",
-    data: modification,
-    backgroundColor: "#2196f3",      // Blue
-    borderColor: "#1976d2",
-    borderWidth: 1,
-    borderRadius: 8,
-    borderSkipped: false,
-  },
-]
-
+        {
+          label: "Preventive",
+          data: preventive,
+          backgroundColor: "#4caf50",
+          borderColor: "#388e3c",
+          borderWidth: 1,
+          borderRadius: 8,
+          borderSkipped: false,
+        },
+        {
+          label: "Corrective",
+          data: corrective,
+          backgroundColor: "#FF0000",
+          borderColor: "#d32f2f",
+          borderWidth: 1,
+          borderRadius: 8,
+          borderSkipped: false,
+        },
+        {
+          label: "Modification",
+          data: modification,
+          backgroundColor: "#2196f3",
+          borderColor: "#1976d2",
+          borderWidth: 1,
+          borderRadius: 8,
+          borderSkipped: false,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -99,9 +122,23 @@ function renderYearlyTrendChart(filteredData) {
           bodyFont: { size: 13 },
           cornerRadius: 6,
           padding: 10,
+          callbacks: {
+            afterLabel: function (context) {
+              const year = context.label;
+              const label = context.dataset.label; // Preventive, Corrective, etc.
+              const q = yearCounts[year]?.quarters?.[label];
+              if (!q) return null;
+              return [
+                `Q1: ${q.Q1 || 0}`,
+                `Q2: ${q.Q2 || 0}`,
+                `Q3: ${q.Q3 || 0}`,
+                `Q4: ${q.Q4 || 0}`,
+              ];
+            },
+          },
         },
         datalabels: {
-          color: "#fff", // light text inside bars
+          color: "#fff",
           anchor: "center",
           align: "center",
           font: {
