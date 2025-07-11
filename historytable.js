@@ -6,12 +6,26 @@ async function loadData() {
   const text = await response.text();
   const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
   originalData = parsed.data;
-  populateFilters(originalData);
+  const filters = getSelectedFiltersFromURL();
+  populateFilters(originalData, filters);
   updateTable();
   attachDropdownListeners();
 }
 
-function populateFilters(data) {
+function getSelectedFiltersFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    system: params.getAll("system"),
+    equipment: params.getAll("equipment"),
+    maintenance: params.getAll("maintenance"),
+    problem: params.getAll("problem"),
+    section: params.getAll("section"),
+    year: params.getAll("year"),
+    quarter: params.getAll("quarter"),
+  };
+}
+
+function populateFilters(data, selectedFilters = {}) {
   const sets = {
     system: new Set(),
     equipment: new Set(),
@@ -31,16 +45,16 @@ function populateFilters(data) {
     if (!isNaN(date)) sets.year.add(date.getFullYear().toString());
   });
 
-  fillSelect("filter-system", Array.from(sets.system));
-  fillSelect("filter-equipment", Array.from(sets.equipment));
-  fillSelect("filter-maintenance", Array.from(sets.maintenance));
-  fillSelect("filter-problem", Array.from(sets.problem));
-  fillSelect("filter-section", Array.from(sets.section));
-  fillSelect("filter-year", Array.from(sets.year));
-  fillSelect("filter-quarter", ["Q1", "Q2", "Q3", "Q4"]);
+  fillSelect("filter-system", Array.from(sets.system), selectedFilters.system);
+  fillSelect("filter-equipment", Array.from(sets.equipment), selectedFilters.equipment);
+  fillSelect("filter-maintenance", Array.from(sets.maintenance), selectedFilters.maintenance);
+  fillSelect("filter-problem", Array.from(sets.problem), selectedFilters.problem);
+  fillSelect("filter-section", Array.from(sets.section), selectedFilters.section);
+  fillSelect("filter-year", Array.from(sets.year), selectedFilters.year);
+  fillSelect("filter-quarter", ["Q1", "Q2", "Q3", "Q4"], selectedFilters.quarter);
 }
 
-function fillSelect(id, values) {
+function fillSelect(id, values, selected = []) {
   const container = document.getElementById(id);
   container.innerHTML = "";
 
@@ -48,14 +62,16 @@ function fillSelect(id, values) {
   searchDiv.innerHTML = `<input type="text" placeholder="Search..." class="dropdown-search" />`;
   container.appendChild(searchDiv);
 
+  const allChecked = selected.length === 0;
   const allDiv = document.createElement("div");
-  allDiv.innerHTML = `<label><input type="checkbox" value="__ALL__" checked> All</label>`;
+  allDiv.innerHTML = `<label><input type="checkbox" value="__ALL__" ${allChecked ? "checked" : ""}> All</label>`;
   container.appendChild(allDiv);
 
   values.sort().forEach(value => {
+    const isChecked = selected.includes(value);
     const div = document.createElement("div");
     div.classList.add("dropdown-item");
-    div.innerHTML = `<label><input type="checkbox" value="${value}"> ${value}</label>`;
+    div.innerHTML = `<label><input type="checkbox" value="${value}" ${isChecked ? "checked" : ""}> ${value}</label>`;
     container.appendChild(div);
   });
 }
@@ -79,8 +95,8 @@ function updateTable() {
     const date = new Date(row["DATE FINISHED"]);
     const rowYear = date.getFullYear().toString();
     const rowQuarter = (date.getMonth() < 3) ? "Q1" :
-                       (date.getMonth() < 6) ? "Q2" :
-                       (date.getMonth() < 9) ? "Q3" : "Q4";
+      (date.getMonth() < 6) ? "Q2" :
+        (date.getMonth() < 9) ? "Q3" : "Q4";
 
     return (
       (system.length === 0 || system.includes(row["SYSTEM"])) &&

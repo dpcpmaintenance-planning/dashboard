@@ -262,17 +262,28 @@ function clearAllFilters() {
   updateChart();
 }
 
+function getURLFilterParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    system: params.getAll("system"),
+    equipment: params.getAll("equipment"),
+    maintenance: params.getAll("maintenance"),
+    problem: params.getAll("problem"),
+    section: params.getAll("section"),
+    year: params.getAll("year"),
+    quarter: params.getAll("quarter"),
+    start: params.get("start") || "",
+    end: params.get("end") || ""
+  };
+}
+
+
 loadCSVData().then((data) => {
   originalData = data;
-  populateFilters(data, {
-    system: [],
-    equipment: [],
-    maintenance: [],
-    problem: [],
-    section: [],
-    year: [],
-  });
-  updateChart();
+
+  const filtersFromURL = getURLFilterParams(); // ✅ get filters from the URL
+  populateFilters(data, filtersFromURL);       // ✅ use those filters to populate checkboxes/inputs
+  updateChart();                               // ✅ trigger chart rendering
 
   document.getElementById("clear-filters").addEventListener("click", clearAllFilters);
 
@@ -290,3 +301,4 @@ loadCSVData().then((data) => {
     if (el) el.addEventListener("change", updateChart);
   });
 });
+
