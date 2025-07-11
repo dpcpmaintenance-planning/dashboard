@@ -77,5 +77,5 @@ function goHome() {
 }
 
 function goBack() {
-    window.history.back();
+    window.location.href = "welcome.html";
 }
