@@ -19,6 +19,12 @@
           "backdrop-filter"
         ]
       }
+    ],
+    "axe/text-alternatives": [
+      "default",
+      {
+        "frame-title": "off"
+      }
     ]
   }
 }
