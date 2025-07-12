@@ -1,0 +1,24 @@
+.org-chart-container {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.org-chart-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.org-chart-image {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.org-chart-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
