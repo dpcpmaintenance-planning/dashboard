@@ -12,14 +12,12 @@ fetch(csvUrl)
         Papa.parse(csvWithoutFirstRow, {
             header: true,
             skipEmptyLines: true,
-            transformHeader: function (header) {
-                return header.trim();
-            },
-            complete: function (results) {
+            transformHeader: (header) => header.trim(),
+            complete: (results) => {
                 allData = results.data;
                 populateFilters(allData);
                 generateTable(allData);
-                renderApprovalChart(allData);
+                renderApprovalChart(allData); // Call external chart script
             },
         });
     });
@@ -34,14 +32,12 @@ function generateTable(data) {
 
     const headers = Object.keys(data[0]);
 
-    // Generate headers
     headers.forEach((header) => {
         const th = document.createElement("th");
         th.textContent = header;
         headerRow.appendChild(th);
     });
 
-    // Generate rows
     data.forEach((row) => {
         const tr = document.createElement("tr");
         headers.forEach((header) => {
@@ -76,6 +72,7 @@ function generateTable(data) {
 function populateFilters(data) {
     const statusFields = [
         { id: "categoryFilter", key: "Category" },
+        { id: "sectionFilter", key: "Section" },
         { id: "systemFilter", key: "System" },
         { id: "currentFilter", key: "Current Status" },
         { id: "quotationFilter", key: "Quotation Status" },
@@ -83,32 +80,24 @@ function populateFilters(data) {
         { id: "prFilter", key: "PR Status" },
         { id: "poFilter", key: "PO/WO STATUS" },
         { id: "deliveryFilter", key: "Delivery Status" },
-        { id: "currentFilter", key: "Current Status" }
     ];
 
-    statusFields.forEach((field) => {
-        const select = document.getElementById(field.id);
+    statusFields.forEach(({ id, key }) => {
+        const select = document.getElementById(id);
         if (!select) return;
 
-        // Try to find the actual column key using case-insensitive match
         const actualKey = Object.keys(data[0]).find(
-            k => k.trim().toLowerCase() === field.key.toLowerCase()
+            (k) => k.trim().toLowerCase() === key.toLowerCase()
         );
-
-        if (!actualKey) {
-            console.warn(`Column "${field.key}" not found in CSV headers`);
-            return;
-        }
+        if (!actualKey) return;
 
         const uniqueValues = [
             ...new Set(
-                data.map(row => (row[actualKey]?.trim() || "")).filter(Boolean)
-            )
+                data.map((row) => (row[actualKey]?.trim() || "")).filter(Boolean)
+            ),
         ].sort();
 
-        // Clear old options
         select.innerHTML = '<option value="">All</option>';
-
         uniqueValues.forEach((value) => {
             const option = document.createElement("option");
             option.value = value;
@@ -118,73 +107,77 @@ function populateFilters(data) {
     });
 }
 
-
 function filterTable() {
     const input = document.getElementById("searchInput").value.toLowerCase();
-    const categoryFilter = document.getElementById("categoryFilter").value;
-    const systemFilter = document.getElementById("systemFilter").value;
-    const currentFilter = document.getElementById("currentFilter").value;
-    const quotationFilter = document.getElementById("quotationFilter").value;
-    const brfFilter = document.getElementById("brfFilter").value;
-    const prFilter = document.getElementById("prFilter").value;
-    const poFilter = document.getElementById("poFilter").value;
-    const deliveryFilter = document.getElementById("deliveryFilter").value;
+    const filters = {
+        category: document.getElementById("categoryFilter").value,
+        section: document.getElementById("sectionFilter").value,
+        system: document.getElementById("systemFilter").value,
+        current: document.getElementById("currentFilter").value,
+        quotation: document.getElementById("quotationFilter").value,
+        brf: document.getElementById("brfFilter").value,
+        pr: document.getElementById("prFilter").value,
+        po: document.getElementById("poFilter").value,
+        delivery: document.getElementById("deliveryFilter").value,
+    };
 
     const filteredData = allData.filter((row) => {
         const matchesSearch = Object.values(row).some((val) =>
             String(val || "").toLowerCase().includes(input)
         );
 
-        const matchesCategory =
-            !categoryFilter || row["CATEGORY"] === categoryFilter;
-        const matchesSystem =
-            !systemFilter || row["SYSTEM"] === systemFilter;
-        const matchesCurrent =
-            !currentFilter || row["CURRENT STATUS"] === currentFilter;
-        const matchesQuotation =
-            !quotationFilter || row["QUOTATION STATUS"] === quotationFilter;
-        const matchesBRF = !brfFilter || row["BRF STATUS"] === brfFilter;
-        const matchesPR = !prFilter || row["PR STATUS"] === prFilter;
-        const matchesPO = !poFilter || row["PO/WO STATUS"] === poFilter;
-        const matchesDelivery =
-            !deliveryFilter || row["DELIVERY STATUS"] === deliveryFilter;
+        const match = (key, filterValue) =>
+            !filterValue || (row[key]?.trim() || "") === filterValue;
 
         return (
             matchesSearch &&
-            matchesCategory &&
-            matchesSystem &&
-            matchesCurrent &&
-            matchesQuotation &&
-            matchesBRF &&
-            matchesPR &&
-            matchesPO &&
-            matchesDelivery
+            match("CATEGORY", filters.category) &&
+            match("SECTION", filters.section) &&
+            match("SYSTEM", filters.system) &&
+            match("CURRENT STATUS", filters.current) &&
+            match("QUOTATION STATUS", filters.quotation) &&
+            match("BRF STATUS", filters.brf) &&
+            match("PR STATUS", filters.pr) &&
+            match("PO/WO STATUS", filters.po) &&
+            match("DELIVERY STATUS", filters.delivery)
         );
     });
 
     generateTable(filteredData);
+    renderApprovalChart(filteredData); // Re-render chart with filtered data
+}
+
+function resetFilters() {
+    document.getElementById("searchInput").value = "";
+    [
+        "categoryFilter",
+        "sectionFilter",
+        "systemFilter",
+        "currentFilter",
+        "quotationFilter",
+        "brfFilter",
+        "prFilter",
+        "poFilter",
+        "deliveryFilter",
+    ].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
+    generateTable(allData);
+    renderApprovalChart(allData); // Reset chart
 }
 
 // Navigation
+function goBack() {
+    window.location.href = "welcome.html";
+}
+function goHome() {
+    window.location.href = "../index.html";
+}
 function redirectWithFade() {
     document.body.classList.remove("fade-in");
     document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = "prm.html";
     }, 300);
-}
-function goHome() {
-    window.location.href = "../index.html";
-}
-function goBack() {
-    window.location.href = "welcome.html";
-}
-function resetFilters() {
-    document.getElementById("searchInput").value = "";
-    ["categoryFilter", "systemFilter", "currentFilter", "quotationFilter", "brfFilter", "prFilter", "poFilter", "deliveryFilter"].forEach(
-        (id) => {
-            document.getElementById(id).value = "";
-        }
-    );
-    generateTable(allData);
 }
