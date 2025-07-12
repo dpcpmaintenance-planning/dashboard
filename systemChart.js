@@ -35,7 +35,9 @@ function renderGroupedChart(groupedData) {
     "Slag Removal System", "Fly Ash Handling System", "Limestone Handling System",
     "Combustion System", "Water Treatment System", "Coal Handling System",
     "Biomass Handling System", "Feedwater System", "Circulating Water System",
-    "Closed Circulating Cooling Water System"
+    "Closed Circulating Cooling Water System", "Heavy Equipment", "Compressed Air System",
+    "Electro-Chlorination Water System", "Main Steam System", "Seawater Intake and Drainage System",
+    "Steam and Water Sampling System", "Turbine Oil System", "Electrical",
   ];
 
   const priority = [], others = [];
@@ -46,7 +48,7 @@ function renderGroupedChart(groupedData) {
   priority.sort((a, b) => b.Preventive - a.Preventive);
   others.sort((a, b) => b.Preventive - a.Preventive);
 
-  const combined = [...priority, ...others].slice(0, 10);
+  const combined = [...priority, ...others].slice(0, 18);
   const systems = combined.map(i => i.system);
   const preventiveData = combined.map(i => i.Preventive);
   const correctiveData = combined.map(i => i.Corrective);

@@ -18,13 +18,57 @@
       placeholder="🔍 Search..."
       onkeyup="filterTable()"
     />
+    <div class="filter-container">
+      <label>
+        Current Status:
+        <select id="currentFilter" onchange="filterTable()">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label>
+        Quotation Status:
+        <select id="quotationFilter" onchange="filterTable()">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label>
+        BRF Status:
+        <select id="brfFilter" onchange="filterTable()">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label>
+        PR Status:
+        <select id="prFilter" onchange="filterTable()">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label>
+        PO/WO Status:
+        <select id="poFilter" onchange="filterTable()">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label>
+        Delivery Status:
+        <select id="deliveryFilter" onchange="filterTable()">
+          <option value="">All</option>
+        </select>
+      </label>
 
-    <table id="requestTable">
-      <thead>
-        <tr id="tableHeader"></tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+      <button onclick="resetFilters()" class="reset-button">
+        Clear Filters
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table id="requestTable">
+        <thead>
+          <tr id="tableHeader"></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script src="prm.js"></script>

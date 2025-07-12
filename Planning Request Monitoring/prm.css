@@ -16,19 +16,29 @@ input[type="text"] {
 }
 
 /* Table Container (optional for scrolling) */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Ensure the table maintains full width */
 table {
+  min-width: 1000px; /* Adjust based on your expected content width */
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   background: #fff;
   border-radius: 10px;
+  border: 1px solid #ddd;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* Header Styling */
 th {
-  background-color: #007bff;
+  background-color: #000000;
   color: white;
   padding: 12px;
   font-weight: 600;
@@ -46,10 +56,12 @@ td {
   transition: background-color 0.3s ease;
   font-size: 12px;
 }
-
+tr:hover {
+  background-color: #dedede;
+}
 /* Alternate row colors */
 tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #007bff;
 }
 
 /* Badges (keep your current ones, but refine spacing if needed) */
@@ -150,4 +162,49 @@ tbody {
 .logo {
   max-width: 120px;
   margin-bottom: 20px;
+}
+
+/* Filter container layout */
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 20px;
+  background: #ffffff;
+  position: sticky;
+  top: 120px;
+  z-index: 998;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Filter label styling */
+.filter-container label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Consistent filter dropdowns */
+.filter-container select {
+  width: 200px;
+  padding: 6px 10px;
+  font-size: 0.9em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.reset-button {
+  padding: 6px 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.reset-button:hover {
+  background-color: #b02a37;
 }
