@@ -1,3 +1,16 @@
+/* === General === */
+body {
+  font-family: "Segoe UI", sans-serif;
+  padding: 20px;
+  background-color: #f8f9fa;
+  margin: 0;
+}
+
+/* === Header === */
+header h2 {
+  text-align: center;
+  margin-bottom: 16px;
+}
 #back-to-dashboard {
   margin: 10px 0;
   padding: 6px 12px;
@@ -13,50 +26,24 @@
   background-color: #0277bd;
 }
 
-.styled-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: "Segoe UI", sans-serif;
-  margin-top: 16px;
-  font-size: 11px;
-}
-
-.styled-table th,
-.styled-table td {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-}
-
-.styled-table th {
-  background-color: #0288d1;
-  color: white;
-  position: sticky;
-  top: 0;
-}
-.styled-table thead th {
-  position: sticky;
-  top: 70px; /* adjust this to be just under filters */
-  background-color: #0288d1;
-  z-index: 998;
-}
-
-/* === Filters Wrapper Container === */
+/* === Filters Wrapper === */
 #filters-wrapper {
   position: sticky;
   top: 0;
   z-index: 999;
-  background-color: #ffffff; /* same as body */
-  padding: 0px 0;
+  background-color: #ffffff;
+  padding: 10px 0;
   display: flex;
   justify-content: center;
+  border-bottom: 1px solid #ddd;
 }
 
-/* === Filters Grid Container === */
+/* === Filters Container === */
 .filters-container {
   display: grid;
-  grid-template-columns: repeat(8, 1fr); /* 8 columns */
+  grid-template-columns: repeat(8, 1fr);
   gap: 12px;
-  background: #fff;
+  background: #ffffff;
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -64,15 +51,23 @@
   width: 100%;
   box-sizing: border-box;
 }
+@media (max-width: 1200px) {
+  .filters-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .filters-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-/* === Filter Dropdown Wrapper === */
+/* === Dropdown Wrappers === */
 .dropdown-wrapper {
   position: relative;
 }
-
-/* === Dropdown Toggle Button === */
 .dropdown-toggle {
-  width: 80%;
+  width: 75%;
   padding: 10px 14px;
   font-size: 14px;
   font-family: monospace;
@@ -87,20 +82,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/* Optional: Responsive adjustment for smaller screens */
-@media (max-width: 1200px) {
-  .filters-container {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .filters-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 .dropdown-toggle:hover {
   background-color: #f0f0f0;
   border-color: #999;
@@ -123,8 +104,6 @@
   margin-top: 6px;
   animation: fadeIn 0.2s ease-in-out;
 }
-
-/* === Dropdown Items === */
 .dropdown label {
   display: flex;
   align-items: center;
@@ -135,14 +114,11 @@
   border-radius: 6px;
   transition: background 0.2s;
 }
-
 .dropdown label:hover {
   background-color: #f4f4f4;
 }
-
-/* === Dropdown Search Input === */
 .dropdown-search {
-  width: 80%;
+  width: 100%;
   margin-bottom: 10px;
   padding: 8px;
   border: 1px solid #ccc;
@@ -153,13 +129,86 @@
   outline: none;
   box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.05);
 }
-
 .dropdown-search:focus {
   border-color: #007bff;
   background-color: #fff;
 }
 
-/* === Simple fade animation === */
+/* === Table === */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 12px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  margin-top: 24px;
+  overflow: hidden;
+}
+.styled-table th,
+.styled-table td {
+  padding: 12px;
+  border-top: 1px solid #eee;
+  text-align: left;
+  font-size: 12px;
+}
+.styled-table thead th {
+  position: sticky;
+  top: 100px; /* Adjust based on your filter height */
+  background-color: #0288d1;
+  color: white;
+  z-index: 998;
+}
+
+/* === Row Hover and Alternating Color === */
+.styled-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+.styled-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* === Badges === */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: capitalize;
+  color: white;
+}
+.badge.done {
+  background-color: #28a745;
+}
+.badge.pending {
+  background-color: #ffc107;
+  color: #000;
+}
+.badge.delayed {
+  background-color: #dc3545;
+}
+.badge.ongoing {
+  background-color: #17a2b8;
+}
+
+/* === Buttons === */
+#clear-filters {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+#clear-filters:hover {
+  background-color: #b02a37;
+}
+
+/* === Animations === */
 @keyframes fadeIn {
   from {
     opacity: 0;
