@@ -1,40 +1,66 @@
-let approvalChartInstance = null;
+let approvalChartInstance;
 
 function renderApprovalChart(data) {
     const brfStatuses = { Approved: 0, Pending: 0 };
     const prStatuses = { Approved: 0, Pending: 0 };
     const poStatuses = { Approved: 0, Pending: 0 };
 
-    // Keywords to check for each status category
     const approvedKeywords = [
         "approved",
-        "approve for payment",
         "approved for payment",
         "upload to share point",
+        "approve for payment"
     ];
-    const pendingKeywords = ["pending", "for approval", "for revision"];
-
-    // Normalize helper
-    const normalize = (val) => (val || "").toLowerCase().trim();
+    const pendingKeywords = ["for approval", "for revision"];
 
     data.forEach((row) => {
-        const brfStatus = normalize(row["BRF STATUS"]);
-        const prStatus = normalize(row["PR STATUS"]);
-        const poStatus = normalize(row["PO/WO STATUS"]);
+        const brf = (row["BRF STATUS"] || "").toLowerCase();
+        const pr = (row["PR STATUS"] || "").toLowerCase();
+        const po = (row["PO/WO STATUS"] || "").toLowerCase();
 
-        if (approvedKeywords.some((kw) => brfStatus.includes(kw))) brfStatuses.Approved++;
-        else if (pendingKeywords.some((kw) => brfStatus.includes(kw))) brfStatuses.Pending++;
+        if (approvedKeywords.some((kw) => brf.includes(kw)))
+            brfStatuses.Approved++;
+        else if (pendingKeywords.some((kw) => brf.includes(kw)))
+            brfStatuses.Pending++;
 
-        if (approvedKeywords.some((kw) => prStatus.includes(kw))) prStatuses.Approved++;
-        else if (pendingKeywords.some((kw) => prStatus.includes(kw))) prStatuses.Pending++;
+        if (approvedKeywords.some((kw) => pr.includes(kw)))
+            prStatuses.Approved++;
+        else if (pendingKeywords.some((kw) => pr.includes(kw)))
+            prStatuses.Pending++;
 
-        if (approvedKeywords.some((kw) => poStatus.includes(kw))) poStatuses.Approved++;
-        else if (pendingKeywords.some((kw) => poStatus.includes(kw))) poStatuses.Pending++;
+        if (approvedKeywords.some((kw) => po.includes(kw)))
+            poStatuses.Approved++;
+        else if (pendingKeywords.some((kw) => po.includes(kw)))
+            poStatuses.Pending++;
     });
 
+    // === Get Filter Summary for Chart Title ===
+    const filterLabels = [];
+    const filterMap = {
+        categoryFilter: "Category",
+        sectionFilter: "Section",
+        systemFilter: "System",
+        currentFilter: "Current Status",
+        quotationFilter: "Quotation Status",
+        brfFilter: "BRF Status",
+        prFilter: "PR Status",
+        poFilter: "PO/WO Status",
+        deliveryFilter: "Delivery Status"
+    };
+
+    for (const [id, label] of Object.entries(filterMap)) {
+        const el = document.getElementById(id);
+        if (el && el.value) {
+            filterLabels.push(`${label}: ${el.value}`);
+        }
+    }
+
+    const filterSummary =
+        filterLabels.length > 0 ? `Filtered by: ${filterLabels.join(", ")}` : "All Records";
+
+    // === Draw or Update Chart ===
     const ctx = document.getElementById("approvalBarChart").getContext("2d");
 
-    // Destroy previous chart if exists
     if (approvalChartInstance) {
         approvalChartInstance.destroy();
     }
@@ -42,46 +68,49 @@ function renderApprovalChart(data) {
     approvalChartInstance = new Chart(ctx, {
         type: "bar",
         data: {
-            labels: ["BRF", "PR", "PO/WO"],
+            labels: ["BRF No.", "PR No.", "PO/WO No."],
             datasets: [
                 {
                     label: "Approved",
                     data: [
                         brfStatuses.Approved,
                         prStatuses.Approved,
-                        poStatuses.Approved,
+                        poStatuses.Approved
                     ],
-                    backgroundColor: "#28a745",
+                    backgroundColor: "#28a745"
                 },
                 {
                     label: "Pending",
                     data: [
                         brfStatuses.Pending,
                         prStatuses.Pending,
-                        poStatuses.Pending,
+                        poStatuses.Pending
                     ],
-                    backgroundColor: "#ffc107",
-                },
-            ],
+                    backgroundColor: "#ffc107"
+                }
+            ]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
             plugins: {
                 legend: { position: "top" },
                 title: {
                     display: true,
-                    text: "Approval Status of BRF, PR, and PO/WO",
-                },
+                    text: `Approval Status of BRF / PR / PO/WO — ${filterSummary}`,
+                    font: {
+                        size: 16
+                    }
+                }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: {
-                        precision: 0,
-                    },
-                },
-            },
-        },
+                    title: {
+                        display: true,
+                        text: "Count"
+                    }
+                }
+            }
+        }
     });
 }
