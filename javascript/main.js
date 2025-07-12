@@ -101,9 +101,12 @@ function setupEquipmentListFilters() {
 
 function renderFullEquipmentTable() {
   const systemOptions = [...new Set(rows.map(r => r["System"]).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b))
     .map(sys => `<option value="${sys}">${sys}</option>`)
     .join("");
+
   const equipmentOptions = [...new Set(rows.map(r => r["Equipment"]).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b))
     .map(eq => `<option value="${eq}">${eq}</option>`)
     .join("");
 
@@ -149,7 +152,6 @@ function renderFullEquipmentTable() {
   `;
 }
 
-
 document.getElementById("diagram-pending-btn").addEventListener("click", () => {
   diagramWRStatus = diagramWRStatus === "Pending" ? "" : "Pending";
   updateDiagramModalTable();
@@ -182,4 +184,3 @@ document.getElementById("image-modal-close").addEventListener("click", () => {
   document.getElementById("image-modal").classList.add("hidden");
   document.getElementById("image-modal-img").src = "";
 });
-
