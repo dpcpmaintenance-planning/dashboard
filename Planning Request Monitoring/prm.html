@@ -12,9 +12,11 @@
     <div class="header">
       <h2>📋 Planning Request Monitoring</h2>
     </div>
+
+    <!-- Back Button -->
     <button onclick="goBack()" class="back-button">← Back</button>
 
-    <!-- Search Box -->
+    <!-- Search Input -->
     <input
       type="text"
       id="searchInput"
@@ -22,69 +24,52 @@
       onkeyup="filterTable()"
     />
 
-    <!-- Filters -->
+    <!-- Filters Section -->
     <div class="filter-container">
-      <label>
-        Category:
-        <select id="categoryFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
-      <label>
-        Section:
-        <select id="sectionFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
-      <label>
-        System:
-        <select id="systemFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
-      <label>
-        Current Status:
-        <select id="currentFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
-      <label>
-        Quotation Status:
-        <select id="quotationFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
-      <label>
-        BRF Status:
-        <select id="brfFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
-      <label>
-        PR Status:
-        <select id="prFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
-      <label>
-        PO/WO Status:
-        <select id="poFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
-      <label>
-        Delivery Status:
-        <select id="deliveryFilter" onchange="filterTable()">
-          <option value="">All</option>
-        </select>
-      </label>
+      <div class="dropdown-wrapper">
+        <label>Category:</label>
+        <div id="categoryFilter" class="dropdown"></div>
+      </div>
+      <div class="dropdown-wrapper">
+        <label>Section:</label>
+        <div id="sectionFilter" class="dropdown"></div>
+      </div>
+      <div class="dropdown-wrapper">
+        <label>System:</label>
+        <div id="systemFilter" class="dropdown"></div>
+      </div>
+      <div class="dropdown-wrapper">
+        <label>Current Status:</label>
+        <div id="currentFilter" class="dropdown"></div>
+      </div>
+      <div class="dropdown-wrapper">
+        <label>Quotation Status:</label>
+        <div id="quotationFilter" class="dropdown"></div>
+      </div>
+      <div class="dropdown-wrapper">
+        <label>BRF Status:</label>
+        <div id="brfFilter" class="dropdown"></div>
+      </div>
+      <div class="dropdown-wrapper">
+        <label>PR Status:</label>
+        <div id="prFilter" class="dropdown"></div>
+      </div>
+      <div class="dropdown-wrapper">
+        <label>PO/WO Status:</label>
+        <div id="poFilter" class="dropdown"></div>
+      </div>
+      <div class="dropdown-wrapper">
+        <label>Delivery Status:</label>
+        <div id="deliveryFilter" class="dropdown"></div>
+      </div>
 
+      <!-- Clear All Filters Button -->
       <button onclick="resetFilters()" class="reset-button">
         Clear Filters
       </button>
     </div>
 
-    <!-- Table -->
+    <!-- Data Table -->
     <div class="table-wrapper">
       <table id="requestTable">
         <thead>
@@ -94,17 +79,17 @@
       </table>
     </div>
 
-    <!-- Bar Chart -->
+    <!-- Chart Section -->
     <div class="chart-section">
       <canvas id="approvalBarChart"></canvas>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+    <!-- Custom Scripts -->
     <script src="prm.js"></script>
-    <!-- Table logic, filters -->
     <script src="prmChart.js"></script>
-    <!-- Chart logic -->
   </body>
 </html>

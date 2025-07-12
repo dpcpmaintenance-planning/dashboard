@@ -18,24 +18,17 @@ function renderApprovalChart(data) {
         const pr = (row["PR STATUS"] || "").toLowerCase();
         const po = (row["PO/WO STATUS"] || "").toLowerCase();
 
-        if (approvedKeywords.some((kw) => brf.includes(kw)))
-            brfStatuses.Approved++;
-        else if (pendingKeywords.some((kw) => brf.includes(kw)))
-            brfStatuses.Pending++;
+        if (approvedKeywords.some((kw) => brf.includes(kw))) brfStatuses.Approved++;
+        else if (pendingKeywords.some((kw) => brf.includes(kw))) brfStatuses.Pending++;
 
-        if (approvedKeywords.some((kw) => pr.includes(kw)))
-            prStatuses.Approved++;
-        else if (pendingKeywords.some((kw) => pr.includes(kw)))
-            prStatuses.Pending++;
+        if (approvedKeywords.some((kw) => pr.includes(kw))) prStatuses.Approved++;
+        else if (pendingKeywords.some((kw) => pr.includes(kw))) prStatuses.Pending++;
 
-        if (approvedKeywords.some((kw) => po.includes(kw)))
-            poStatuses.Approved++;
-        else if (pendingKeywords.some((kw) => po.includes(kw)))
-            poStatuses.Pending++;
+        if (approvedKeywords.some((kw) => po.includes(kw))) poStatuses.Approved++;
+        else if (pendingKeywords.some((kw) => po.includes(kw))) poStatuses.Pending++;
     });
 
-    // === Get Filter Summary for Chart Title ===
-    const filterLabels = [];
+    // === Build Chart Titles Based on Filters ===
     const filterMap = {
         categoryFilter: "Category",
         sectionFilter: "Section",
@@ -48,17 +41,30 @@ function renderApprovalChart(data) {
         deliveryFilter: "Delivery Status"
     };
 
+    let mainTitle = "Approval Status of BRF / PR / PO/WO";
+    const subtitleParts = [];
+
     for (const [id, label] of Object.entries(filterMap)) {
-        const el = document.getElementById(id);
-        if (el && el.value) {
-            filterLabels.push(`${label}: ${el.value}`);
+        const container = document.getElementById(id);
+        if (!container) continue;
+
+        const selected = Array.from(container.querySelectorAll("input[type='checkbox']:checked"))
+            .map(cb => cb.value.trim())
+            .filter(Boolean);
+
+        if (selected.length > 0) {
+            if (id === "systemFilter") {
+                mainTitle = `System: ${selected.join(", ")}`;
+            } else {
+                subtitleParts.push(`${label}: ${selected.join(", ")}`);
+            }
         }
     }
 
-    const filterSummary =
-        filterLabels.length > 0 ? `Filtered by: ${filterLabels.join(", ")}` : "All Records";
+    const subtitle =
+        subtitleParts.length > 0 ? `Filtered by: ${subtitleParts.join(" | ")}` : "All Records";
 
-    // === Draw or Update Chart ===
+    // === Render or Update Chart ===
     const ctx = document.getElementById("approvalBarChart").getContext("2d");
 
     if (approvalChartInstance) {
@@ -92,14 +98,20 @@ function renderApprovalChart(data) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: "top" },
                 title: {
                     display: true,
-                    text: `Approval Status of BRF / PR / PO/WO — ${filterSummary}`,
-                    font: {
-                        size: 16
-                    }
+                    text: mainTitle,
+                    font: { size: 18 }
+                },
+                subtitle: {
+                    display: true,
+                    text: subtitle,
+                    font: { size: 13 },
+                    color: "#444",
+                    padding: { top: 6 }
                 }
             },
             scales: {
