@@ -19,6 +19,7 @@ fetch(csvUrl)
                 allData = results.data;
                 populateFilters(allData);
                 generateTable(allData);
+                renderApprovalChart(allData);
             },
         });
     });
@@ -74,6 +75,8 @@ function generateTable(data) {
 
 function populateFilters(data) {
     const statusFields = [
+        { id: "categoryFilter", key: "Category" },
+        { id: "systemFilter", key: "System" },
         { id: "currentFilter", key: "Current Status" },
         { id: "quotationFilter", key: "Quotation Status" },
         { id: "brfFilter", key: "BRF Status" },
@@ -118,6 +121,8 @@ function populateFilters(data) {
 
 function filterTable() {
     const input = document.getElementById("searchInput").value.toLowerCase();
+    const categoryFilter = document.getElementById("categoryFilter").value;
+    const systemFilter = document.getElementById("systemFilter").value;
     const currentFilter = document.getElementById("currentFilter").value;
     const quotationFilter = document.getElementById("quotationFilter").value;
     const brfFilter = document.getElementById("brfFilter").value;
@@ -130,6 +135,10 @@ function filterTable() {
             String(val || "").toLowerCase().includes(input)
         );
 
+        const matchesCategory =
+            !categoryFilter || row["CATEGORY"] === categoryFilter;
+        const matchesSystem =
+            !systemFilter || row["SYSTEM"] === systemFilter;
         const matchesCurrent =
             !currentFilter || row["CURRENT STATUS"] === currentFilter;
         const matchesQuotation =
@@ -142,6 +151,8 @@ function filterTable() {
 
         return (
             matchesSearch &&
+            matchesCategory &&
+            matchesSystem &&
             matchesCurrent &&
             matchesQuotation &&
             matchesBRF &&
@@ -170,7 +181,7 @@ function goBack() {
 }
 function resetFilters() {
     document.getElementById("searchInput").value = "";
-    ["quotationFilter", "brfFilter", "prFilter", "poFilter", "deliveryFilter"].forEach(
+    ["categoryFilter", "systemFilter", "currentFilter", "quotationFilter", "brfFilter", "prFilter", "poFilter", "deliveryFilter"].forEach(
         (id) => {
             document.getElementById(id).value = "";
         }
