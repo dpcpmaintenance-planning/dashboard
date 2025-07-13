@@ -290,13 +290,53 @@
         </div>
       </section>
 
-      <div class="org-chart-container">
-        <h2>Table of Organization</h2>
+      <div class="cms-pms-container">
         <img
-          src="bg/to.png"
+          src="bg/CMS.png"
           alt="Table of Organization"
           class="org-chart-image"
         />
+        <img
+          src="bg/PMS.png"
+          alt="Table of Organization"
+          class="org-chart-image"
+        />
+      </div>
+
+      <div class="org-chart-container">
+        <h2>Table of Organization</h2>
+
+        <!-- Toggle Buttons (initial: Aborlan visible) -->
+        <button
+          class="toggle-button right"
+          id="btn-aborlan"
+          onclick="showImage('aborlan')"
+        >
+          Aborlan Expansion
+        </button>
+        <button
+          class="toggle-button left hidden"
+          id="btn-narra"
+          onclick="showImage('narra')"
+        >
+          Narra Thermal
+        </button>
+
+        <!-- Image Container -->
+        <div class="org-chart-images">
+          <img
+            src="bg/to.png"
+            alt="Narra Thermal Table"
+            class="org-chart-image"
+            id="narra-img"
+          />
+          <img
+            src="bg/TO2.png"
+            alt="Aborlan Expansion Table"
+            class="org-chart-image hidden"
+            id="aborlan-img"
+          />
+        </div>
       </div>
     </main>
 
@@ -783,5 +823,6 @@
         showSlide(currentIndex);
       });
     </script>
+    <script src="to.js"></script>
   </body>
 </html>
