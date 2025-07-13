@@ -84,8 +84,8 @@ function updateDiagram() {
       (status === "0"
         ? "operational"
         : status === "1"
-        ? "sustainable"
-        : "breakdown");
+          ? "sustainable"
+          : "breakdown");
 
     div.style.left = `${coords.x}px`;
     div.style.top = `${coords.y}px`;
@@ -94,7 +94,7 @@ function updateDiagram() {
 📌 ${label}
 📊 Status: ${readableStatus}
 💥 Breakdowns: ${breakdown}
-⏱️ Days Delayed: ${daysDelayed}
+⏱️ Days in Queue: ${daysDelayed}
     `.trim();
 
     const emoji = encodeURIComponent(statusEmoji[status]);
