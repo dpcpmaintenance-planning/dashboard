@@ -234,7 +234,7 @@ function resetFilters() {
 
 // Navigation
 function goBack() {
-    window.location.href = "welcome.html";
+    window.location.href = "../index.html";
 }
 function goHome() {
     window.location.href = "../index.html";
