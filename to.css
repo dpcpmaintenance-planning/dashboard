@@ -11,16 +11,13 @@
 }
 
 .org-chart-images {
-  position: relative;
+  overflow: hidden;
 }
 
+/* Enable transform for zoom and pan */
 .org-chart-image {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.3s ease;
+  transition: transform 0.3s ease;
+  transform-origin: center center;
 }
 
 .hidden {
@@ -47,11 +44,11 @@
 }
 
 .toggle-button.left {
-  left: 200px;
+  left: 10px;
 }
 
 .toggle-button.right {
-  right: 180px;
+  right: 10px;
 }
 
 .cms-pms-container {

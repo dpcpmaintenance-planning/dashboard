@@ -2,16 +2,50 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>In-House Reports</title>
+    <title>In-House Maintenance Service Reports</title>
     <style>
       body {
         font-family: "Oswald", sans-serif;
         padding: 20px;
       }
     </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>In-House</h2>
-    <p>This is the in house report content.</p>
+    <h2>In-House Maintenance Service Reports</h2>
+    <label for="sheet-select"></label>
+    <select id="sheet-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://docs.google.com/spreadsheets/d/1UD9JudmY3K9aXy1Q13pxNvuYyXP3krGT/preview"
+      >
+        DPTPP IN-HOUSE PMS 2025 FOR SR_ Electrical
+      </option>
+      <option
+        value="https://docs.google.com/spreadsheets/d/1sGeb3w43BhKdIzh852yE51lr5PxxF8eF/preview"
+      >
+        DPTPP IN-HOUSE PMS 2025 FOR SR-I&C
+      </option>
+    </select>
+
+    <div class="sheet-viewer" style="margin-top: 20px">
+      <iframe
+        id="sheet-frame"
+        width="100%"
+        height="600"
+        frameborder="0"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
   </body>
+
+  <script>
+    const sheetSelect = document.getElementById("sheet-select");
+    const sheetFrame = document.getElementById("sheet-frame");
+
+    sheetSelect.addEventListener("change", () => {
+      const url = sheetSelect.value;
+      sheetFrame.src = url || "";
+    });
+  </script>
 </html>

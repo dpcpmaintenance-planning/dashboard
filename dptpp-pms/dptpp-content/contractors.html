@@ -9,9 +9,95 @@
         padding: 20px;
       }
     </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>Contractors</h2>
-    <p>This is the contractors report content.</p>
+    <h2>Contractors' Service Reports</h2>
+    <label for="pdf-select"></label>
+    <select id="pdf-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://drive.google.com/file/d/1tpgYg0X1fmXskih1OPIEASLCjOlRc8Eg/preview"
+      >
+        INTEGRAL - VALVE CALIBRATION_2025_DMCI POWER COMPLETION
+        REPORT_PO#S1_320251941019
+      </option>
+      <option
+        value="https://drive.google.com/file/d/12r7thFqPrp5IWG81MhtcNAMguipCVuc_/preview"
+      >
+        JISS - INSTRUMENT CALIBRATION_25-5128C, DMCI Power Corporation (Palawan)
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1XKiLfrq3pVcmXMkvX9FQ6vPqq7oWdnKh/preview"
+      >
+        MEGA MASTERLINK - GENERATOR, SWITCHGEAR, ESP_ - FINAL REPORT OF DMCI
+        PALAWAN (PS-24-0162)
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1kiwaul00yt52PCV4mzf9qjL5tAieCFcS/preview"
+      >
+        NEPC SR - Boiler Minor PMS(PO NO. WO-001916)
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1IDH-8rXyc8ESSpPTO2uL43O01WoMr_yc/preview"
+      >
+        NEPC SR - COAL HANDLING AND WATER TREATMENT MINOR PMS
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1osxcsEV4C1bEftVFkNGjQzikrDaa1vmi/preview"
+      >
+        SHIN NIPPON MACHINERIES - TURBINE - Working Report (DMCIP-82136)
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1k4mbORAkKe9EeD51jNSk0ee9Z3ChOhhE/preview"
+      >
+        SPSI-REFRACTORY_DMCI TECHNICAL REPORT-1
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1ptwvMv7u5XuAksZQYrJad4xppUOGG0le/preview"
+      >
+        SPSI-REFRACTORY_MAPPING
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1Zumua8NZi_lDpI0KSgB0F1yS-NBZhGfU/preview"
+      >
+        WTL-PALAWAN UTG
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1w9K35mFSLT18NqeFwkwHov62SPNnBQuC/preview"
+      >
+        WTL-UTG_DMCI FINAL REPORT.
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1T4lS_gUMBvURUafSrQ5-jPW-y883cM-g/preview"
+      >
+        YAR-SWITCHYARD_Pictures
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1cZAl8gRV4hbqS4Gpg2ObLmfKHD08z6rp/preview"
+      >
+        YAR-SWITCHYARD_Service Report
+      </option>
+    </select>
+
+    <div class="pdf-viewer-container" style="margin-top: 20px">
+      <iframe
+        id="pdf-frame"
+        width="100%"
+        height="600"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
   </body>
+  <script src="pdf.js"></script>
 </html>

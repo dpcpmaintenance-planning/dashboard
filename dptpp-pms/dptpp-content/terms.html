@@ -9,9 +9,77 @@
         padding: 20px;
       }
     </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <h2>Terms of References</h2>
-    <p>This is the Terms of Referencesrt content.</p>
+    <label for="pdf-select"></label>
+    <select id="pdf-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://drive.google.com/file/d/1Y8zMMI3c0TYLcnNvGAUvrpP0nuuA47Tx/preview"
+      >
+        DPTPP-2024-TOR-EM-02_ELECTRICAL TEST – GENERATOR, NGR, VT.SA, MV
+        SWITCHGEAR,
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1EX_g_I48z5ntnW5xWWOCrepJONLbInP_/preview"
+      >
+        JISS-DPTPP-2024-TOR-IM-01_INSTRUMENT CALIBRATION & SERVICING
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1Bm5kLN-AEVI7rvzaRxI7aNsmkJ_DP_by/preview"
+      >
+        K.U.S.-DPTPP-2024-TOR-MM-01_SCAFFOLDING
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1SXzRfARE69-X264Fy20fQ7d3tU3HNtqK/preview"
+      >
+        MEGA MASTERLINK-DPTPP-2024-TOR-EM-01_ESP R.T, 69KV SUBSTATION AND
+        SWITCHYARD
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1rpudPZhVY8l0OX6SzNjzr_ehgzehn-EZ/preview"
+      >
+        NEPC-DPTPP-2024-TOR-MM-02_BOILER
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1GDtJNqa1Bxd6bDm2I8emoVuq9xkG6vyd/preview"
+      >
+        NEPC-DPTPP-2024-TOR-MM-05_BALANCE OF PLANT (BOP)
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1eKgqZs0ExUtatW-5253DCWuYhnDChfuB/preview"
+      >
+        SHIN NIPPON MACHINERY.SENTIMO-DPTPP-2024-TOR-MM-04_TURBINE PMS
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1_C-7pR0sK8thEcqnHAchrDkD82u9fa3W/preview"
+      >
+        SPSI-DPTPP-2024-TOR-MM-06_REFRACTORY REPAIR
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1ALPtgnkjuZFKvh8BQUso6oDFDFmhso8o/preview"
+      >
+        WTL-DPTPP-2024-TOR-MM-03_ULTRASONIC THICKNESS GAUGING (UTG)
+      </option>
+    </select>
+
+    <div class="pdf-viewer-container" style="margin-top: 20px">
+      <iframe
+        id="pdf-frame"
+        width="100%"
+        height="600"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
   </body>
+  <script src="pdf.js"></script>
 </html>

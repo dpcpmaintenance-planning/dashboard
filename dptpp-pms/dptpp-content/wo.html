@@ -2,16 +2,88 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Work Order</title>
+    <title>Work Orders (Labor)</title>
     <style>
       body {
         font-family: "Oswald", sans-serif;
         padding: 20px;
       }
     </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>Work Orders</h2>
-    <p>This is the work-orders report content.</p>
+    <h2>Work Orders (Labor)</h2>
+    <label for="pdf-select"></label>
+    <select id="pdf-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://drive.google.com/file/d/1qmE7rybKYXwqtiaD7x5pFdV0mPDs_BVt/preview"
+      >
+        WO-001896_KUS STRUCTURAL COMPONENTS INCS
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1nTL8kQ-1cCMzCw1yaPFwtrfeNiCA4-Sm/preview"
+      >
+        WO-001900_WELDERS TESTING LABORATORIES PHILS., INC.-1
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1mGrOrZQ95PPt2q6JckIg_0pApicPU7M1/preview"
+      >
+        WO-001901_SPECIALIZED PRODUCTS AND SERVICES (SPSI), INC.-1.pdf
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1nWb0G4YTp1CKgxOY1EhRuh-u2TbtaymD/preview"
+      >
+        WO-001902_YAR DRAINAGE MAINTENANCE SERVICES-1-1
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1rpW4w-D2du64fEaLm7bsnj6pHtV6PoHJ/preview"
+      >
+        WO-001908-CHINA SOUTHEAST ASIA ELECTRIC POWER CONST.
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1TYQbefwby0rEZomxOYhIqgLeEbf9lW9_/preview"
+      >
+        WO-001916_CHINA SOUTHEAST ASIA ELECTRIC POWER CONST.
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1hgI31fJ_iBXLTDQHgCi6ApL21iYyMdrT/preview"
+      >
+        WO001881 SENTIMO INDUSTRIAL SUPPLIES CORPORATION
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1cILqknqFJLlKkAWnjzMoNRAOqTD2aW0h/preview"
+      >
+        WO001888 MEGA MASTERLINK FABRICATOR AND ELECTRICAL-1
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1ERiCcDU1Bt6sJXISiabeY2vOiafrbawj/preview"
+      >
+        WO001889 JNJ INSTRUMENTATION SALES AND SERVICES INC
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1w7a-U4Q0eFOmdcHsS5ym5ISSE8KF9LvU/preview"
+      >
+        WO001891 INTEGRAL INDUSTRIAL MANAGEMENT CORPORATION-1
+      </option>
+    </select>
+
+    <div class="pdf-viewer-container" style="margin-top: 20px">
+      <iframe
+        id="pdf-frame"
+        width="100%"
+        height="600"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
   </body>
+  <script src="pdf.js"></script>
 </html>

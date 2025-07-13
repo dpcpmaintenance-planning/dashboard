@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Purchase Orders (Parts)</title>
+
+    <style>
+      body {
+        font-family: "Oswald", sans-serif;
+        padding: 20px;
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h2>Purchase Orders (Parts)</h2>
+    <label for="pdf-select"></label>
+    <select id="pdf-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://drive.google.com/file/d/1phR69Nh-wxdud2Po-scofZqkZyo4v33h/preview"
+      >
+        FPO 000125 RVCGBI AND RVC GLOBAL MANAGEMENT
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1tvUUA9kTRocKgWI84ArbBIlW-QtOYT36/preview"
+      >
+        FPO 000125 RVCGBI AND RVC GLOBAL MANAGEMENT
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1p87rVQAo8lB236acy8xXBii3inRgFsua/preview"
+      >
+        FPO 000126 NFF INDUSTRIAL CORPORATION
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/13ry7AVjvWNnSopwazBkFwhkPuIJ1i8t3/preview"
+      >
+        FPO-000123-RVCGBI AND RVC GLOBAL MANAGEMENT
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1SeYtoklW1CdgQui9B5eYz1mnBDxNCXAS/preview"
+      >
+        FPO-000127-RVCGBI AND RVC GLOBAL MANAGEMENT-1
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/14luFH3VXIMLbxAv-IjAYRzCTnMV75Jt6/preview"
+      >
+        FPO-000128-SHIN-NIPPON MACHINERY CO. LTD.
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/14-ViwJa0Wpfw2KcbJOsGEKRZe39sHHer/preview"
+      >
+        FPO-000130-RVCGBI AND RVC GLOBAL MANAGEMENT
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1ie1zoiB_vO8LZgkJQfcPseGdsCQTHn82/preview"
+      >
+        FPO-000133-SHIN NIPPON MACHINERY CO. LTD
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/16VQ_dy0-4pGpTsQaddW4tCSMuO_d9O1W/preview"
+      >
+        FPO-000141 RVCGBI AND RVC GLOBAL MANAGEMENT
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1qyGbsgDpGgGoj6z3zXx2Rx3yCV8Ap1Ao/preview"
+      >
+        FPO-000146 INVENCONTROL PTE LTD
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1ixNZ9PYFHHblBHrVhVkdV-9tV6xpCld5/preview"
+      >
+        FPO-000160_RVCGBI AND RVC GLOBAL MANAGEMENT
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1KduB5wkyLp2zpOwLLa3a-QBSuQ7leljq/preview"
+      >
+        PO-007911 GOLDENVILLE
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1mr3mXGOGivEQPzPN203KYUAmLhGXCR-R/preview"
+      >
+        PO-007951_KUS STRUCTURAL COMPONENTS INC.
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1iHmBILDbzMWyWQNzLvA2-74skHo1ov8d/preview"
+      >
+        PO-008001_KUS STRUCTURAL COMPONENTS INC. (SUPPLEMENTAL ORDER)
+      </option>
+    </select>
+
+    <div class="pdf-viewer-container" style="margin-top: 20px">
+      <iframe
+        id="pdf-frame"
+        width="100%"
+        height="600"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
+  </body>
+  <script src="pdf.js"></script>
+</html>
