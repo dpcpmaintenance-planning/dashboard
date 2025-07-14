@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Late Task Reports</title>
+    <style>
+      body {
+        font-family: "Oswald", sans-serif;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>ELECTRICAL MAINTENANCE</h2>
+    <p>WEEK-AHEAD SCHEDULE</p>
+    <label for="sheet-select"></label>
+    <select id="sheet-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://docs.google.com/spreadsheets/d/e/2PACX-1vSNNNQrdimAugcruXfij6Fyyej3fq_al6w6Vwi7-T0AO7DqAEX60TRdqdV-lTIdOpP0uuGlD0cBQvOb/pubhtml"
+      >
+        ELECTRICAL MAINTENANCE WEEK-AHEAD SCHEDULE
+      </option>
+    </select>
+
+    <div class="sheet-viewer" style="margin-top: 20px">
+      <iframe
+        id="sheet-frame"
+        width="100%"
+        height="600"
+        frameborder="0"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
+  </body>
+
+  <script>
+    const sheetSelect = document.getElementById("sheet-select");
+    const sheetFrame = document.getElementById("sheet-frame");
+
+    sheetSelect.addEventListener("change", () => {
+      const url = sheetSelect.value;
+      sheetFrame.src = url || "";
+    });
+  </script>
+</html>

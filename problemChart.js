@@ -16,7 +16,7 @@ function renderProblemChart(groupedProblems, topSystem) {
 
   const sorted = Object.entries(problems)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 10); // ✅ Limit to top 10 problems
+    .slice(0, 20); // ✅ Limit to top 10 problems
 
   const labels = sorted.map(([problem]) => problem);
   const data = sorted.map(([_, count]) => count);
@@ -43,7 +43,7 @@ function renderProblemChart(groupedProblems, topSystem) {
         legend: { display: false },
         title: {
           display: true,
-          text: `Problems in ${topSystem}`,
+          text: `Nature Activity in ${topSystem}`,
           font: { size: 18, family: "Oswald" },
         },
         datalabels: {
