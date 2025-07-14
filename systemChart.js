@@ -105,8 +105,11 @@ function renderGroupedChart(groupedData) {
           color: "#fff",
           anchor: "center",
           align: "center",
+          rotation: -90,
           font: { weight: "bold", size: 12, family: "monospace" },
           formatter: Math.round,
+          clamp: true,
+          clip: false
         },
       },
       scales: {
