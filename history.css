@@ -64,19 +64,22 @@ h1 {
   padding: 20px;
   background: white;
   border-radius: 16px;
+  padding: 2px 4px;
+  font-size: 11px;
 }
 
 .filters-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto auto;
-  gap: 10px;
-  padding: 15px 20px;
-  margin: 0 auto 20px auto;
+  gap: 16px;
+  padding: 30px;
+  margin: 0 auto 30px auto;
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  max-width: 1000px;
+  max-width: 1200px;
+  height: 80px;
   box-sizing: border-box;
   align-items: start;
   /* Adjust depending on your header height */
@@ -94,7 +97,7 @@ h1 {
 .dropdown-toggle,
 #clear-filters {
   width: 100%;
-  padding: 10px 14px;
+  padding: 4px 4px; /* smaller padding */
   font-size: 12px;
   font-family: monospace;
   border: 2px solid #ccc;
@@ -151,6 +154,7 @@ h1 {
   font-family: monospace;
   width: 100%;
   box-sizing: border-box;
+  padding: 4px 8px;
 }
 
 .date-range-wrapper label {
@@ -168,7 +172,8 @@ h1 {
 
 .date-range-row input[type="date"] {
   flex: 1;
-  padding: 8px 10px;
+  padding: 2px 6px;
+  font-size: 11px;
   border: 2px solid #ccc;
   border-radius: 12px;
   font-family: monospace;
@@ -189,8 +194,9 @@ h1 {
 }
 
 #clear-filters {
-  padding: 10px 24px;
-  font-size: 14px;
+  padding: 2px 4px;
+  margin-bottom: 10px;
+  font-size: 11px;
   background-color: #ffffff;
   font-family: monospace;
   border-radius: 20px;
