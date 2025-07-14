@@ -11,8 +11,56 @@
     </style>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
     <h2>Schedule</h2>
-    <p>This is the schedule content.</p>
+    <label for="sheet-select"></label>
+    <select id="sheet-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://drive.google.com/file/d/1bF6hRpXlaq1moQtzEWk7HPvQzdBAa44o/preview"
+      >
+        ALL LEVELS COMBINED
+      </option>
+      <option
+        value="https://drive.google.com/file/d/131slIeUnSN0PlLJa6NpGSXITo4vn4YmC/preview"
+      >
+        ALL LEVELS
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1k1fy4mdaNoiqpfEwnu7Arh_IKc67D4nT/preview"
+      >
+        LEVEL 5
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1KW_p-mbFoP3Xp14F4DyNT4HLU2zpdKIf/preview"
+      >
+        LEVEL 6
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1DjFyLOqXGIppw1ktnNlrd88mVnWirUaz/preview"
+      >
+        LEVEL 7
+      </option>
+    </select>
+
+    <div class="sheet-viewer" style="margin-top: 20px">
+      <iframe
+        id="sheet-frame"
+        width="100%"
+        height="600"
+        frameborder="0"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
   </body>
+  <script>
+    const sheetSelect = document.getElementById("sheet-select");
+    const sheetFrame = document.getElementById("sheet-frame");
+
+    sheetSelect.addEventListener("change", () => {
+      const url = sheetSelect.value;
+      sheetFrame.src = url || "";
+    });
+  </script>
 </html>
