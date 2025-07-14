@@ -13,6 +13,99 @@
   </head>
   <body>
     <h2>Late Tasks Reports</h2>
-    <p>This is the late task report content.</p>
+    <label for="sheet-select"></label>
+    <select id="sheet-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://drive.google.com/file/d/1Q47tHu0OuSRhT-58c5Pc-mMHN9K42MtX/preview"
+      >
+        LATE TASK COMBINED
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1jCk3mh8XiDkDcftf0-qgKQzAmFW4CyBm/preview"
+      >
+        LATE TASK DAY 2
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1bjUZ1mQ7tmwF4Fp0_ecEUkDVxeAJyE42/preview"
+      >
+        LATE TASK DAY 3
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1DjFyLOqXGIppw1ktnNlrd88mVnWirUaz/preview"
+      >
+        LATE TASK DAY 4
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1GhssS0UMYWiVtGH6ej3OvZx39G-osXYd/preview"
+      >
+        LATE TASK DAY 5
+      </option>
+      <option
+        value="https://drive.google.com/file/d/11Md-c7h2ILz2XtmuC4iReI_WQBjbrBpx/preview"
+      >
+        LATE TASK DAY 6
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1x26n1pA--KAbHFuy-_7cu49_Un6ovcTK/preview"
+      >
+        LATE TASK DAY 7
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1HO09ABMFRuxu1nj6i3lT_StoeC8CW2Vv/preview"
+      >
+        LATE TASK DAY 8
+      </option>
+      <option
+        value="https://drive.google.com/file/d/11sBify2hY3R0JTVexIHRY2fekzIJaahs/preview"
+      >
+        LATE TASK DAY 9
+      </option>
+
+      <option
+        value="https://drive.google.com/file/d/1osFwtrps8u8hS9z0J2zmghUMeD6PA2BS/preview"
+      >
+        LATE TASK DAY 10
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1vOJZ30RI-IVjq93kYlXkjMhdlam4vHJl/preview"
+      >
+        LATE TASK DAY 11
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1WVkDqmSuq_OTuEl35vLK9x7ScJx5cZVC/preview"
+      >
+        LATE TASK DAY 12
+      </option>
+      <option
+        value="https://drive.google.com/file/d/12Y71DPkobZ8eJF2ED1ojUAHfUbxVYk2C/preview"
+      >
+        LATE TASK DAY 13
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1jR1m8K7_G9JRkqxLNhyEpG7xwKbI-_D1/preview"
+      >
+        LATE TASK DAY 14
+      </option>
+    </select>
+
+    <div class="sheet-viewer" style="margin-top: 20px">
+      <iframe
+        id="sheet-frame"
+        width="100%"
+        height="600"
+        frameborder="0"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
   </body>
+  <script>
+    const sheetSelect = document.getElementById("sheet-select");
+    const sheetFrame = document.getElementById("sheet-frame");
+
+    sheetSelect.addEventListener("change", () => {
+      const url = sheetSelect.value;
+      sheetFrame.src = url || "";
+    });
+  </script>
 </html>
