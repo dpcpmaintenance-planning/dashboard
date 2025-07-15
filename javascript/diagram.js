@@ -269,8 +269,8 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
 
     // ✅ Update max delay regardless of status
     if (!wrStatus.includes("done") && (delayText.includes("pending") || delayText.includes("delayed"))) {
-      const match = delayText.match(/(\d+)/);
-      const delay = match ? parseInt(match[1]) : 0;
+      const match = delayText.match(/-?\d+/);
+      const delay = match ? parseInt(match[0]) : 0;
       if (!isNaN(delay) && delay > (daysDelayedMap[eq] || 0)) {
         daysDelayedMap[eq] = delay;
       }
