@@ -1,3 +1,4 @@
+
 window.addEventListener("DOMContentLoaded", () => {
   // Auto-detect GitHub repo name if hosted on GitHub Pages
   const repoName = location.hostname === "dpcpmaintenance-planning.github.io"
@@ -63,24 +64,34 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // Dropdown logic
-      const dropdownWrappers = document.querySelectorAll(".dropdown-wrapper");
-      dropdownWrappers.forEach((wrapper) => {
-        const dropdown = wrapper.querySelector(".dropdown");
-        wrapper.addEventListener("click", (e) => {
-          e.stopPropagation();
-          document.querySelectorAll(".dropdown").forEach((d) => {
-            if (d !== dropdown) d.style.display = "none";
-          });
-          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-        });
-      });
+      // Dropdown logic scoped to NAVBAR only
+      const navbarElement = document.getElementById("navbar");
+      if (navbarElement) {
+        const dropdownWrappers = navbarElement.querySelectorAll(".dropdown-wrapper");
 
-      document.addEventListener("click", () => {
-        document.querySelectorAll(".dropdown").forEach((dropdown) => {
-          dropdown.style.display = "none";
+        dropdownWrappers.forEach((wrapper) => {
+          const dropdown = wrapper.querySelector(".dropdown");
+          wrapper.addEventListener("click", (e) => {
+            e.stopPropagation();
+
+            dropdownWrappers.forEach((otherWrapper) => {
+              if (otherWrapper !== wrapper) {
+                const otherDropdown = otherWrapper.querySelector(".dropdown");
+                if (otherDropdown) otherDropdown.style.display = "none";
+              }
+            });
+
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+          });
         });
-      });
+
+        document.addEventListener("click", () => {
+          dropdownWrappers.forEach((wrapper) => {
+            const dropdown = wrapper.querySelector(".dropdown");
+            if (dropdown) dropdown.style.display = "none";
+          });
+        });
+      }
     })
     .catch((error) => {
       console.error("❌ Failed to load navbar:", error);
@@ -100,3 +111,4 @@ window.addEventListener("DOMContentLoaded", () => {
       console.error("❌ Failed to load footer:", error);
     });
 });
+
