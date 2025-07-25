@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", () => {
   // ✅ GitHub Pages repo name (must match exactly!)
   const repoName = "dashboard";
 
