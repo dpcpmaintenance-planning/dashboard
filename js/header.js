@@ -1,22 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const depth = location.pathname.replace(/\/$/, "").split("/").length - 2;
+  // ✅ Replace with your actual repo name
+  const repoName = "dasboard";
+
+  // Strip trailing slash and split
+  const path = location.pathname.replace(/\/$/, "");
+  const parts = path.split("/").filter((p) => p !== "" && p !== repoName);
+  const depth = parts.length;
   const basePath = "../".repeat(depth);
 
   // Load Navbar
   fetch(basePath + "navbar.html")
-    .then((res) => res.text())
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
     .then((data) => {
       document.getElementById("main-header").innerHTML = data;
 
-      // ✅ Fix all relative links inside navbar
-      document.querySelectorAll('#navbar a').forEach((link) => {
+      // Fix relative links in navbar
+      document.querySelectorAll("#navbar a").forEach((link) => {
         const href = link.getAttribute("href");
         if (href && !href.startsWith("http") && !href.startsWith("#")) {
           link.setAttribute("href", basePath + href);
         }
       });
 
-      // existing navbar JS...
+      // Navbar toggle and scroll behavior
       const navbar = document.getElementById("navbar");
       const hamburger = document.getElementById("hamburger");
       const navRight = document.querySelector(".nav-right");
@@ -45,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const dropdownWrappers = document.querySelectorAll(".dropdown-wrapper");
       dropdownWrappers.forEach((wrapper) => {
         const dropdown = wrapper.querySelector(".dropdown");
-
         wrapper.addEventListener("click", (e) => {
           e.stopPropagation();
           document.querySelectorAll(".dropdown").forEach((d) => {
@@ -63,16 +71,23 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     })
     .catch((error) => {
-      console.error("Failed to load navbar:", error);
+      console.error("❌ Failed to load navbar:", error);
     });
 
   // Load Footer
   fetch(basePath + "footer.html")
-    .then((res) => res.text())
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
     .then((data) => {
       document.getElementById("main-footer").innerHTML = data;
     })
     .catch((error) => {
-      console.error("Failed to load footer:", error);
+      console.error("❌ Failed to load footer:", error);
     });
+
+  // 🛠️ Debug info (optional, can remove later)
+  console.log("📂 Current path:", location.pathname);
+  console.log("🔁 Calculated basePath:", basePath);
 });
