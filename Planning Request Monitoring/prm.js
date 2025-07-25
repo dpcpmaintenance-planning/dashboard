@@ -53,12 +53,33 @@ function populateFilters(data) {
 
         const toggle = document.createElement("button");
         toggle.classList.add("dropdown-toggle");
-        toggle.textContent = "Select";
+        toggle.textContent = "All";
         toggle.type = "button";
         toggle.onclick = () => dropdown.classList.toggle("open");
 
         const list = document.createElement("div");
         list.classList.add("checkbox-list");
+
+        // Add "All" option
+        const allLabel = document.createElement("label");
+        const allCheckbox = document.createElement("input");
+        allCheckbox.type = "checkbox";
+        allCheckbox.value = "ALL";
+        allCheckbox.checked = true;
+
+        allCheckbox.onchange = () => {
+            if (allCheckbox.checked) {
+                list.querySelectorAll("input[type='checkbox']").forEach((cb) => {
+                    if (cb.value !== "ALL") cb.checked = false;
+                });
+            }
+            updateDropdownLabel(toggle, list);
+            filterTable();
+        };
+
+        allLabel.appendChild(allCheckbox);
+        allLabel.append(" All");
+        list.appendChild(allLabel);
 
         uniqueValues.forEach((value) => {
             const label = document.createElement("label");
@@ -67,6 +88,9 @@ function populateFilters(data) {
             checkbox.value = value;
 
             checkbox.onchange = () => {
+                if (checkbox.checked) {
+                    allCheckbox.checked = false;
+                }
                 updateDropdownLabel(toggle, list);
                 filterTable();
             };
@@ -81,7 +105,6 @@ function populateFilters(data) {
         container.innerHTML = "";
         container.appendChild(dropdown);
 
-        // Initialize label text
         updateDropdownLabel(toggle, list);
     });
 
@@ -94,6 +117,61 @@ function populateFilters(data) {
         });
     });
 }
+
+function getCheckedValues(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return [];
+    const checked = Array.from(
+        container.querySelectorAll("input[type='checkbox']:checked")
+    ).map((cb) => cb.value);
+
+    return checked.includes("ALL") ? [] : checked;
+}
+
+function resetFilters() {
+    const filterIds = [
+        "categoryFilter",
+        "sectionFilter",
+        "systemFilter",
+        "currentFilter",
+        "quotationFilter",
+        "brfFilter",
+        "prFilter",
+        "poFilter",
+        "deliveryFilter",
+    ];
+
+    filterIds.forEach((id) => {
+        const container = document.getElementById(id);
+        if (!container) return;
+
+        const checkboxes = container.querySelectorAll("input[type='checkbox']");
+        checkboxes.forEach((cb) => {
+            cb.checked = cb.value === "ALL";
+        });
+
+        const toggleBtn = container.querySelector(".dropdown-toggle");
+        const list = container.querySelector(".checkbox-list");
+        updateDropdownLabel(toggleBtn, list);
+    });
+
+    filterTable();
+}
+
+function updateDropdownLabel(button, list) {
+    const checked = list.querySelectorAll("input[type='checkbox']:checked");
+    if (checked.length === 0 || [...checked].some((cb) => cb.value === "ALL")) {
+        button.textContent = "All";
+    } else {
+        button.textContent = `${checked.length} selected`;
+    }
+}
+
+function filterTable() {
+    // Example implementation; replace with your actual filter logic
+    console.log("Filtering table using selected values...");
+}
+
 
 function updateDropdownLabel(toggleBtn, checkboxList) {
     const selected = Array.from(
@@ -110,10 +188,12 @@ function updateDropdownLabel(toggleBtn, checkboxList) {
 function getCheckedValues(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return [];
-    return Array.from(
-        container.querySelectorAll("input[type='checkbox']:checked")
-    ).map((cb) => cb.value);
+    const checkboxes = container.querySelectorAll("input[type='checkbox']:checked");
+    const allSelected = Array.from(checkboxes).some((cb) => cb.value === "ALL");
+    if (allSelected) return []; // Treat "All" as no filter
+    return Array.from(checkboxes).map((cb) => cb.value);
 }
+
 
 function filterTable() {
     const input = document.getElementById("searchInput").value.toLowerCase();
