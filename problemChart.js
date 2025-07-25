@@ -16,10 +16,18 @@ function renderProblemChart(groupedProblems, topSystem) {
 
   const sorted = Object.entries(problems)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 20); // ✅ Limit to top 10 problems
+    .slice(0, 20); // Top 20 problems
 
   const labels = sorted.map(([problem]) => problem);
   const data = sorted.map(([_, count]) => count);
+
+  // Define which problems to show in green
+  const greenList = ["PMS", "Change OIl", "Visual Inspection / Cleaning", "Annual PMS", "Regreasing / Lubrication"];
+  const backgroundColors = labels.map((label) =>
+    greenList.includes(label) ? "#00C853" : "#FF0000"
+  );
+
+
 
   if (problemChart) problemChart.destroy();
 
@@ -29,9 +37,9 @@ function renderProblemChart(groupedProblems, topSystem) {
       labels,
       datasets: [
         {
-          label: `${topSystem} - Problems`,
+          label: `${topSystem} - Problem/Activity`,
           data,
-          backgroundColor: "#FF0000",
+          backgroundColor: backgroundColors,
           borderRadius: 4,
         },
       ],
@@ -43,7 +51,7 @@ function renderProblemChart(groupedProblems, topSystem) {
         legend: { display: false },
         title: {
           display: true,
-          text: `Nature Activity in ${topSystem}`,
+          text: `Nature of Activity in ${topSystem}`,
           font: { size: 18, family: "Oswald" },
         },
         datalabels: {
@@ -54,10 +62,10 @@ function renderProblemChart(groupedProblems, topSystem) {
           formatter: Math.round,
         },
       },
+
       scales: {
         y: {
           beginAtZero: true,
-          ticks: {},
           grid: { color: "#eee" },
         },
         x: {

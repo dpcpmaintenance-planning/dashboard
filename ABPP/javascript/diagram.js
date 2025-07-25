@@ -63,7 +63,7 @@ function updateDiagram() {
   };
   img.src = `${imagePath}.jpg`;
 
-  diagram.innerHTML = `<div class="equipment-list-button" onclick="currentDiagramEquipment=''; diagramWRStatus=''; showSystemEquipmentList('${selectedSystemTab}')">EQUIPMENT LIST</div>`;
+  diagram.innerHTML = `<div class="equipment-list-button" onclick="currentDiagramEquipment=''; diagramWRStatus=''; showSystemEquipmentList('${selectedSystemTab}')"></div>`;
 
   const systemNames = systemGroups[selectedSystemTab] || [];
   const { latestStatusMap, breakdownMap, daysDelayedMap } = getLatestStatusAndBreakdown(rows, systemNames);
@@ -94,7 +94,7 @@ function updateDiagram() {
 📌 ${label}
 📊 Status: ${readableStatus}
 💥 Breakdowns: ${breakdown}
-⏱️ Days Delayed: ${daysDelayed}
+⏱️ Days in Queue: ${daysDelayed}
     `.trim();
 
     const emoji = encodeURIComponent(statusEmoji[status]);
