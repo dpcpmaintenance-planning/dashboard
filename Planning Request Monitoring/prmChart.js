@@ -112,6 +112,15 @@ function renderApprovalChart(data) {
                     font: { size: 13 },
                     color: "#444",
                     padding: { top: 6 }
+                },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'start',
+                    color: '#000',
+                    font: {
+                        weight: 'bold'
+                    },
+                    formatter: Math.round
                 }
             },
             scales: {
@@ -123,6 +132,8 @@ function renderApprovalChart(data) {
                     }
                 }
             }
-        }
+        },
+        plugins: [ChartDataLabels] // 🔹 Register plugin here
     });
+
 }
