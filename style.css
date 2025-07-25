@@ -181,35 +181,15 @@ html {
   font-size: 2rem;
   color: white;
   text-decoration: none;
-  margin-top: 40px;
+  margin-bottom: 40px;
   animation: bounce 1.5s infinite;
   position: absolute;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-}
-.back-to-top {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background-color: rgba(0, 119, 216, 0.8);
-  color: white;
-  font-size: 2rem;
-  padding: 10px 15px;
-  border-radius: 100%;
-  text-align: center;
-  text-decoration: none;
-  z-index: 1000;
-  display: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  animation: bounce 1.5s infinite;
+  transition: opacity 0.3s ease;
 }
 
-.back-to-top:hover {
-  background-color: rgb(0, 191, 255);
-  transform: scale(1.1);
-}
 /*Equipment list*/
 iframe {
   width: 100%;
