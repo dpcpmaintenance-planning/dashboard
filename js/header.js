@@ -1,12 +1,14 @@
 window.addEventListener("DOMContentLoaded", () => {
-  // ✅ GitHub Pages repo name (must match exactly!)
+  // ✅ Adjust this if repo name changes
   const repoName = "dashboard";
 
-  // Get path depth relative to repo root (excluding repo name)
+  // Remove trailing slash and split path
   const path = location.pathname.replace(/\/$/, "");
   const parts = path.split("/").filter((p) => p !== "" && p !== repoName);
   const depth = parts.length;
-  const basePath = "../".repeat(depth);
+
+  // Compute relative path (../) based on depth
+  const basePath = depth === 0 ? "./" : "../".repeat(depth);
 
   console.log("📂 Current path:", location.pathname);
   console.log("🔁 basePath:", basePath);
@@ -21,7 +23,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const header = document.getElementById("main-header");
       if (header) header.innerHTML = data;
 
-      // Adjust relative links inside navbar
+      // 🔗 Adjust internal navbar links to work relatively
       document.querySelectorAll("#navbar a").forEach((link) => {
         const href = link.getAttribute("href");
         if (href && !href.startsWith("http") && !href.startsWith("#")) {
@@ -29,7 +31,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // Navbar scroll effect
+      // 🔽 SCROLL NAVBAR EFFECT
       const navbar = document.getElementById("navbar");
       window.addEventListener("scroll", () => {
         if (navbar) {
@@ -37,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // Hamburger menu toggle
+      // 🍔 HAMBURGER MENU TOGGLE
       const hamburger = document.getElementById("hamburger");
       const navRight = document.querySelector(".nav-right");
 
@@ -56,11 +58,10 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // Dropdown logic
+      // ⬇️ DROPDOWN LOGIC
       const dropdownWrappers = document.querySelectorAll(".dropdown-wrapper");
       dropdownWrappers.forEach((wrapper) => {
         const dropdown = wrapper.querySelector(".dropdown");
-
         wrapper.addEventListener("click", (e) => {
           e.stopPropagation();
           document.querySelectorAll(".dropdown").forEach((d) => {
@@ -71,6 +72,7 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       });
 
+      // Hide dropdowns on body click
       document.addEventListener("click", () => {
         document.querySelectorAll(".dropdown").forEach((dropdown) => {
           dropdown.style.display = "none";
