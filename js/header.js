@@ -1,16 +1,24 @@
 window.addEventListener("DOMContentLoaded", () => {
-  // ✅ Adjust this if repo name changes
   const repoName = "dashboard";
 
-  // Remove trailing slash and split path
+  // Remove trailing slash
   const path = location.pathname.replace(/\/$/, "");
-  const parts = path.split("/").filter((p) => p !== "" && p !== repoName);
+
+  // Detect if path ends with a file (e.g. index.html)
+  const endsWithFile = /\.\w+$/.test(path);
+
+  // Remove the file if it exists to compute directory depth
+  const cleanPath = endsWithFile ? path.substring(0, path.lastIndexOf("/")) : path;
+
+  // Get depth (excluding repo name)
+  const parts = cleanPath.split("/").filter((p) => p !== "" && p !== repoName);
   const depth = parts.length;
 
-  // Compute relative path (../) based on depth
+  // Compute base path
   const basePath = depth === 0 ? "./" : "../".repeat(depth);
 
   console.log("📂 Current path:", location.pathname);
+  console.log("🧠 Clean path:", cleanPath);
   console.log("🔁 basePath:", basePath);
 
   // ========== LOAD NAVBAR ==========
@@ -23,7 +31,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const header = document.getElementById("main-header");
       if (header) header.innerHTML = data;
 
-      // 🔗 Adjust internal navbar links to work relatively
+      // Fix relative links in navbar
       document.querySelectorAll("#navbar a").forEach((link) => {
         const href = link.getAttribute("href");
         if (href && !href.startsWith("http") && !href.startsWith("#")) {
@@ -31,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // 🔽 SCROLL NAVBAR EFFECT
+      // Scroll and menu logic...
       const navbar = document.getElementById("navbar");
       window.addEventListener("scroll", () => {
         if (navbar) {
@@ -39,17 +47,14 @@ window.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // 🍔 HAMBURGER MENU TOGGLE
       const hamburger = document.getElementById("hamburger");
       const navRight = document.querySelector(".nav-right");
-
       if (hamburger && navRight) {
         hamburger.addEventListener("click", (e) => {
           e.stopPropagation();
           navRight.classList.toggle("active");
           hamburger.classList.toggle("open");
         });
-
         document.addEventListener("click", (e) => {
           if (!navRight.contains(e.target) && !hamburger.contains(e.target)) {
             navRight.classList.remove("active");
@@ -58,7 +63,6 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // ⬇️ DROPDOWN LOGIC
       const dropdownWrappers = document.querySelectorAll(".dropdown-wrapper");
       dropdownWrappers.forEach((wrapper) => {
         const dropdown = wrapper.querySelector(".dropdown");
@@ -72,7 +76,6 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      // Hide dropdowns on body click
       document.addEventListener("click", () => {
         document.querySelectorAll(".dropdown").forEach((dropdown) => {
           dropdown.style.display = "none";
