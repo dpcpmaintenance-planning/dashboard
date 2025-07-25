@@ -34,8 +34,31 @@ function updateDiagramModalTable() {
     })
     .join("");
 
+  // Ensure the pending/done buttons are properly rebound every time
+  const pendingBtn = document.getElementById("diagram-pending-btn");
+  const doneBtn = document.getElementById("diagram-done-btn");
+
+  pendingBtn.onclick = () => {
+    if (currentDiagramEquipment) {
+      diagramWRStatus = "Pending";
+      updateDiagramModalTable();
+    } else {
+      showSystemEquipmentList(selectedSystemTab, "Pending");
+    }
+  };
+
+  doneBtn.onclick = () => {
+    if (currentDiagramEquipment) {
+      diagramWRStatus = "Done";
+      updateDiagramModalTable();
+    } else {
+      showSystemEquipmentList(selectedSystemTab, "Done");
+    }
+  };
+
   updateFilterButtonStates();
 }
+
 
 function updateDiagram() {
   const diagram = document.getElementById("diagram");
@@ -63,7 +86,7 @@ function updateDiagram() {
   };
   img.src = `${imagePath}.jpg`;
 
-  diagram.innerHTML = `<div class="equipment-list-button" onclick="currentDiagramEquipment=''; diagramWRStatus=''; showSystemEquipmentList('${selectedSystemTab}')"></div>`;
+  diagram.innerHTML = `<div class="equipment-list-button" onclick="currentDiagramEquipment=''; diagramWRStatus=''; showSystemEquipmentList('${selectedSystemTab}')">EQUIPMENT LIST</div>`;
 
   const systemNames = systemGroups[selectedSystemTab] || [];
   const { latestStatusMap, breakdownMap, daysDelayedMap } = getLatestStatusAndBreakdown(rows, systemNames);
@@ -113,13 +136,24 @@ function updateDiagram() {
 
       if (!currentDiagramEquipment) {
         pendingBtn.onclick = () => {
-          showSystemEquipmentList(systemTabId, "Pending");
+          if (currentDiagramEquipment) {
+            diagramWRStatus = "Pending";
+            updateDiagramModalTable();
+          } else {
+            showSystemEquipmentList(systemTabId, "Pending");
+          }
         };
-        doneBtn.onclick = () => {
-          showSystemEquipmentList(systemTabId, "Done");
-        };
-      }
 
+        doneBtn.onclick = () => {
+          if (currentDiagramEquipment) {
+            diagramWRStatus = "Done";
+            updateDiagramModalTable();
+          } else {
+            showSystemEquipmentList(systemTabId, "Done");
+          }
+        };
+
+      }
       updateFilterButtonStates();
     });
 

@@ -18,24 +18,47 @@ function updateDiagramModalTable() {
     .map((row) => {
       const imageURL = row[imageColumnKey]?.trim();
       return `
-        <tr>
-          <td>${formatDate(row["Timestamp"])}</td>
-          <td>${row["Work Order Num"] || ""}</td>
-          <td>${row["Equipment"] || ""}</td>
-          <td>${row["Sub-Component"] || ""}</td>
-          <td>${row["Brief Description of Problem or Work"] || ""}</td>
-          <td>${row["Detailed Description"] || ""}</td>
-          <td>${row["Severity"] || ""}</td>
-          <td>${row["*Planning Remarks"] || ""}</td>
-          <td>${row["WR Status"] || ""}</td>
-          <td>${formatImageLink(imageURL)}</td>
-        </tr>
-      `;
+          <tr>
+            <td>${formatDate(row["Timestamp"])}</td>
+            <td>${row["Work Order Num"] || ""}</td>
+            <td>${row["Equipment"] || ""}</td>
+            <td>${row["Sub-Component"] || ""}</td>
+            <td>${row["Brief Description of Problem or Work"] || ""}</td>
+            <td>${row["Detailed Description"] || ""}</td>
+            <td>${row["Severity"] || ""}</td>
+            <td>${row["*Planning Remarks"] || ""}</td>
+            <td>${row["WR Status"] || ""}</td>
+            <td>${formatImageLink(imageURL)}</td>
+          </tr>
+        `;
     })
     .join("");
 
+  // Ensure the pending/done buttons are properly rebound every time
+  const pendingBtn = document.getElementById("diagram-pending-btn");
+  const doneBtn = document.getElementById("diagram-done-btn");
+
+  pendingBtn.onclick = () => {
+    if (currentDiagramEquipment) {
+      diagramWRStatus = "Pending";
+      updateDiagramModalTable();
+    } else {
+      showSystemEquipmentList(selectedSystemTab, "Pending");
+    }
+  };
+
+  doneBtn.onclick = () => {
+    if (currentDiagramEquipment) {
+      diagramWRStatus = "Done";
+      updateDiagramModalTable();
+    } else {
+      showSystemEquipmentList(selectedSystemTab, "Done");
+    }
+  };
+
   updateFilterButtonStates();
 }
+
 
 function updateDiagram() {
   const diagram = document.getElementById("diagram");
@@ -113,13 +136,24 @@ function updateDiagram() {
 
       if (!currentDiagramEquipment) {
         pendingBtn.onclick = () => {
-          showSystemEquipmentList(systemTabId, "Pending");
+          if (currentDiagramEquipment) {
+            diagramWRStatus = "Pending";
+            updateDiagramModalTable();
+          } else {
+            showSystemEquipmentList(systemTabId, "Pending");
+          }
         };
-        doneBtn.onclick = () => {
-          showSystemEquipmentList(systemTabId, "Done");
-        };
-      }
 
+        doneBtn.onclick = () => {
+          if (currentDiagramEquipment) {
+            diagramWRStatus = "Done";
+            updateDiagramModalTable();
+          } else {
+            showSystemEquipmentList(systemTabId, "Done");
+          }
+        };
+
+      }
       updateFilterButtonStates();
     });
 
@@ -158,21 +192,22 @@ function showSystemEquipmentList(systemTabId, wrStatus = "") {
     .map((row) => {
       const imageURL = row[imageColumnKey]?.trim();
       return `
-        <tr>
-          <td>${formatDate(row["Timestamp"])}</td>
-          <td>${row["Work Order Num"] || ""}</td>
-          <td>${row["Equipment"] || ""}</td>
-          <td>${row["Sub-Component"] || ""}</td>
-          <td>${row["Brief Description of Problem or Work"] || ""}</td>
-          <td>${row["Detailed Description"] || ""}</td>
-          <td>${row["Severity"] || ""}</td>
-          <td>${row["*Planning Remarks"] || ""}</td>
-          <td>${row["WR Status"] || ""}</td>
-          <td>${formatImageLink(imageURL)}</td>
-        </tr>
-      `;
+          <tr>
+            <td>${formatDate(row["Timestamp"])}</td>
+            <td>${row["Work Order Num"] || ""}</td>
+            <td>${row["Equipment"] || ""}</td>
+            <td>${row["Sub-Component"] || ""}</td>
+            <td>${row["Brief Description of Problem or Work"] || ""}</td>
+            <td>${row["Detailed Description"] || ""}</td>
+            <td>${row["Severity"] || ""}</td>
+            <td>${row["*Planning Remarks"] || ""}</td>
+            <td>${row["WR Status"] || ""}</td>
+            <td>${formatImageLink(imageURL)}</td>
+          </tr>
+        `;
     })
     .join("");
+
 
   document.getElementById("diagram-modal-title").textContent = "EQUIPMENT LIST";
   document.getElementById("diagram-modal").classList.remove("hidden");
@@ -188,7 +223,7 @@ function showSystemEquipmentList(systemTabId, wrStatus = "") {
   };
 
   updateFilterButtonStates();
-}
+};
 
 function updateFilterButtonStates() {
   const pendingBtn = document.getElementById("diagram-pending-btn");
@@ -269,8 +304,8 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
 
     // ✅ Update max delay regardless of status
     if (!wrStatus.includes("done") && (delayText.includes("pending") || delayText.includes("delayed"))) {
-      const match = delayText.match(/-?\d+/);
-      const delay = match ? parseInt(match[0]) : 0;
+      const match = delayText.match(/(\d+)/);
+      const delay = match ? parseInt(match[1]) : 0;
       if (!isNaN(delay) && delay > (daysDelayedMap[eq] || 0)) {
         daysDelayedMap[eq] = delay;
       }
