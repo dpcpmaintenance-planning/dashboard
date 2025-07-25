@@ -1,27 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ✅ Use your actual GitHub Pages repo name
+  // ✅ GitHub Pages repo name (must match exactly!)
   const repoName = "dashboard";
 
-  // Get path depth, excluding the repoName
+  // Get path depth relative to repo root (excluding repo name)
   const path = location.pathname.replace(/\/$/, "");
   const parts = path.split("/").filter((p) => p !== "" && p !== repoName);
   const depth = parts.length;
   const basePath = "../".repeat(depth);
 
-  // 🧭 Debug info (optional)
   console.log("📂 Current path:", location.pathname);
-  console.log("🔁 Calculated basePath:", basePath);
+  console.log("🔁 basePath:", basePath);
 
-  // ===== LOAD NAVBAR =====
+  // ========== LOAD NAVBAR ==========
   fetch(basePath + "navbar.html")
     .then((res) => {
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`Navbar fetch failed: HTTP ${res.status}`);
       return res.text();
     })
     .then((data) => {
-      document.getElementById("main-header").innerHTML = data;
+      const header = document.getElementById("main-header");
+      if (header) header.innerHTML = data;
 
-      // ✅ Fix all relative links inside navbar
+      // Adjust relative links inside navbar
       document.querySelectorAll("#navbar a").forEach((link) => {
         const href = link.getAttribute("href");
         if (href && !href.startsWith("http") && !href.startsWith("#")) {
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // Scroll effect for navbar
+      // Navbar scroll effect
       const navbar = document.getElementById("navbar");
       window.addEventListener("scroll", () => {
         if (navbar) {
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // Hamburger toggle
+      // Hamburger menu toggle
       const hamburger = document.getElementById("hamburger");
       const navRight = document.querySelector(".nav-right");
 
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // Dropdown toggle logic
+      // Dropdown logic
       const dropdownWrappers = document.querySelectorAll(".dropdown-wrapper");
       dropdownWrappers.forEach((wrapper) => {
         const dropdown = wrapper.querySelector(".dropdown");
@@ -71,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      // Close dropdowns when clicking outside
       document.addEventListener("click", () => {
         document.querySelectorAll(".dropdown").forEach((dropdown) => {
           dropdown.style.display = "none";
@@ -82,14 +81,15 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("❌ Failed to load navbar:", error);
     });
 
-  // ===== LOAD FOOTER =====
+  // ========== LOAD FOOTER ==========
   fetch(basePath + "footer.html")
     .then((res) => {
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`Footer fetch failed: HTTP ${res.status}`);
       return res.text();
     })
     .then((data) => {
-      document.getElementById("main-footer").innerHTML = data;
+      const footer = document.getElementById("main-footer");
+      if (footer) footer.innerHTML = data;
     })
     .catch((error) => {
       console.error("❌ Failed to load footer:", error);
