@@ -90,9 +90,6 @@
   position: relative;
 }
 
-.carousel-item:hover {
-}
-
 .carousel-item img {
   width: 100%;
   max-width: 400px;

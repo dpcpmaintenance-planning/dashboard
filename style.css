@@ -5,31 +5,7 @@ html {
   font-family: "Oswald", sans-serif;
   overflow-x: hidden;
 }
-.fade-in {
-  animation: fadeIn 0.8s ease-in;
-}
 
-@keyframes fadeIn {
-  from {
-    opacity: 1%;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 100%;
-    transform: translateY(0);
-  }
-}
-
-.fade-out {
-  animation: fadeOut 0.3s ease-in forwards;
-}
-
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-}
 html {
   scroll-behavior: smooth;
 }
