@@ -1,60 +1,60 @@
 window.addEventListener("DOMContentLoaded", () => {
-  const repoName = "dashboard";
+  // Auto-detect GitHub repo name if hosted on GitHub Pages
+  const repoName = location.hostname === "dpcpmaintenance-planning.github.io"
+    ? location.pathname.split("/")[1]
+    : "";
 
-  // Remove trailing slash
+  // Normalize path
   const path = location.pathname.replace(/\/$/, "");
-
-  // Detect if path ends with a file (e.g. index.html)
   const endsWithFile = /\.\w+$/.test(path);
-
-  // Remove the file if it exists to compute directory depth
   const cleanPath = endsWithFile ? path.substring(0, path.lastIndexOf("/")) : path;
 
-  // Get depth (excluding repo name)
-  const parts = cleanPath.split("/").filter((p) => p !== "" && p !== repoName);
+  // Compute depth based on path
+  const parts = cleanPath.split("/").filter(p => p !== "" && p !== repoName);
   const depth = parts.length;
 
-  // Compute base path
   const basePath = depth === 0 ? "./" : "../".repeat(depth);
 
-  console.log("📂 Current path:", location.pathname);
-  console.log("🧠 Clean path:", cleanPath);
-  console.log("🔁 basePath:", basePath);
+  console.log("🌐 Repo:", repoName);
+  console.log("📂 Path:", location.pathname);
+  console.log("🧹 Clean Path:", cleanPath);
+  console.log("🔁 Base Path:", basePath);
 
   // ========== LOAD NAVBAR ==========
   fetch(basePath + "navbar.html")
-    .then((res) => {
+    .then(res => {
       if (!res.ok) throw new Error(`Navbar fetch failed: HTTP ${res.status}`);
       return res.text();
     })
-    .then((data) => {
+    .then(data => {
       const header = document.getElementById("main-header");
       if (header) header.innerHTML = data;
 
-      // Fix relative links in navbar
-      document.querySelectorAll("#navbar a").forEach((link) => {
+      // Fix relative links
+      document.querySelectorAll("#navbar a").forEach(link => {
         const href = link.getAttribute("href");
         if (href && !href.startsWith("http") && !href.startsWith("#")) {
           link.setAttribute("href", basePath + href);
         }
       });
 
-      // Scroll and menu logic...
+      // Scroll effect
       const navbar = document.getElementById("navbar");
       window.addEventListener("scroll", () => {
-        if (navbar) {
-          navbar.classList.toggle("scrolled", window.scrollY > 50);
-        }
+        if (navbar) navbar.classList.toggle("scrolled", window.scrollY > 50);
       });
 
+      // Hamburger toggle
       const hamburger = document.getElementById("hamburger");
       const navRight = document.querySelector(".nav-right");
+
       if (hamburger && navRight) {
         hamburger.addEventListener("click", (e) => {
           e.stopPropagation();
           navRight.classList.toggle("active");
           hamburger.classList.toggle("open");
         });
+
         document.addEventListener("click", (e) => {
           if (!navRight.contains(e.target) && !hamburger.contains(e.target)) {
             navRight.classList.remove("active");
@@ -63,6 +63,7 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
+      // Dropdown logic
       const dropdownWrappers = document.querySelectorAll(".dropdown-wrapper");
       dropdownWrappers.forEach((wrapper) => {
         const dropdown = wrapper.querySelector(".dropdown");
@@ -71,8 +72,7 @@ window.addEventListener("DOMContentLoaded", () => {
           document.querySelectorAll(".dropdown").forEach((d) => {
             if (d !== dropdown) d.style.display = "none";
           });
-          dropdown.style.display =
-            dropdown.style.display === "block" ? "none" : "block";
+          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
         });
       });
 
@@ -88,11 +88,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // ========== LOAD FOOTER ==========
   fetch(basePath + "footer.html")
-    .then((res) => {
+    .then(res => {
       if (!res.ok) throw new Error(`Footer fetch failed: HTTP ${res.status}`);
       return res.text();
     })
-    .then((data) => {
+    .then(data => {
       const footer = document.getElementById("main-footer");
       if (footer) footer.innerHTML = data;
     })
