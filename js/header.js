@@ -1,8 +1,8 @@
 window.addEventListener("DOMContentLoaded", () => {
-  // ✅ GitHub Pages repo name (must match exactly!)
+  // ✅ Set your GitHub repo name (must match URL repo folder)
   const repoName = "dashboard";
 
-  // Get path depth relative to repo root (excluding repo name)
+  // Determine current path and relative depth
   const path = location.pathname.replace(/\/$/, "");
   const parts = path.split("/").filter((p) => p !== "" && p !== repoName);
   const depth = parts.length;
@@ -21,7 +21,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const header = document.getElementById("main-header");
       if (header) header.innerHTML = data;
 
-      // Adjust relative links inside navbar
+      // Adjust internal links inside the navbar
       document.querySelectorAll("#navbar a").forEach((link) => {
         const href = link.getAttribute("href");
         if (href && !href.startsWith("http") && !href.startsWith("#")) {
@@ -56,7 +56,7 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      // Dropdown logic
+      // Dropdown behavior
       const dropdownWrappers = document.querySelectorAll(".dropdown-wrapper");
       dropdownWrappers.forEach((wrapper) => {
         const dropdown = wrapper.querySelector(".dropdown");
