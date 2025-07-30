@@ -264,14 +264,16 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
   const breakdownMap = {};
   const daysDelayedMap = {};
   const hasUnresolvedSustainable = {};
+  const hasUnresolvedBreakdown = {};
 
   const currentPositionMap = positionMaps[selectedSystemTab] || {};
   for (const key of Object.keys(currentPositionMap)) {
     const eq = normalize(key);
-    latestStatusMap[eq] = "0";
+    latestStatusMap[eq] = "0"; // default to operational
     breakdownMap[eq] = 0;
     daysDelayedMap[eq] = 0;
     hasUnresolvedSustainable[eq] = false;
+    hasUnresolvedBreakdown[eq] = false;
   }
 
   const seenLatestStatus = new Set();
@@ -286,9 +288,16 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
     const delayText = (row["Days Delayed"] || "").toLowerCase();
     const breakdownCount = row["Breakdown Count"];
 
-    // ✅ Get latest Current Status (0/1/2)
-    if (!seenLatestStatus.has(eq) && ["0", "1", "2"].includes(currentStatus)) {
-      latestStatusMap[eq] = currentStatus;
+    // ✅ Get latest Current Status
+    if (["0", "1", "2"].includes(currentStatus)) {
+      const current = parseInt(currentStatus);
+      const prev = parseInt(latestStatusMap[eq] ?? "0");
+
+      // Prioritize breakdown > sustainable > operational
+      if (current > prev) {
+        latestStatusMap[eq] = currentStatus;
+      }
+
       seenLatestStatus.add(eq);
     }
 
@@ -302,7 +311,12 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
       hasUnresolvedSustainable[eq] = true;
     }
 
-    // ✅ Update max delay regardless of status
+    // ✅ Check if there's any pending breakdown status
+    if (currentStatus === "2" && wrStatus !== "done") {
+      hasUnresolvedBreakdown[eq] = true;
+    }
+
+    // ✅ Update max delay
     if (!wrStatus.includes("done") && (delayText.includes("pending") || delayText.includes("delayed"))) {
       const match = delayText.match(/(\d+)/);
       const delay = match ? parseInt(match[1]) : 0;
@@ -319,6 +333,14 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
     }
   }
 
+  // ✅ Override to breakdown if any pending breakdown WR exists (even if not latest)
+  for (const eq of Object.keys(latestStatusMap)) {
+    if (hasUnresolvedBreakdown[eq]) {
+      latestStatusMap[eq] = "2";
+    }
+  }
+
   return { latestStatusMap, breakdownMap, daysDelayedMap };
 }
+
 

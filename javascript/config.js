@@ -187,8 +187,8 @@ const positionMaps = {
   cbhs: {
     "Underground Hopper A": { x: 170, y: 125 },
     "Underground Hopper B": { x: 250, y: 125 },
-    "Electromagnetic Iron Separator 3A": { x: 285, y: 192 },
-    "Electromagnetic Iron Separator 3B": { x: 384, y: 192 },
+    "Electromagnetic Iron Separator 1A": { x: 285, y: 192 },
+    "Electromagnetic Iron Separator 1B": { x: 384, y: 192 },
     "Metal Detector A": { x: 415, y: 145 },
     "Metal Detector B": { x: 451, y: 145 },
     "Belt Conveyor 1A": { x: 560, y: 213 },
