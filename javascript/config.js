@@ -153,7 +153,10 @@ const positionMaps = {
     "Condenser": { x: 812, y: 270 },
     "Condensate Pump A": { x: 915, y: 310 },
     "Condensate Pump B": { x: 915, y: 408 },
-    "Deaerator Tank": { x: 589, y: 408 },
+    "Deaerator System": [
+      { name: "Safety Valve 1", x: 589, y: 408 },
+      { name: "Deaerator Tank", x: 589, y: 408 },
+    ],
     "Feedwater Tank": { x: 550, y: 515 },
     "Feedwater Control": { x: 355, y: 530 },
     "Boiler Feedwater Pump A": { x: 497, y: 693 },
@@ -283,7 +286,6 @@ const positionMaps = {
   electrical: {
     "51DL": { x: 100, y: 300 },
     "41DL": { x: 284, y: 300 },
-    "Bus VT": { x: 540, y: 300 },
     "2DL": { x: 640, y: 130 },
     "40DL": { x: 755, y: 300 },
     "42DL": { x: 890, y: 300 },

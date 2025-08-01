@@ -93,35 +93,71 @@ function updateDiagram() {
   const currentPositionMap = positionMaps[selectedSystemTab] || {};
   const statusEmoji = { 0: "🟢", 1: "🟡", 2: "🔴" };
 
-  // Group items by x/y to determine which status should be shown
-  const positionGroups = {};
+  for (const [label, coords] of Object.entries(currentPositionMap)) {
+    const eqNorm = normalize(label);
+    const status = latestStatusMap[eqNorm] ?? "0";
+    const breakdown = breakdownMap[eqNorm] ?? 0;
+    const daysDelayed = daysDelayedMap[eqNorm] || 0;
+    const statusLabels = { "0": "Operational", "1": "Sustainable", "2": "Breakdown" };
+    const readableStatus = statusLabels[status] || "Unknown";
 
-  for (const [key, value] of Object.entries(currentPositionMap)) {
-    if (Array.isArray(value)) {
-      value.forEach(({ name, x, y }) => {
-        const eqNorm = normalize(name);
-        const status = latestStatusMap[eqNorm] ?? "0";
-        const keyPos = `${x},${y}`;
+    const div = document.createElement("div");
+    div.className =
+      "status-indicator " +
+      (status === "0"
+        ? "operational"
+        : status === "1"
+          ? "sustainable"
+          : "breakdown");
 
-        if (!positionGroups[keyPos]) positionGroups[keyPos] = [];
-        positionGroups[keyPos].push({ name, x, y, status });
-      });
-    } else {
-      const eqNorm = normalize(key);
-      const status = latestStatusMap[eqNorm] ?? "0";
-      const keyPos = `${value.x},${value.y}`;
+    div.style.left = `${coords.x}px`;
+    div.style.top = `${coords.y}px`;
 
-      if (!positionGroups[keyPos]) positionGroups[keyPos] = [];
-      positionGroups[keyPos].push({ name: key, x: value.x, y: value.y, status });
-    }
-  }
+    div.title = `
+📌 ${label}
+📊 Status: ${readableStatus}
+💥 Breakdowns: ${breakdown}
+⏱️ Days in Queue: ${daysDelayed}
+    `.trim();
 
-  // Draw only highest-priority per position
-  for (const group of Object.values(positionGroups)) {
-    // Sort: Breakdown (2) > Sustainable (1) > Operational (0)
-    const sorted = group.sort((a, b) => b.status - a.status);
-    const { name, x, y } = sorted[0]; // show highest priority status
-    drawStatusIndicator(name, x, y, latestStatusMap, breakdownMap, daysDelayedMap, statusEmoji);
+    const emoji = encodeURIComponent(statusEmoji[status]);
+    div.style.backgroundImage = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28'>${emoji}</text></svg>")`;
+    div.innerHTML = `<div class="count">${breakdown}</div>`;
+
+    div.addEventListener("click", () => {
+      currentDiagramEquipment = label;
+      diagramWRStatus = "";
+      updateDiagramModalTable();
+      document.getElementById("diagram-modal-title").textContent = label;
+      document.getElementById("diagram-modal").classList.remove("hidden");
+
+      const pendingBtn = document.getElementById("diagram-pending-btn");
+      const doneBtn = document.getElementById("diagram-done-btn");
+
+      if (!currentDiagramEquipment) {
+        pendingBtn.onclick = () => {
+          if (currentDiagramEquipment) {
+            diagramWRStatus = "Pending";
+            updateDiagramModalTable();
+          } else {
+            showSystemEquipmentList(systemTabId, "Pending");
+          }
+        };
+
+        doneBtn.onclick = () => {
+          if (currentDiagramEquipment) {
+            diagramWRStatus = "Done";
+            updateDiagramModalTable();
+          } else {
+            showSystemEquipmentList(systemTabId, "Done");
+          }
+        };
+
+      }
+      updateFilterButtonStates();
+    });
+
+    diagram.appendChild(div);
   }
 
   const legend = document.createElement("div");
@@ -133,105 +169,6 @@ function updateDiagram() {
   `;
   diagram.appendChild(legend);
 }
-
-
-function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDelayedMap, statusEmoji) {
-  const eqNorm = normalize(label);
-  const status = latestStatusMap[eqNorm] ?? "0";
-  const breakdown = breakdownMap[eqNorm] ?? 0;
-  const daysDelayed = daysDelayedMap[eqNorm] || 0;
-
-  const statusLabels = {
-    "0": "Operational",
-    "1": "Sustainable",
-    "2": "Breakdown"
-  };
-  const readableStatus = statusLabels[status] || "Unknown";
-
-  const div = document.createElement("div");
-  div.className =
-    "status-indicator " +
-    (status === "2" ? "breakdown" :
-      status === "1" ? "sustainable" : "operational");
-
-  div.style.left = `${x}px`;
-  div.style.top = `${y}px`;
-  div.style.zIndex = status === "2" ? 3 : status === "1" ? 2 : 1;
-
-  div.title = `
-📌 ${label}
-📊 Status: ${readableStatus}
-💥 Breakdowns: ${breakdown}
-⏱️ Days in Queue: ${daysDelayed}
-  `.trim();
-
-  // Emoji circle icon
-  const emoji = encodeURIComponent(statusEmoji[status]);
-  div.style.backgroundImage = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28'>${emoji}</text></svg>")`;
-
-  // Show breakdown count as badge
-  if (breakdown !== undefined && breakdown !== null) {
-    div.innerHTML = `<div class="count">${breakdown}</div>`;
-  } else {
-    div.innerHTML = `<div class="count">0</div>`;
-  }
-
-
-  div.addEventListener("click", () => {
-    currentDiagramEquipment = label;
-    diagramWRStatus = "";
-    updateDiagramModalTable();
-    document.getElementById("diagram-modal-title").textContent = label;
-    document.getElementById("diagram-modal").classList.remove("hidden");
-    updateFilterButtonStates();
-  });
-
-  document.getElementById("diagram").appendChild(div);
-}
-
-
-
-function autoRefreshFromSheet() {
-  fetch(sheetURL)
-    .then((res) => res.text())
-    .then((csvText) => {
-      Papa.parse(csvText, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-          rows = results.data;
-
-          // Update the diagram display
-          if (typeof updateDiagram === "function") {
-            updateDiagram();
-          }
-
-          const modal = document.getElementById("diagram-modal");
-          const isModalOpen = modal && !modal.classList.contains("hidden");
-
-          if (isModalOpen) {
-            if (currentDiagramEquipment && typeof updateDiagramModalTable === "function") {
-              updateDiagramModalTable();
-            } else if (typeof showSystemEquipmentList === "function") {
-              showSystemEquipmentList(selectedSystemTab, currentSystemFilter);
-            }
-          }
-
-          // Optional: Update "Last Updated" display
-          const updatedEl = document.getElementById("last-updated");
-          if (updatedEl) {
-            updatedEl.textContent = "Last updated: " + new Date().toLocaleTimeString();
-          }
-        },
-      });
-    })
-    .catch((error) => {
-      console.error("Error auto-refreshing data:", error);
-    });
-}
-
-setInterval(autoRefreshFromSheet, 120000); // Refresh every 60 seconds
-
 
 function showSystemEquipmentList(systemTabId, wrStatus = "") {
   const systemNames = systemGroups[systemTabId] || [];
@@ -327,16 +264,14 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
   const breakdownMap = {};
   const daysDelayedMap = {};
   const hasUnresolvedSustainable = {};
-  const hasUnresolvedBreakdown = {};
 
   const currentPositionMap = positionMaps[selectedSystemTab] || {};
   for (const key of Object.keys(currentPositionMap)) {
     const eq = normalize(key);
-    latestStatusMap[eq] = "0"; // default to operational
+    latestStatusMap[eq] = "0";
     breakdownMap[eq] = 0;
     daysDelayedMap[eq] = 0;
     hasUnresolvedSustainable[eq] = false;
-    hasUnresolvedBreakdown[eq] = false;
   }
 
   const seenLatestStatus = new Set();
@@ -351,16 +286,9 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
     const delayText = (row["Days Delayed"] || "").toLowerCase();
     const breakdownCount = row["Breakdown Count"];
 
-    // ✅ Get latest Current Status
-    if (["0", "1", "2"].includes(currentStatus)) {
-      const current = parseInt(currentStatus);
-      const prev = parseInt(latestStatusMap[eq] ?? "0");
-
-      // Prioritize breakdown > sustainable > operational
-      if (current > prev) {
-        latestStatusMap[eq] = currentStatus;
-      }
-
+    // ✅ Get latest Current Status (0/1/2)
+    if (!seenLatestStatus.has(eq) && ["0", "1", "2"].includes(currentStatus)) {
+      latestStatusMap[eq] = currentStatus;
       seenLatestStatus.add(eq);
     }
 
@@ -374,12 +302,7 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
       hasUnresolvedSustainable[eq] = true;
     }
 
-    // ✅ Check if there's any pending breakdown status
-    if (currentStatus === "2" && wrStatus !== "done") {
-      hasUnresolvedBreakdown[eq] = true;
-    }
-
-    // ✅ Update max delay
+    // ✅ Update max delay regardless of status
     if (!wrStatus.includes("done") && (delayText.includes("pending") || delayText.includes("delayed"))) {
       const match = delayText.match(/(\d+)/);
       const delay = match ? parseInt(match[1]) : 0;
@@ -396,14 +319,6 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
     }
   }
 
-  // ✅ Override to breakdown if any pending breakdown WR exists (even if not latest)
-  for (const eq of Object.keys(latestStatusMap)) {
-    if (hasUnresolvedBreakdown[eq]) {
-      latestStatusMap[eq] = "2";
-    }
-  }
-
   return { latestStatusMap, breakdownMap, daysDelayedMap };
 }
-
 
