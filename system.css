@@ -102,8 +102,9 @@ a {
   background-repeat: no-repeat;
   cursor: pointer;
 }
+
 .status-indicator .count {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 5px;
   position: relative;
@@ -276,20 +277,25 @@ a {
 .equipment-table thead th {
   position: sticky;
   top: 0;
-  background: #000;
+  background-color: #000;
   color: #fff;
+  z-index: 1;
   padding: 10px;
   text-align: left;
+  height: 10px;
 }
 
 .status-table td,
 .equipment-table td,
 .status-table th,
 .equipment-table th {
+  text-align: left;
+  vertical-align: top;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
   font-size: 15px;
   padding: 10px;
-  word-break: break-word;
-  vertical-align: top;
 }
 
 .status-table tbody tr:nth-child(odd),
