@@ -286,6 +286,7 @@ const positionMaps = {
   electrical: {
     "51DL": { x: 100, y: 300 },
     "41DL": { x: 284, y: 300 },
+    "BUS VT": { x: 495, y: 300 },
     "2DL": { x: 640, y: 130 },
     "40DL": { x: 755, y: 300 },
     "42DL": { x: 890, y: 300 },
