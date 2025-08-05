@@ -17,8 +17,9 @@
 
     <!-- TomSelect JS -->
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
   </head>
 
   <body>
@@ -31,6 +32,8 @@
 
     <!-- Tabs Container -->
     <div class="tabs" id="tabs-container"></div>
+
+    <button id="export-pdf-btn" class="export-pdf-btn">📄PDF</button>
 
     <!-- Diagram or Equipment Table will go here -->
     <div class="diagram-container" id="diagram"></div>
@@ -113,6 +116,7 @@
     <script src="javascript/utils.js"></script>
     <script src="javascript/diagram.js"></script>
     <script src="javascript/main.js"></script>
+    <script src="javascript/pdf.js"></script>
     <!-- Tab Button Script + Main App Script -->
     <!-- Optional: Initialize tabs only once -->
     <script>
@@ -146,7 +150,7 @@
           .join("");
       });
     </script>
-    <!-- <div id="last-updated" class="last-updated-text"></div>-->
+    <div id="last-updated" class="last-updated-text"></div>
 
     <!-- FOOTER -->
     <footer id="main-footer" class="footer"></footer>

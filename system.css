@@ -408,3 +408,20 @@ a {
   content: " ⟳";
   color: #9ca3af; /* subtle spinner symbol */
 }
+.export-pdf-btn {
+  position: fixed;
+  top: 80px;
+  right: 16px;
+  z-index: 1000;
+  padding: 10px 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.export-pdf-btn:hover {
+  background-color: #1b4f72;
+}
