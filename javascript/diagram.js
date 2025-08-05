@@ -230,7 +230,7 @@ function autoRefreshFromSheet() {
     });
 }
 
-setInterval(autoRefreshFromSheet, 120000); // Refresh every 60 seconds
+setInterval(autoRefreshFromSheet, 300000); // Refresh every 5 minutes
 
 
 function showSystemEquipmentList(systemTabId, wrStatus = "") {
