@@ -23,7 +23,7 @@ const systemGroups = {
   substation: ["Substation"],
   "heavy-equipment": ["Heavy Equipment"],
   switchyard: ["Switchyard"],
-  le: ["Lifting Equipment"]
+  le: ["Lifting Equipment", "Coal Handling System"]
 };
 
 const positionMaps = {
@@ -343,14 +343,14 @@ const positionMaps = {
     "Disconnect Switch Brooke's Point": { x: 270, y: 490 },
   },
   le: {
-    "Coal Crusher Hoist": { x: 150, y: 150 },
+    "Coal Crusher Hoist 1": { x: 150, y: 150 },
     "Boiler Pump Hoist": { x: 415, y: 150 },
-    "Bunker Hoist": { x: 685, y: 150 },
+    "Coal Bunker Hoist": { x: 685, y: 150 },
     "Workshop Hoist": { x: 975, y: 150 },
     "Fly Ash Silo Hoist": { x: 140, y: 300 },
     "Bottom Ash Silo Hoist": { x: 405, y: 300 },
     "Limestone Silo Hoist": { x: 695, y: 300 },
-    "Fly Ash Silo Hoist 2": { x: 975, y: 300 },
+    "Electrostatic Precipitator Hoist": { x: 975, y: 300 },
     "Crane": { x: 380, y: 615 },
     "Elevator": { x: 730, y: 615 },
   },
