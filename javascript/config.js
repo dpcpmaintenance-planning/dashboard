@@ -215,7 +215,7 @@ const positionMaps = {
     "Belt Conveyor 2C": { x: 670, y: 450 },
     "Belt Conveyor 3C": { x: 670, y: 514 },
     "Belt Conveyor 4C": { x: 670, y: 567 },
-    "Biomass Bunker": { x: 985, y: 630 },
+    /* "Biomass Bunker": { x: 985, y: 630 }, */
   },
   cas: {
     "Screw Air Compressor A": { x: 145, y: 230 },
