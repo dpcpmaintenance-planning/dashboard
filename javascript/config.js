@@ -261,7 +261,7 @@ const positionMaps = {
     "Oil Cooler B": { x: 340, y: 498 },
     "Overflow Tank": { x: 305, y: 680 },
     "Emergency Oil Pump": { x: 511, y: 580 },
-    "Auxiliary Oil Pump": { x: 586, y: 580 },
+    "Auxiliary Control Oil Pump": { x: 586, y: 580 },
     "Main LO Tank": { x: 560, y: 695 },
     "Control Oil Pump A": { x: 664, y: 554 },
     "Control Oil Pump B": { x: 717, y: 554 },
