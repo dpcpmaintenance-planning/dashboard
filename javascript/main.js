@@ -159,6 +159,12 @@ function renderFullEquipmentTable() {
   return `
   <div class="filter-container">
     <div class="filter-row">
+    <input
+        type="text"
+        id="equipment-search-bar"
+        class="filter-btn"
+        placeholder="🔍 SEARCH"
+      />
       <select id="equipment-system-filter" class="filter-btn">
         <option value="">All Systems</option>
         ${systemOptions}
@@ -169,12 +175,7 @@ function renderFullEquipmentTable() {
         ${equipmentOptions}
       </select>
 
-      <input
-        type="text"
-        id="equipment-search-bar"
-        class="filter-btn"
-        placeholder="🔍 SEARCH"
-      />
+      
 
       <button id="equipment-pending-btn" class="filter-item filter-btn">Pending</button>
       <button id="equipment-done-btn" class="filter-item filter-btn">Done</button>
