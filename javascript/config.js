@@ -47,6 +47,7 @@ const positionMaps = {
     "Soot Blower 8": { x: 674, y: 225 },
     "Ash Bin 9": { x: 545, y: 360 },
     "Ash Bin 10": { x: 633, y: 360 },
+    "Electrostatic Precipitator": { x: 790, y: 100 },
     "Ash Bin 1": { x: 735, y: 190 },
     "Ash Bin 2": { x: 778, y: 190 },
     "Ash Bin 3": { x: 735, y: 315 },
