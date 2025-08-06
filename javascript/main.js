@@ -31,6 +31,7 @@ function setupEquipmentListFilters() {
   const equipmentFilter = document.getElementById("equipment-name-filter");
   const pendingBtn = document.getElementById("equipment-pending-btn");
   const doneBtn = document.getElementById("equipment-done-btn");
+  const searchInput = document.getElementById("equipment-search-bar");
 
   let currentStatusFilter = "";
 
@@ -46,9 +47,29 @@ function setupEquipmentListFilters() {
     }
   }
 
+  function updateEquipmentOptions() {
+    const selectedSystem = systemFilter.value.trim();
+
+    const equipments = rows
+      .filter((r) => !selectedSystem || r["System"] === selectedSystem)
+      .map((r) => r["Equipment"])
+      .filter(Boolean);
+
+    const uniqueEquipments = [...new Set(equipments)].sort((a, b) =>
+      a.localeCompare(b)
+    );
+
+    equipmentFilter.innerHTML =
+      `<option value="">All Equipment</option>` +
+      uniqueEquipments.map(
+        (eq) => `<option value="${eq}">${eq}</option>`
+      ).join("");
+  }
+
   function renderTable() {
     const selectedSystem = systemFilter.value.trim();
     const selectedEquipment = equipmentFilter.value.trim();
+    const keyword = searchInput?.value.trim().toLowerCase() || "";
 
     const filtered = rows
       .filter((r) => !selectedSystem || r["System"] === selectedSystem)
@@ -57,9 +78,23 @@ function setupEquipmentListFilters() {
         currentStatusFilter
           ? r["WR Status"]?.toLowerCase() === currentStatusFilter.toLowerCase()
           : true
-      );
+      )
+      .filter((r) => {
+        if (!keyword) return true;
+        const combinedText = `
+          ${r["Work Order Num"] || ""}
+          ${r["Equipment"] || ""}
+          ${r["Sub-Component"] || ""}
+          ${r["Brief Description of Problem or Work"] || ""}
+          ${r["Detailed Description"] || ""}
+          ${r["*Planning Remarks"] || ""}
+        `.toLowerCase();
+        return combinedText.includes(keyword);
+      });
 
-    filtered.sort((a, b) => new Date(b["Timestamp"]) - new Date(a["Timestamp"]));
+    filtered.sort(
+      (a, b) => new Date(b["Timestamp"]) - new Date(a["Timestamp"])
+    );
 
     tbody.innerHTML = filtered
       .map((row) => {
@@ -82,22 +117,33 @@ function setupEquipmentListFilters() {
       .join("");
   }
 
-  systemFilter.addEventListener("change", renderTable);
+  systemFilter.addEventListener("change", () => {
+    updateEquipmentOptions();
+    renderTable();
+  });
+
   equipmentFilter.addEventListener("change", renderTable);
+
   pendingBtn.addEventListener("click", () => {
     currentStatusFilter = currentStatusFilter === "Pending" ? "" : "Pending";
     updateFilterButtons();
     renderTable();
   });
+
   doneBtn.addEventListener("click", () => {
     currentStatusFilter = currentStatusFilter === "Done" ? "" : "Done";
     updateFilterButtons();
     renderTable();
   });
 
+  searchInput.addEventListener("input", renderTable);
+
+  // Initial population
   updateFilterButtons();
+  updateEquipmentOptions(); // ensure equipment list matches current system
   renderTable();
 }
+
 
 function renderFullEquipmentTable() {
   const systemOptions = [...new Set(rows.map(r => r["System"]).filter(Boolean))]
@@ -111,24 +157,31 @@ function renderFullEquipmentTable() {
     .join("");
 
   return `
-    <div class="filter-container">
-      <label>
-        <select id="equipment-system-filter">
-          <option value="">All Systems</option>
-          ${systemOptions}
-        </select>
-      </label>
-      <label>
-        <select id="equipment-name-filter">
-          <option value="">All Equipment</option>
-          ${equipmentOptions}
-        </select>
-      </label>
-      <div class="status-toggle-buttons">
-        <button id="equipment-pending-btn" class="filter-btn">Pending</button>
-        <button id="equipment-done-btn" class="filter-btn">Done</button>
-      </div>
+  <div class="filter-container">
+    <div class="filter-row">
+      <select id="equipment-system-filter" class="filter-btn">
+        <option value="">All Systems</option>
+        ${systemOptions}
+      </select>
+
+      <select id="equipment-name-filter" class="filter-btn">
+        <option value="">All Equipment</option>
+        ${equipmentOptions}
+      </select>
+
+      <input
+        type="text"
+        id="equipment-search-bar"
+        class="filter-btn"
+        placeholder="🔍 SEARCH"
+      />
+
+      <button id="equipment-pending-btn" class="filter-item filter-btn">Pending</button>
+      <button id="equipment-done-btn" class="filter-item filter-btn">Done</button>
     </div>
+  </div>
+
+
 
     <div class="table-container full-table">
       <table class="equipment-table">

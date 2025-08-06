@@ -211,10 +211,10 @@ a {
 .filter-container select {
   padding: 8px 10px;
   font-size: 14px;
-  border: 2px solid #005eff;
+
   border-radius: 6px;
   background-color: #f9f9f9;
-  min-width: 200px;
+  max-width: 200px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -222,6 +222,12 @@ a {
   border-color: #4a90e2;
   box-shadow: 0 0 4px rgba(74, 144, 226, 0.4);
   outline: none;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .filter-btn {
@@ -248,7 +254,6 @@ a {
 }
 
 .filter-btn:hover {
-  background-color: #69b0f8;
   box-shadow: inset 2px 2px 8px #bcbcbc, inset -2px -2px 8px #ffffff,
     2px 2px 8px #bcbcbc, -2px -2px 8px #ffffff;
 }
@@ -262,7 +267,7 @@ a {
 }
 
 .table-container.full-table {
-  max-height: 83vh;
+  min-height: 82vh;
 }
 
 .status-table,
