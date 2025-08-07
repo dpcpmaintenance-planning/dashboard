@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Auxiliary Control Oil Pump",
                     "Loader 1",
                     "Loader 2",
+                    "Elevator",
                 ];
 
                 const filteredRows = rows.filter(row => {
