@@ -6,6 +6,7 @@ const systemGroups = {
   "bottom-ash": [
     "Slag Removal System",
     "Fly Ash Handling System",
+    "Electrostatic Precipitator System",
     "Limestone Handling System",
     "Combustion System",
     "Industrial Water Reuse System"
