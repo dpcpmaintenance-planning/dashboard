@@ -18,8 +18,8 @@ function formatDate(value) {
   return isNaN(date)
     ? value
     : date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    });
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
 }
