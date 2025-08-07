@@ -76,7 +76,7 @@ function updateDiagram() {
 
   container.classList.remove("no-diagram");
 
-  const imagePath = `systems/${selectedSystemTab}`;
+  const imagePath = `abppsystems/${selectedSystemTab}`;
   const img = new Image();
   img.onload = () => {
     container.style.backgroundImage = `url("${imagePath}.jpg")`;
