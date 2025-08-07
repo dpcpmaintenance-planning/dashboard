@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Loader 1",
                     "Loader 2",
                     "Elevator",
+                    "Electrostatic Precipitator",
                 ];
 
                 const filteredRows = rows.filter(row => {
