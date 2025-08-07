@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 });
 
-                doc.save("Pending_Work_Requests_By_Section.pdf");
+                doc.save("Pending_Work_Requests.pdf");
             });
         }
     }, 300);
