@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const startDateVal = document.getElementById("start-date").value;
                 const endDateVal = document.getElementById("end-date").value;
 
-                // Convert to Date objects if both are provided
                 const startDate = startDateVal ? new Date(startDateVal) : null;
                 const endDate = endDateVal ? new Date(endDateVal) : null;
 
@@ -33,9 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const section = (row["Maintenance Section"] || "").toUpperCase();
                     const equipment = row["Equipment"] || "";
                     const rowDate = row["Timestamp"] ? new Date(row["Timestamp"]) : null;
-                    const wrstatus = (row["Work Request Status"] || "").toLowerCase();
 
-                    // Date range filter
                     const withinDateRange =
                         (!startDate || (rowDate && rowDate >= startDate)) &&
                         (!endDate || (rowDate && rowDate <= endDate));
@@ -51,25 +48,38 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                // Group by Maintenance Section
+                // Group rows by Maintenance Section
                 const grouped = {};
                 filteredRows.forEach(row => {
-                    const section = row["Maintenance Section"] || "UNKNOWN";
+                    const section = (row["Maintenance Section"] || "UNKNOWN").toUpperCase();
                     if (!grouped[section]) grouped[section] = [];
                     grouped[section].push(row);
                 });
 
                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                let y = 20;
+                const doc = new jsPDF({
+                    orientation: "portrait",
+                    unit: "mm",
+                    format: "a4"
+                });
 
+                let y = 20;
                 doc.setFontSize(14);
                 doc.text("Pending Work Requests", 14, y);
                 y += 10;
 
-                Object.entries(grouped).forEach(([section, sectionRows], index) => {
+                const sectionOrder = ["MECHANICAL", "ELECTRICAL", "I&C"];
+                const orderedSections = [
+                    ...sectionOrder.filter(sec => grouped[sec]),
+                    ...Object.keys(grouped).filter(sec => !sectionOrder.includes(sec))
+                ];
+
+                orderedSections.forEach((section, index) => {
+                    const sectionRows = grouped[section];
+
                     if (index !== 0) y += 10;
                     const pageHeight = doc.internal.pageSize.height;
+
                     if (y + 20 >= pageHeight) {
                         doc.addPage();
                         y = 20;
@@ -77,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     doc.setFontSize(12);
                     doc.setTextColor(0);
-                    doc.text(`${section}`, 14, y);
+                    doc.text(section, 14, y);
                     y += 6;
 
                     const tableData = sectionRows.map((row, i) => [
@@ -94,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         head: [["#", "Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description", "Planning Remarks"]],
                         body: tableData,
                         startY: y,
-                        styles: { fontSize: 10 },
+                        styles: { fontSize: 8 },
                         headStyles: { fillColor: [41, 128, 185] },
                         margin: { left: 14, right: 14 },
                         didDrawPage: (data) => {
