@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const section = (row["Maintenance Section"] || "").toUpperCase();
                     const equipment = row["Equipment"] || "";
                     const rowDate = row["Timestamp"] ? new Date(row["Timestamp"]) : null;
+                    const wrstatus = (row["Work Request Status"] || "").toLowerCase();
 
                     // Date range filter
                     const withinDateRange =
@@ -84,10 +85,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         row["Equipment"] || "",
                         row["Sub-Component"] || "",
                         row["Brief Description of Problem or Work"] || "",
+                        row["Work Request Status"] || "",
                     ]);
 
                     doc.autoTable({
-                        head: [["#", "Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description"]],
+                        head: [["#", "Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description", "Work Request Status"]],
                         body: tableData,
                         startY: y,
                         styles: { fontSize: 10 },
