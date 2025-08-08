@@ -18,7 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Biomass Bunker",
                     "Circulating Fluidized Bed Boiler",
                     "Secondary High Pressure Water Pump A",
+                    "Secondary High Pressure Water Pump B",
                     "Primary R.O. Device A",
+                    "Primary R.O. Device B",
                     "Condensate Pump A",
                     "Condensate Pump B",
                     "Boiler Feedwater Pump A",
@@ -31,6 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Loader 2",
                     "Elevator",
                     "Electrostatic Precipitator",
+                    "Primary High Pressure Water Pump B",
+                    "Primary High Pressure Water Pump A",
                 ];
 
                 const filteredRows = rows.filter(row => {
