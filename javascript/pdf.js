@@ -85,11 +85,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         row["Equipment"] || "",
                         row["Sub-Component"] || "",
                         row["Brief Description of Problem or Work"] || "",
-                        row["Work Request Status"] || "",
+                        row["*Planning Remarks"] || "",
                     ]);
 
                     doc.autoTable({
-                        head: [["#", "Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description", "Work Request Status"]],
+                        head: [["#", "Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description", "Planning Remarks"]],
                         body: tableData,
                         startY: y,
                         styles: { fontSize: 10 },
