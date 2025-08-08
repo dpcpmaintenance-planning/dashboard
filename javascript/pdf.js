@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ];
 
                 const filteredRows = rows.filter(row => {
+                    const timestamp = (row["Timestamp"] || "").toLowerCase();
                     const status = (row["WR Status"] || "").toLowerCase();
                     const section = (row["Maintenance Section"] || "").toUpperCase();
                     const equipment = row["Equipment"] || "";
@@ -84,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     const tableData = sectionRows.map((row, i) => [
                         i + 1,
+                        row["Timestamp"] || "",
                         row["Work Order Num"] || "",
                         row["Equipment"] || "",
                         row["Sub-Component"] || "",
@@ -91,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ]);
 
                     doc.autoTable({
-                        head: [["#", "WR Number", "Equipment", "Sub-Component", "Brief Description"]],
+                        head: [["#", "Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description"]],
                         body: tableData,
                         startY: y,
                         styles: { fontSize: 10 },
