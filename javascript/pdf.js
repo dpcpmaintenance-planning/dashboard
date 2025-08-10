@@ -113,7 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 });
 
-                doc.save("Pending_Work_Requests.pdf");
+                const today = new Date();
+                const formattedDate = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}-${today.getFullYear()}`;
+                doc.save(`Pending_Work_Requests_${formattedDate}.pdf`);
+
             });
         }
     }, 300);
