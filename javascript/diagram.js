@@ -16,25 +16,38 @@ function updateDiagramModalTable() {
 
   tbody.innerHTML = filtered
     .map((row) => {
-      const imageURL = row[imageColumnKey]?.trim();
-      return `
-          <tr>
-            <td>${formatDate(row["Timestamp"])}</td>
-            <td>${row["Work Order Num"] || ""}</td>
-            <td>${row["Equipment"] || ""}</td>
-            <td>${row["Sub-Component"] || ""}</td>
-            <td>${row["Brief Description of Problem or Work"] || ""}</td>
-            <td>${row["Detailed Description"] || ""}</td>
-            <td>${row["Severity"] || ""}</td>
-            <td>${row["*Planning Remarks"] || ""}</td>
-            <td>${row["WR Status"] || ""}</td>
-            <td>${formatImageLink(imageURL)}</td>
-          </tr>
+      const rawImageURL = row[imageColumnKey]?.trim();
+      let imageCell = "No image";
+
+      if (rawImageURL) {
+        const thumbURL = convertGoogleDriveLink(rawImageURL);
+        imageCell = `
+          <a href="${rawImageURL}" target="_blank" rel="noopener noreferrer">
+            <img src="${thumbURL}" 
+                 alt="Work Request Image" 
+                 style="width:100px; height:auto; border:1px solid #ccc; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.1);" />
+          </a>
         `;
+      }
+
+      return `
+        <tr>
+          <td>${formatDate(row["Timestamp"])}</td>
+          <td>${row["Work Order Num"] || ""}</td>
+          <td>${row["Equipment"] || ""}</td>
+          <td>${row["Sub-Component"] || ""}</td>
+          <td>${row["Brief Description of Problem or Work"] || ""}</td>
+          <td>${row["Detailed Description"] || ""}</td>
+          <td>${row["Severity"] || ""}</td>
+          <td>${row["*Planning Remarks"] || ""}</td>
+          <td>${row["WR Status"] || ""}</td>
+          <td>${imageCell}</td>
+        </tr>
+      `;
     })
     .join("");
 
-  // Ensure the pending/done buttons are properly rebound every time
+  // Rebind buttons each time
   const pendingBtn = document.getElementById("diagram-pending-btn");
   const doneBtn = document.getElementById("diagram-done-btn");
 
@@ -58,6 +71,7 @@ function updateDiagramModalTable() {
 
   updateFilterButtonStates();
 }
+
 
 
 function updateDiagram() {
@@ -253,24 +267,36 @@ function showSystemEquipmentList(systemTabId, wrStatus = "") {
 
   tbody.innerHTML = filtered
     .map((row) => {
-      const imageURL = row[imageColumnKey]?.trim();
-      return `
-          <tr>
-            <td>${formatDate(row["Timestamp"])}</td>
-            <td>${row["Work Order Num"] || ""}</td>
-            <td>${row["Equipment"] || ""}</td>
-            <td>${row["Sub-Component"] || ""}</td>
-            <td>${row["Brief Description of Problem or Work"] || ""}</td>
-            <td>${row["Detailed Description"] || ""}</td>
-            <td>${row["Severity"] || ""}</td>
-            <td>${row["*Planning Remarks"] || ""}</td>
-            <td>${row["WR Status"] || ""}</td>
-            <td>${formatImageLink(imageURL)}</td>
-          </tr>
+      const rawImageURL = row[imageColumnKey]?.trim();
+      let imageCell = "No image";
+
+      if (rawImageURL) {
+        const thumbURL = convertGoogleDriveLink(rawImageURL);
+        imageCell = `
+          <a href="${rawImageURL}" target="_blank" rel="noopener noreferrer">
+            <img src="${thumbURL}" 
+                 alt="Work Request Image"
+                 style="width:100px; height:auto; border:1px solid #ccc; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.1);" />
+          </a>
         `;
+      }
+
+      return `
+        <tr>
+          <td>${formatDate(row["Timestamp"])}</td>
+          <td>${row["Work Order Num"] || ""}</td>
+          <td>${row["Equipment"] || ""}</td>
+          <td>${row["Sub-Component"] || ""}</td>
+          <td>${row["Brief Description of Problem or Work"] || ""}</td>
+          <td>${row["Detailed Description"] || ""}</td>
+          <td>${row["Severity"] || ""}</td>
+          <td>${row["*Planning Remarks"] || ""}</td>
+          <td>${row["WR Status"] || ""}</td>
+          <td>${imageCell}</td>
+        </tr>
+      `;
     })
     .join("");
-
 
   document.getElementById("diagram-modal-title").textContent = "EQUIPMENT LIST";
   document.getElementById("diagram-modal").classList.remove("hidden");
@@ -286,7 +312,8 @@ function showSystemEquipmentList(systemTabId, wrStatus = "") {
   };
 
   updateFilterButtonStates();
-};
+}
+
 
 function updateFilterButtonStates() {
   const pendingBtn = document.getElementById("diagram-pending-btn");

@@ -82,13 +82,13 @@ function setupEquipmentListFilters() {
       .filter((r) => {
         if (!keyword) return true;
         const combinedText = `
-          ${r["Work Order Num"] || ""}
-          ${r["Equipment"] || ""}
-          ${r["Sub-Component"] || ""}
-          ${r["Brief Description of Problem or Work"] || ""}
-          ${r["Detailed Description"] || ""}
-          ${r["*Planning Remarks"] || ""}
-        `.toLowerCase();
+        ${r["Work Order Num"] || ""}
+        ${r["Equipment"] || ""}
+        ${r["Sub-Component"] || ""}
+        ${r["Brief Description of Problem or Work"] || ""}
+        ${r["Detailed Description"] || ""}
+        ${r["*Planning Remarks"] || ""}
+      `.toLowerCase();
         return combinedText.includes(keyword);
       });
 
@@ -98,24 +98,38 @@ function setupEquipmentListFilters() {
 
     tbody.innerHTML = filtered
       .map((row) => {
-        const imageURL = row[imageColumnKey]?.trim();
-        return `
-          <tr>
-            <td>${formatDate(row["Timestamp"])}</td>
-            <td>${row["Work Order Num"] || ""}</td>
-            <td>${row["Equipment"] || ""}</td>
-            <td>${row["Sub-Component"] || ""}</td>
-            <td>${row["Brief Description of Problem or Work"] || ""}</td>
-            <td>${row["Detailed Description"] || ""}</td>
-            <td>${row["Severity"] || ""}</td>
-            <td>${row["*Planning Remarks"] || ""}</td>
-            <td>${row["WR Status"] || ""}</td>
-            <td>${formatImageLink(imageURL)}</td>
-          </tr>
+        const rawImageURL = row[imageColumnKey]?.trim();
+        let imageCell = "No image";
+
+        if (rawImageURL) {
+          const thumbURL = convertGoogleDriveLink(rawImageURL);
+          imageCell = `
+          <a href="${rawImageURL}" target="_blank" rel="noopener noreferrer">
+            <img src="${thumbURL}" 
+                 alt="Work Request Image" 
+                 style="width:80px; height:auto; border:1px solid #ccc; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.1);" />
+          </a>
         `;
+        }
+
+        return `
+        <tr>
+          <td>${formatDate(row["Timestamp"])}</td>
+          <td>${row["Work Order Num"] || ""}</td>
+          <td>${row["Equipment"] || ""}</td>
+          <td>${row["Sub-Component"] || ""}</td>
+          <td>${row["Brief Description of Problem or Work"] || ""}</td>
+          <td>${row["Detailed Description"] || ""}</td>
+          <td>${row["Severity"] || ""}</td>
+          <td>${row["*Planning Remarks"] || ""}</td>
+          <td>${row["WR Status"] || ""}</td>
+          <td>${imageCell}</td>
+        </tr>
+      `;
       })
       .join("");
   }
+
 
   systemFilter.addEventListener("change", () => {
     updateEquipmentOptions();
@@ -225,11 +239,12 @@ document.getElementById("equipment-modal-close").addEventListener("click", () =>
 });
 
 document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("image-popup-link")) {
+  const link = e.target.closest(".image-popup-link");
+  if (link) {
     e.preventDefault();
     const modal = document.getElementById("image-modal");
     const modalImg = document.getElementById("image-modal-img");
-    modalImg.src = e.target.href;
+    modalImg.src = link.dataset.full;
     modal.classList.remove("hidden");
   }
 });
@@ -238,3 +253,4 @@ document.getElementById("image-modal-close").addEventListener("click", () => {
   document.getElementById("image-modal").classList.add("hidden");
   document.getElementById("image-modal-img").src = "";
 });
+
