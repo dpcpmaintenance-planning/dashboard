@@ -67,7 +67,7 @@ function drawStatusIndicator(label, x, y) {
   btn.addEventListener("click", () => {
     const googleDrivePDFs = {
       "Close Cooling Pump": "1Q-UL9fYMiOerhu9HwvK50jI_a6uWXX16",
-      "Bucket Elevator": "2xYzAbCdEfGhIjKlMnOpQrStUvWxYz12",
+      "Bucket Elevator": "",
       // Add your mappings here
     };
 
