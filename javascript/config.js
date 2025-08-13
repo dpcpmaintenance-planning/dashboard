@@ -29,7 +29,7 @@ const systemGroups = {
 
 const positionMaps = {
   "bottom-ash": {
-    "Wet Mixer": { x: 70, y: 386 },
+    "Wet Mixer 2": { x: 70, y: 386 },
     "Mist Curtain": { x: 190, y: 353 },
     "Bottom Ash Silo Dust Collector": { x: 51, y: 320 },
     "Bucket Elevator B": { x: 135, y: 260 },
@@ -58,7 +58,7 @@ const positionMaps = {
     "Ash Bin 6": { x: 821, y: 315 },
     "Ash Bin 8": { x: 864, y: 315 },
     "Fly Ash Silo": { x: 1007, y: 275 },
-    "Wet Mixer 2": { x: 1027, y: 355 },
+    "Wet Mixer": { x: 1027, y: 355 },
     "Mist Curtain 2": { x: 946, y: 377 },
     "Industrial Water Pump B": { x: 870, y: 580 },
     "Industrial Water Pump A": { x: 768, y: 580 },
