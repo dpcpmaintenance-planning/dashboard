@@ -80,11 +80,17 @@ function drawStatusIndicator(label, x, y) {
       "Gasification Fan": "170fypjCvZDLhkSkV4m_T29kT1K-5iHK9",
       "Clarifier": "1DmX9jpXaXRYrJntfI8fh8xEZ39imCR31",
       "Raw Water Pump": "1dEBH37SfG0H-9MdGRphoggYMYlSMMMnA",
+      "Raw Water Tank": "1MbMtD00WXr4PSnZbkpavs-ZWsiO2eWg4",
       "Secondary R.O. Booster Pump": "1zcjdjy9cMRu39g9CUj0GSUGR04vDwTHU",
       "Service Pump": "1WzFARugYLbra88FuE3Ac5Z20nGtmCBcS",
       "Primary R.O. H.P. Pump": "1o_6-bmbYiTifgMQ0hxILOF8pY3scH58t",
       "Secondary R.O. H.P. Pump": "1k88Ox13MtjGM4npECyRdnRwjUPVtsBEx",
-      "Screw Air Compressor": "17rGTEL-HMOapjY5Br_5Mt7YFEc4Tar9r"
+      "Screw Air Compressor": "17rGTEL-HMOapjY5Br_5Mt7YFEc4Tar9r",
+      "Multi Media Filter": "1mhg_TTA9WnuaqIKZcUpbE5SIaclfK9y6",
+      "Activated Carbon Filter": "1mhg_TTA9WnuaqIKZcUpbE5SIaclfK9y6",
+      "Primary R.O. Device": "1f3SbaCfrERRhQSnvsgw8j9ZXuDMvp2pn",
+      "R.O. Flushing Water Pump": "1k9MSHor-G6NQXBmFF7bRTjxit90THtHI"
+
       // Example ID
       // Add your mappings here
     };
