@@ -24,7 +24,11 @@ function updateDiagram() {
   };
   img.src = `${imagePath}.jpg`;
 
-  diagram.innerHTML = `<div onclick="currentDiagramEquipment=''; diagramWRStatus=''; showSystemEquipmentList('${selectedSystemTab}')"></div>`;
+  diagram.innerHTML = `
+  <a href="../system.html" class="equipment-list-button">
+    EQUIPMENT STATUS
+  </a>
+`;
 
   const systemNames = systemGroups[selectedSystemTab] || [];
   const currentPositionMap = positionMaps[selectedSystemTab] || {};

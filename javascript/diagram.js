@@ -100,7 +100,11 @@ function updateDiagram() {
   };
   img.src = `${imagePath}.jpg`;
 
-  diagram.innerHTML = `<div class="equipment-list-button" onclick="currentDiagramEquipment=''; diagramWRStatus=''; showSystemEquipmentList('${selectedSystemTab}')">EQUIPMENT LIST</div>`;
+  diagram.innerHTML = `
+  <a href="systeminfo/systeminfo.html" class="equipment-list-button">
+    EQUIPMENT INFORMATION
+  </a>
+`;
 
   const systemNames = systemGroups[selectedSystemTab] || [];
   const { latestStatusMap, breakdownMap, daysDelayedMap } = getLatestStatusAndBreakdown(rows, systemNames);
