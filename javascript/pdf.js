@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Ash Bin 9", "Ash Bin 10", "Bucket Elevator A", "Bucket Elevator B", "Sea Water Intake Pump A", "Sea Water Intake Pump B",
                     "Belt Conveyor 1A", "Belt Conveyor 1B", "Belt Conveyor 2A", "Belt Conveyor 2B", "Belt Conveyor 3A", "Belt Conveyor 3B",
                     "Belt Conveyor 1C", "Belt Conveyor 2C", "Belt Conveyor 3C", "Belt Conveyor 4C", "Wet Mixer", "Fuel Unloading Pump",
+                    "Circulating Water Pump A", "Circulating Water Pump B", "Circulating Water Pump C",
                 ];
 
                 const filteredRows = rows.filter(row => {
