@@ -43,7 +43,7 @@ const positionMaps = {
          "Mist Curtain 2": { x: 946, y: 377 },
  
          "Industrial Water Pump": { x: 768, y: 580 },*/
-        "Gasification Fan": { x: 440, y: 530, color: "#FFD700" },
+        "Gasification Fan": { x: 440, y: 500, color: "#FFD700" },
 
         /* "Conveying Roots Blower": { x: 482, y: 655 },
  
@@ -100,7 +100,7 @@ const positionMaps = {
 
         "Primary R.O. Device": { x: 850, y: 497 },
 
-        /* "Primary R.O. Production Water Tank": { x: 720, y: 465 },*/
+        "Primary R.O. Production Water Tank": { x: 620, y: 380 },
         "R.O. Flushing Water Pump": { x: 500, y: 305 },
 
         "Secondary R.O. Booster Pump": { x: 460, y: 475 },
@@ -235,20 +235,20 @@ const positionMaps = {
     },
     tls: {
         /*"Run Down Tank": { x: 600, y: 110 },
-        "Main Control Oil Pump": { x: 565, y: 292 },
-        "Main Oil Filter A": { x: 220, y: 430 },
-        "Main Oil Filter B": { x: 220, y: 498 },
-        "Oil Cooler A": { x: 340, y: 440 },
-        "Oil Cooler B": { x: 340, y: 498 },
-        "Overflow Tank": { x: 305, y: 680 },
-        "Emergency Oil Pump": { x: 511, y: 580 },
-        "Auxiliary Oil Pump": { x: 586, y: 580 },
-        "Main LO Tank": { x: 560, y: 695 },
+        "Main Control Oil Pump": { x: 565, y: 292 },*/
+        "Main Oil Filter": { x: 220, y: 450 },
+
+        /*"Oil Cooler A": { x: 340, y: 440 },
+         "Oil Cooler B": { x: 340, y: 498 },
+         "Overflow Tank": { x: 305, y: 680 },*/
+        "Emergency Oil Pump": { x: 370, y: 550 },
+        "Auxiliary Oil Pump": { x: 530, y: 550 },
+        /*"Main LO Tank": { x: 560, y: 695 },
         "Control Oil Pump A": { x: 664, y: 554 },
-        "Control Oil Pump B": { x: 717, y: 554 },
-        "Control Oil Filter A": { x: 664, y: 500 },
-        "Control Oil Filter B": { x: 717, y: 500 },
-        "Mobile Oil Purification Device": { x: 788, y: 560 },*/
+        "Control Oil Pump B": { x: 717, y: 554 },*/
+        "Control Oil Filter": { x: 570, y: 440 },
+
+        /*"Mobile Oil Purification Device": { x: 788, y: 560 },*/
     },
     cs: {
         /*"NaCl Solution Tank A": { x: 702, y: 180 },

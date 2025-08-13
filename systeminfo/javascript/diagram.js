@@ -89,7 +89,11 @@ function drawStatusIndicator(label, x, y) {
       "Multi Media Filter": "1mhg_TTA9WnuaqIKZcUpbE5SIaclfK9y6",
       "Activated Carbon Filter": "1mhg_TTA9WnuaqIKZcUpbE5SIaclfK9y6",
       "Primary R.O. Device": "1f3SbaCfrERRhQSnvsgw8j9ZXuDMvp2pn",
-      "R.O. Flushing Water Pump": "1k9MSHor-G6NQXBmFF7bRTjxit90THtHI"
+      "R.O. Flushing Water Pump": "1k9MSHor-G6NQXBmFF7bRTjxit90THtHI",
+      "Primary R.O. Production Water Tank": "1JqRQ8Vp_uvl1EmJuNqKlyuZKgfSDZ94M",
+      "Auxiliary Oil Pump": "1baXi9cfYUsx4RSwo_LpjXjRMdinbEqDh",
+      "Emergency Oil Pump": "1EMkgWhBR43E_8QJ51c5Cwe9UOP0d1Hm9",
+      "Main Oil Filter": "1Qv_vEN9gouNdZZCZ5dLpo-SW4p8wyjZI"
 
       // Example ID
       // Add your mappings here
