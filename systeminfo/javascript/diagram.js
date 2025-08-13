@@ -95,7 +95,11 @@ function drawStatusIndicator(label, x, y) {
       "Auxiliary Oil Pump": "1baXi9cfYUsx4RSwo_LpjXjRMdinbEqDh",
       "Emergency Oil Pump": "1EMkgWhBR43E_8QJ51c5Cwe9UOP0d1Hm9",
       "Main Oil Filter": "1Qv_vEN9gouNdZZCZ5dLpo-SW4p8wyjZI",
+      "Control Oil Filter": "1sqUGLE378OV4jUL11eKg3_dEIMiKbi09",
+      "Control Oil Pump": "1-TBf3-3lyxiR2iy-Jbkz2GdGLNlrWl7U",
+      "Oil Cooler": "1h91-VtfNsh1IowF5z63rFbifeVbM9pJE",
       "EDI Booster Pump": "1Hw2gMhdNP4oMfHuxKiIdfJVENEiqmq31",
+      "Condensate Pump": "1Jv-0aMwPQegqapUvCjkXPFOc_oKuIu6F",
 
       // Example ID
       // Add your mappings here

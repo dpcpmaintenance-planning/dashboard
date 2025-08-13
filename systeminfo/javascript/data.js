@@ -134,17 +134,16 @@ const positionMaps = {
           "Auxiliary Steam System": { x: 673, y: 115 },
           "Bypass System": { x: 673, y: 175 },
           "Steam Turbine": { x: 655, y: 250 },
-          "Condenser": { x: 812, y: 270 },
-          "Condensate Pump A": { x: 915, y: 310 },
-          "Condensate Pump B": { x: 915, y: 408 },
-          "Deaerator System": { x: 589, y: 408 },
-          "Feedwater Tank": { x: 550, y: 515 },
-          "Feedwater Control": { x: 355, y: 530 },
-          "Boiler Feedwater Pump": { x: 497, y: 693 },
-  
-          "LP Heater": { x: 768, y: 670 },
-          "Gland Steam Heater": { x: 888, y: 670 },
-          "Air Jet Condenser": { x: 1002, y: 670 },*/
+          "Condenser": { x: 812, y: 270 },*/
+        "Condensate Pump": { x: 915, y: 250 },
+        /*"Deaerator System": { x: 589, y: 408 },
+        "Feedwater Tank": { x: 550, y: 515 },
+        "Feedwater Control": { x: 355, y: 530 },
+        "Boiler Feedwater Pump": { x: 497, y: 693 },
+ 
+        "LP Heater": { x: 768, y: 670 },
+        "Gland Steam Heater": { x: 888, y: 670 },
+        "Air Jet Condenser": { x: 1002, y: 670 },*/
     },
     sccws: {
         /*  "Condenser": { x: 488, y: 90 },
@@ -238,14 +237,12 @@ const positionMaps = {
         "Main Control Oil Pump": { x: 565, y: 292 },*/
         "Main Oil Filter": { x: 220, y: 450 },
 
-        /*"Oil Cooler A": { x: 340, y: 440 },
-         "Oil Cooler B": { x: 340, y: 498 },
-         "Overflow Tank": { x: 305, y: 680 },*/
+        "Oil Cooler": { x: 381, y: 398 },
+        /* "Overflow Tank": { x: 305, y: 680 },*/
         "Emergency Oil Pump": { x: 370, y: 550 },
         "Auxiliary Oil Pump": { x: 530, y: 550 },
-        /*"Main LO Tank": { x: 560, y: 695 },
-        "Control Oil Pump A": { x: 664, y: 554 },
-        "Control Oil Pump B": { x: 717, y: 554 },*/
+        /*"Main LO Tank": { x: 560, y: 695 },*/
+        "Control Oil Pump": { x: 660, y: 622 },
         "Control Oil Filter": { x: 570, y: 440 },
 
         /*"Mobile Oil Purification Device": { x: 788, y: 560 },*/
