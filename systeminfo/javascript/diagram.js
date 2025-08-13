@@ -77,6 +77,7 @@ function drawStatusIndicator(label, x, y) {
     const googleDrivePDFs = {
       "Close Cooling Pump": "1Q-UL9fYMiOerhu9HwvK50jI_a6uWXX16",
       "Demineralized Water Pump": "1jPn_U6gKRzv4kbezcP085ZfN7CW2_3GD",
+      "Demineralized Water Tank": "1R9pyAJqx9xLCGJKjdYS0mLmhf9d4gSx-",
       "Gasification Fan": "170fypjCvZDLhkSkV4m_T29kT1K-5iHK9",
       "Clarifier": "1DmX9jpXaXRYrJntfI8fh8xEZ39imCR31",
       "Raw Water Pump": "1dEBH37SfG0H-9MdGRphoggYMYlSMMMnA",
@@ -93,7 +94,8 @@ function drawStatusIndicator(label, x, y) {
       "Primary R.O. Production Water Tank": "1JqRQ8Vp_uvl1EmJuNqKlyuZKgfSDZ94M",
       "Auxiliary Oil Pump": "1baXi9cfYUsx4RSwo_LpjXjRMdinbEqDh",
       "Emergency Oil Pump": "1EMkgWhBR43E_8QJ51c5Cwe9UOP0d1Hm9",
-      "Main Oil Filter": "1Qv_vEN9gouNdZZCZ5dLpo-SW4p8wyjZI"
+      "Main Oil Filter": "1Qv_vEN9gouNdZZCZ5dLpo-SW4p8wyjZI",
+      "EDI Booster Pump": "1Hw2gMhdNP4oMfHuxKiIdfJVENEiqmq31",
 
       // Example ID
       // Add your mappings here

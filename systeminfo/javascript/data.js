@@ -113,11 +113,11 @@ const positionMaps = {
  
          "Secondary R.O. Production Water Tank": { x: 155, y: 555 },*/
         "Service Pump": { x: 325, y: 560 },
-        /*"EDI Booster Pump": { x: 287, y: 622 },
+        "EDI Booster Pump": { x: 270, y: 700 },
 
-        "EDI": { x: 465, y: 650 },
+        /*"EDI": { x: 465, y: 650 },*/
 
-        "Demineralized Tank": { x: 700, y: 655 },*/
+        "Demineralized Water Tank": { x: 700, y: 655 },
         "Demineralized Water Pump": { x: 885, y: 687, color: "#15c635ff" },
 
     },
