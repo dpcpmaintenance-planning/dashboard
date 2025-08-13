@@ -60,6 +60,8 @@ function updateDiagram() {
 }
 
 function drawStatusIndicator(label, x, y) {
+
+
   const btn = document.createElement("button");
   btn.textContent = label;
   btn.style.position = "absolute";
@@ -67,11 +69,23 @@ function drawStatusIndicator(label, x, y) {
   btn.style.top = `${y}px`;
   btn.style.padding = "4px 8px";
   btn.style.cursor = "pointer";
+  btn.style.backgroundColor = "#1ac336ff";
+
+
 
   btn.addEventListener("click", () => {
     const googleDrivePDFs = {
       "Close Cooling Pump": "1Q-UL9fYMiOerhu9HwvK50jI_a6uWXX16",
-      "Bucket Elevator": "",
+      "Demineralized Water Pump": "1jPn_U6gKRzv4kbezcP085ZfN7CW2_3GD",
+      "Gasification Fan": "170fypjCvZDLhkSkV4m_T29kT1K-5iHK9",
+      "Clarifier": "1DmX9jpXaXRYrJntfI8fh8xEZ39imCR31",
+      "Raw Water Pump": "1dEBH37SfG0H-9MdGRphoggYMYlSMMMnA",
+      "Secondary R.O. Booster Pump": "1zcjdjy9cMRu39g9CUj0GSUGR04vDwTHU",
+      "Service Pump": "1WzFARugYLbra88FuE3Ac5Z20nGtmCBcS",
+      "Primary R.O. H.P. Pump": "1o_6-bmbYiTifgMQ0hxILOF8pY3scH58t",
+      "Secondary R.O. H.P. Pump": "1k88Ox13MtjGM4npECyRdnRwjUPVtsBEx",
+      "Screw Air Compressor": "17rGTEL-HMOapjY5Br_5Mt7YFEc4Tar9r"
+      // Example ID
       // Add your mappings here
     };
 
