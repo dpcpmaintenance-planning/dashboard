@@ -17,9 +17,12 @@ function formatDate(value) {
   const date = new Date(value);
   return isNaN(date)
     ? value
-    : date.toLocaleDateString("en-US", {
+    : date.toLocaleString("en-US", {
       year: "numeric",
       month: "long",
-      day: "numeric"
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false // <-- military time
     });
 }
