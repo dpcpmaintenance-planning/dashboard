@@ -191,7 +191,7 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
           <table class="detail-table">
             <thead>
               <tr>
-                <th>Date</th>
+                <th>Timestamp</th>
                 <th>Work Order Num</th>
                 <th>Equipment</th>
                 <th>Sub-Component</th>
@@ -226,29 +226,27 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
     // Toggle table ↔ image
     imageBtn.addEventListener("click", () => {
       if (detailTable.style.display !== "none") {
-        // Switch to image/PDF view
+        // Keep original label safe
         let baseName = label.trim();
 
-        // Remove only single-letter or single-digit suffix like "A", "B", "1", "2" at the end
-        const suffixMatch = label.match(/\s+[A-Z0-9]$/i);
-        if (suffixMatch) {
-          baseName = label.replace(suffixMatch[0], "").trim();
+        // If label ends with just "A", "B", "1", or "2", strip it
+        if (/\s+[A-Z0-9]$/i.test(baseName)) {
+          baseName = baseName.replace(/\s+[A-Z0-9]$/i, "").trim();
         }
 
-        const encodedName = encodeURIComponent(baseName);
-        const imgPath = `equipments/${encodedName}.jpg`;
-        const pdfPath = `equipments/${encodedName}.pdf`;
+        const imgPath = `equipments/${encodeURIComponent(baseName)}.jpg`;
+        const pdfPath = `equipments/${encodeURIComponent(baseName)}.pdf`;
 
-        // Try PDF first, fallback to image
+        // Try PDF first
         fetch(pdfPath, { method: "HEAD" })
           .then(res => {
             if (res.ok) {
-              // PDF exists → show embedded PDF
+              // Show PDF in iframe
               imageContainer.innerHTML = `
             <iframe src="${pdfPath}" style="width:100%; height:80vh;" frameborder="0"></iframe>
           `;
             } else {
-              // PDF not found → show image
+              // Show image
               imageContainer.innerHTML = `
             <img id="equipment-image" src="${imgPath}" alt="Equipment Image"
                  style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:10px; box-shadow:0 0 10px #ccc;">
@@ -259,7 +257,7 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
             imageBtn.textContent = "Table View";
           })
           .catch(() => {
-            // If fetch fails, fallback to image
+            // Fallback to image if fetch fails
             imageContainer.innerHTML = `
           <img id="equipment-image" src="${imgPath}" alt="Equipment Image"
                style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:10px; box-shadow:0 0 10px #ccc;">
@@ -276,6 +274,7 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
         imageBtn.textContent = "Equipment Sectional View and Parts List";
       }
     });
+
 
 
 
