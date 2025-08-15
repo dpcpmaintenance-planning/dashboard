@@ -6,33 +6,9 @@
     "axe/forms": [
       "default",
       {
-        "label": "off",
         "select-name": "off"
       }
     ],
-    "no-inline-styles": "off",
-    "meta-viewport": "off",
-    "compat-api/css": [
-      "default",
-      {
-        "ignore": [
-          "backdrop-filter",
-          "min-height: auto"
-        ]
-      }
-    ],
-    "axe/text-alternatives": [
-      "default",
-      {
-        "frame-title": "off",
-        "image-alt": "off"
-      }
-    ],
-    "axe/language": [
-      "default",
-      {
-        "html-has-lang": "off"
-      }
-    ]
+    "no-inline-styles": "off"
   }
 }

@@ -1,0 +1,168 @@
+/* === Detail View Table === */
+.detail-view {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 5px #ccc;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.detail-view .back-btn {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  z-index: 10; /* make sure it stays on top */
+}
+
+.detail-view .back-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Header row with H2, left buttons, and right button */
+.detail-view .header-row {
+  display: flex;
+  align-items: center; /* vertically center items */
+  justify-content: space-between; /* push right button to far right */
+  gap: 10px; /* space between H2 and left buttons */
+  margin-bottom: 12px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.detail-view .header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.detail-view .header-left h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Left filter buttons */
+.detail-view .header-left .filter-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.detail-view .header-left .filter-buttons button {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.detail-view .header-left .filter-buttons button:hover {
+  background-color: #e0f7fa;
+  border-color: #00bcd4;
+}
+
+.detail-view .header-left .filter-buttons button.active {
+  background-color: #00cde3;
+  border-color: #00cde3;
+  color: #fff;
+}
+
+/* Right button */
+.detail-view .header-right button {
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.detail-view .header-right button:hover {
+  background-color: #0056b3;
+}
+
+/* Scrollable Table Container */
+.detail-view .table-container {
+  flex: 1; /* fill remaining space */
+  overflow: auto; /* allow both vertical & horizontal scroll */
+  max-height: calc(100vh - 100px); /* adjust as needed */
+  border-radius: 6px;
+  box-shadow: 0 0 5px #ccc;
+}
+
+/* Table styles */
+.detail-view table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 800px; /* ensures horizontal scroll if table is wide */
+}
+.detail-view thead th {
+  position: sticky;
+  top: 0;
+  background-color: #000;
+  color: #fff;
+  z-index: 2;
+  padding: 10px;
+  text-align: left;
+}
+
+.detail-view td,
+.detail-view th {
+  text-align: left;
+  vertical-align: top;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  font-size: 15px;
+  padding: 10px;
+}
+
+/* Thumbnail image fix */
+.detail-view td img {
+  max-width: 90px; /* limit width */
+  max-height: 500px; /* limit height */
+  object-fit: contain; /* keep aspect ratio without cropping */
+  display: block;
+  margin: 0 auto; /* center in cell */
+}
+
+.detail-view tbody tr:nth-child(odd) {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.detail-view tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.detail-view td a {
+  color: inherit;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .detail-view table {
+    font-size: 12px;
+  }
+  .detail-view td img {
+    max-width: 60px;
+    max-height: 60px;
+  }
+}

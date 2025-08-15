@@ -1,77 +1,66 @@
-function updateDiagramModalTable() {
+function updateDiagramTableInline() {
   const tbody = document.getElementById("diagram-table-body");
 
   const filtered = rows
-    .filter((r) =>
+    .filter(r =>
       currentDiagramEquipment
         ? normalize(r["Equipment"]) === normalize(currentDiagramEquipment)
         : true
     )
-    .filter((r) =>
+    .filter(r =>
       diagramWRStatus
         ? r["WR Status"]?.toLowerCase() === diagramWRStatus.toLowerCase()
         : true
     )
     .sort((a, b) => new Date(b["Timestamp"]) - new Date(a["Timestamp"]));
 
-  tbody.innerHTML = filtered
-    .map((row) => {
-      const rawImageURL = row[imageColumnKey]?.trim();
-      let imageCell = "No image";
+  tbody.innerHTML = filtered.map(row => {
+    const rawImageURL = row[imageColumnKey]?.trim();
+    let imageCell = "No image";
 
-      if (rawImageURL) {
-        const thumbURL = convertGoogleDriveLink(rawImageURL);
-        imageCell = `
-          <a href="${rawImageURL}" target="_blank" rel="noopener noreferrer">
-            <img src="${thumbURL}" 
-                 alt="Work Request Image" 
-                 style="width:100px; height:auto; border:1px solid #ccc; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.1);" />
-          </a>
-        `;
-      }
-
-      return `
-        <tr>
-          <td>${formatDate(row["Timestamp"])}</td>
-          <td>${row["Work Order Num"] || ""}</td>
-          <td>${row["Equipment"] || ""}</td>
-          <td>${row["Sub-Component"] || ""}</td>
-          <td>${row["Brief Description of Problem or Work"] || ""}</td>
-          <td>${row["Detailed Description"] || ""}</td>
-          <td>${row["Severity"] || ""}</td>
-          <td>${row["*Planning Remarks"] || ""}</td>
-          <td>${row["WR Status"] || ""}</td>
-          <td>${imageCell}</td>
-        </tr>
+    if (rawImageURL) {
+      const thumbURL = convertGoogleDriveLink(rawImageURL);
+      imageCell = `
+        <a href="${rawImageURL}" target="_blank" rel="noopener noreferrer">
+          <img src="${thumbURL}" 
+               alt="Work Request Image" 
+               style="width:100px; height:auto; border:1px solid #ccc; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.1);" />
+        </a>
       `;
-    })
-    .join("");
+    }
 
-  // Rebind buttons each time
+    return `
+      <tr>
+        <td>${formatDate(row["Timestamp"])}</td>
+        <td>${row["Work Order Num"] || ""}</td>
+        <td>${row["Equipment"] || ""}</td>
+        <td>${row["Sub-Component"] || ""}</td>
+        <td>${row["Brief Description of Problem or Work"] || ""}</td>
+        <td>${row["Detailed Description"] || ""}</td>
+        <td>${row["Severity"] || ""}</td>
+        <td>${row["*Planning Remarks"] || ""}</td>
+        <td>${row["WR Status"] || ""}</td>
+        <td>${imageCell}</td>
+      </tr>
+    `;
+  }).join("");
+
+  // Filter buttons
   const pendingBtn = document.getElementById("diagram-pending-btn");
   const doneBtn = document.getElementById("diagram-done-btn");
 
   pendingBtn.onclick = () => {
-    if (currentDiagramEquipment) {
-      diagramWRStatus = "Pending";
-      updateDiagramModalTable();
-    } else {
-      showSystemEquipmentList(selectedSystemTab, "Pending");
-    }
+    diagramWRStatus = (diagramWRStatus.toLowerCase() === "pending") ? "" : "Pending";
+    updateDiagramTableInline();
   };
 
   doneBtn.onclick = () => {
-    if (currentDiagramEquipment) {
-      diagramWRStatus = "Done";
-      updateDiagramModalTable();
-    } else {
-      showSystemEquipmentList(selectedSystemTab, "Done");
-    }
+    diagramWRStatus = (diagramWRStatus.toLowerCase() === "done") ? "" : "Done";
+    updateDiagramTableInline();
   };
 
   updateFilterButtonStates();
 }
-
 
 
 function updateDiagram() {
@@ -80,6 +69,7 @@ function updateDiagram() {
 
   diagramWRStatus = "";
   currentSystemFilter = "";
+  currentDiagramEquipment = "";
 
   if (selectedSystemTab === "equipments") {
     container.classList.add("no-diagram");
@@ -100,27 +90,21 @@ function updateDiagram() {
   };
   img.src = `${imagePath}.jpg`;
 
-  diagram.innerHTML = `
-  <a href="systeminfo/systeminfo.html" class="equipment-list-button">
-    EQUIPMENT INFORMATION
-  </a>
-`;
+  diagram.innerHTML = "";
+
 
   const systemNames = systemGroups[selectedSystemTab] || [];
   const { latestStatusMap, breakdownMap, daysDelayedMap } = getLatestStatusAndBreakdown(rows, systemNames);
   const currentPositionMap = positionMaps[selectedSystemTab] || {};
   const statusEmoji = { 0: "🟢", 1: "🟡", 2: "🔴" };
 
-  // Group items by x/y to determine which status should be shown
   const positionGroups = {};
-
   for (const [key, value] of Object.entries(currentPositionMap)) {
     if (Array.isArray(value)) {
       value.forEach(({ name, x, y }) => {
         const eqNorm = normalize(name);
         const status = latestStatusMap[eqNorm] ?? "0";
         const keyPos = `${x},${y}`;
-
         if (!positionGroups[keyPos]) positionGroups[keyPos] = [];
         positionGroups[keyPos].push({ name, x, y, status });
       });
@@ -128,17 +112,14 @@ function updateDiagram() {
       const eqNorm = normalize(key);
       const status = latestStatusMap[eqNorm] ?? "0";
       const keyPos = `${value.x},${value.y}`;
-
       if (!positionGroups[keyPos]) positionGroups[keyPos] = [];
       positionGroups[keyPos].push({ name: key, x: value.x, y: value.y, status });
     }
   }
 
-  // Draw only highest-priority per position
   for (const group of Object.values(positionGroups)) {
-    // Sort: Breakdown (2) > Sustainable (1) > Operational (0)
     const sorted = group.sort((a, b) => b.status - a.status);
-    const { name, x, y } = sorted[0]; // show highest priority status
+    const { name, x, y } = sorted[0];
     drawStatusIndicator(name, x, y, latestStatusMap, breakdownMap, daysDelayedMap, statusEmoji);
   }
 
@@ -159,18 +140,13 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
   const breakdown = breakdownMap[eqNorm] ?? 0;
   const daysDelayed = daysDelayedMap[eqNorm] || 0;
 
-  const statusLabels = {
-    "0": "Operational",
-    "1": "Sustainable",
-    "2": "Breakdown"
-  };
+  const statusLabels = { "0": "Operational", "1": "Sustainable", "2": "Breakdown" };
   const readableStatus = statusLabels[status] || "Unknown";
 
   const div = document.createElement("div");
   div.className =
     "status-indicator " +
-    (status === "2" ? "breakdown" :
-      status === "1" ? "sustainable" : "operational");
+    (status === "2" ? "breakdown" : status === "1" ? "sustainable" : "operational");
 
   div.style.left = `${x}px`;
   div.style.top = `${y}px`;
@@ -183,29 +159,141 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
 ⏱️ Days in Queue: ${daysDelayed}
   `.trim();
 
-  // Emoji circle icon
   const emoji = encodeURIComponent(statusEmoji[status]);
   div.style.backgroundImage = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28'>${emoji}</text></svg>")`;
 
-  // Show breakdown count as badge
-  if (breakdown !== undefined && breakdown !== null) {
-    div.innerHTML = `<div class="count">${breakdown}</div>`;
-  } else {
-    div.innerHTML = `<div class="count">0</div>`;
-  }
+  div.innerHTML = `<div class="count">${breakdown || 0}</div>`;
 
-
+  // Inline detail view instead of modal
   div.addEventListener("click", () => {
     currentDiagramEquipment = label;
     diagramWRStatus = "";
-    updateDiagramModalTable();
-    document.getElementById("diagram-modal-title").textContent = label;
-    document.getElementById("diagram-modal").classList.remove("hidden");
-    updateFilterButtonStates();
+
+    const container = document.querySelector(".diagram-container");
+    container.style.backgroundImage = "none";
+    container.innerHTML = `
+      <div class="detail-view">
+        <button class="back-btn">⬅ Back to Diagram</button><br><br>
+
+        <div class="header-row">
+          <div class="header-left">
+            <h2>${label}</h2>
+            <div class="filter-buttons">
+              <button id="diagram-pending-btn">Pending</button>
+              <button id="diagram-done-btn">Done</button>
+            </div>
+          </div>
+          <div class="header-right">
+            <button id="diagram-export-btn">Equipment Sectional View and Parts List</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="detail-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Work Order Num</th>
+                <th>Equipment</th>
+                <th>Sub-Component</th>
+                <th>Brief Description</th>
+                <th>Detailed Description</th>
+                <th>Severity</th>
+                <th>Planning Remarks</th>
+                <th>Status</th>
+                <th>Image</th>
+              </tr>
+            </thead>
+            <tbody id="diagram-table-body"></tbody>
+          </table>
+        </div>
+
+        <!-- Image container, hidden by default -->
+        <div id="equipment-image-container" style="display:none; text-align:center; padding:20px;">
+          <img id="equipment-image" src="" alt="Equipment Image" style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:10px; box-shadow:0 0 10px #ccc;">
+        </div>
+      </div>
+    `;
+
+    // Cache elements
+    const detailTable = container.querySelector(".table-container");
+    const imageContainer = container.querySelector("#equipment-image-container");
+    const equipmentImage = container.querySelector("#equipment-image");
+    const imageBtn = container.querySelector("#diagram-export-btn");
+
+    // Initial table view
+    imageBtn.textContent = "Equipment Sectional View and Parts List";
+
+    // Toggle table ↔ image
+    imageBtn.addEventListener("click", () => {
+      if (detailTable.style.display !== "none") {
+        // Switch to image/PDF view
+        let baseName = label.trim();
+
+        // Remove only single-letter or single-digit suffix like "A", "B", "1", "2" at the end
+        const suffixMatch = label.match(/\s+[A-Z0-9]$/i);
+        if (suffixMatch) {
+          baseName = label.replace(suffixMatch[0], "").trim();
+        }
+
+        const encodedName = encodeURIComponent(baseName);
+        const imgPath = `equipments/${encodedName}.jpg`;
+        const pdfPath = `equipments/${encodedName}.pdf`;
+
+        // Try PDF first, fallback to image
+        fetch(pdfPath, { method: "HEAD" })
+          .then(res => {
+            if (res.ok) {
+              // PDF exists → show embedded PDF
+              imageContainer.innerHTML = `
+            <iframe src="${pdfPath}" style="width:100%; height:80vh;" frameborder="0"></iframe>
+          `;
+            } else {
+              // PDF not found → show image
+              imageContainer.innerHTML = `
+            <img id="equipment-image" src="${imgPath}" alt="Equipment Image"
+                 style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:10px; box-shadow:0 0 10px #ccc;">
+          `;
+            }
+            detailTable.style.display = "none";
+            imageContainer.style.display = "block";
+            imageBtn.textContent = "Table View";
+          })
+          .catch(() => {
+            // If fetch fails, fallback to image
+            imageContainer.innerHTML = `
+          <img id="equipment-image" src="${imgPath}" alt="Equipment Image"
+               style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:10px; box-shadow:0 0 10px #ccc;">
+        `;
+            detailTable.style.display = "none";
+            imageContainer.style.display = "block";
+            imageBtn.textContent = "Table View";
+          });
+
+      } else {
+        // Switch back to table view
+        detailTable.style.display = "block";
+        imageContainer.style.display = "none";
+        imageBtn.textContent = "Equipment Sectional View and Parts List";
+      }
+    });
+
+
+
+
+    updateDiagramTableInline();
+
+    container.querySelector(".back-btn").addEventListener("click", () => {
+      currentDiagramEquipment = "";
+      diagramWRStatus = "";
+      updateDiagram();
+    });
   });
 
   document.getElementById("diagram").appendChild(div);
 }
+
+
 
 
 
@@ -323,22 +411,14 @@ function updateFilterButtonStates() {
   const pendingBtn = document.getElementById("diagram-pending-btn");
   const doneBtn = document.getElementById("diagram-done-btn");
 
-  const isDiagramMode = !!currentDiagramEquipment;
-
-  pendingBtn.classList.toggle(
-    "active",
-    isDiagramMode
-      ? diagramWRStatus.toLowerCase() === "pending"
-      : currentSystemFilter === "pending"
-  );
-
-  doneBtn.classList.toggle(
-    "active",
-    isDiagramMode
-      ? diagramWRStatus.toLowerCase() === "done"
-      : currentSystemFilter === "done"
-  );
+  if (pendingBtn) {
+    pendingBtn.classList.toggle("active", diagramWRStatus.toLowerCase() === "pending");
+  }
+  if (doneBtn) {
+    doneBtn.classList.toggle("active", diagramWRStatus.toLowerCase() === "done");
+  }
 }
+
 
 function resetDiagramModal() {
   currentDiagramEquipment = "";

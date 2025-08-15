@@ -13,7 +13,7 @@ const systemGroups = {
   ],
   combustion: ["Combustion System", "Coal Pipe System", "Biomass Handling System"],
   wts: ["Water Treatment System"],
-  sws: ["Steam and Water", "Feedwater System", "Deaerator System", "Turbine Condensation Water System"],
+  sws: ["Steam and Water", "Feedwater System", "Deaerator System", "Turbine Condensation Water System", "Main Steam System"],
   sccws: ["Seawater Instake and Drainage System", "Circulating Water System", "Close Circulating Cooling Water System", "Closed Circulating Cooling Water System"],
   cbhs: ["Coal Handling System", "Biomass Handling System"],
   cas: ["Compressed Air System"],
