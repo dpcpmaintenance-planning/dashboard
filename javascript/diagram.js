@@ -92,7 +92,6 @@ function updateDiagram() {
 
   diagram.innerHTML = "";
 
-
   const systemNames = systemGroups[selectedSystemTab] || [];
   const { latestStatusMap, breakdownMap, daysDelayedMap } = getLatestStatusAndBreakdown(rows, systemNames);
   const currentPositionMap = positionMaps[selectedSystemTab] || {};
