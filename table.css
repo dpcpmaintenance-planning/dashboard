@@ -7,19 +7,16 @@
 }
 
 .detail-view .back-btn {
-  position: absolute;
-  top: 5px;
-  left: 10px;
-  padding: 6px 12px;
-  background-color: #007bff;
-  color: white;
+  flex: 0 0 auto; /* don’t stretch */
+  display: inline-block; /* size to text */
+  width: 200px; /* prevent full width */
+  color: rgb(0, 0, 0);
   font-weight: bold;
+  padding: 6px 12px;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease;
-  z-index: 10; /* make sure it stays on top */
 }
 
 .detail-view .back-btn:hover {
@@ -29,27 +26,30 @@
 /* Header row with H2, left buttons, and right button */
 .detail-view .header-row {
   display: flex;
-  align-items: center; /* vertically center items */
-  justify-content: space-between; /* push right button to far right */
-  gap: 10px; /* space between H2 and left buttons */
-  margin-bottom: 12px;
-  margin-left: 10px;
-  margin-right: 10px;
+  align-items: center; /* center vertically */
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 10px 12px 10px;
 }
 
+/* Left side (H2 + filter buttons) */
 .detail-view .header-left {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
 }
 
+/* Fix H2 alignment in Firefox */
 .detail-view .header-left h2 {
   font-size: 1.5rem;
   margin: 0;
   flex-shrink: 0;
+  line-height: 1; /* ✅ normalize line-height */
+  display: flex; /* ✅ makes text respect flex centering */
+  align-items: center;
 }
 
-/* Left filter buttons */
+/* Filter buttons */
 .detail-view .header-left .filter-buttons {
   display: flex;
   gap: 6px;
@@ -63,6 +63,7 @@
   background-color: #fff;
   cursor: pointer;
   transition: all 0.2s ease;
+  line-height: 1; /* ✅ keep buttons aligned */
 }
 
 .detail-view .header-left .filter-buttons button:hover {
@@ -77,6 +78,11 @@
 }
 
 /* Right button */
+.detail-view .header-right {
+  display: flex; /* ✅ ensure consistent alignment */
+  align-items: center;
+}
+
 .detail-view .header-right button {
   padding: 8px 12px;
   font-size: 12px;
@@ -86,9 +92,9 @@
   color: #fff;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease;
+  line-height: 1; /* ✅ aligns properly with H2 */
 }
 
 .detail-view .header-right button:hover {
