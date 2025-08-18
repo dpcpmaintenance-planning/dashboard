@@ -168,3 +168,75 @@
     max-height: 60px;
   }
 }
+/* === Status Indicators === */
+/* === Status Indicators === */
+.equip-status-indicator {
+  position: absolute;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Inner span holds the emoji/status and blinks */
+.equip-status-indicator .status-icon {
+  display: inline-block;
+}
+
+/* Blinking animation */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.equip-status-indicator.sustainable .status-icon {
+  animation: blink 1s infinite; /* Yellow blinks */
+}
+
+.equip-status-indicator.breakdown .status-icon {
+  animation: blink 0.6s infinite; /* Red blinks faster */
+}
+
+/* Tooltip styling */
+.equip-status-indicator::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: pre-line;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  width: max-content;
+  max-width: 225px;
+  z-index: 9999;
+  text-align: left;
+  gap: 5px;
+}
+
+.equip-status-indicator:hover::after {
+  opacity: 1;
+}
+.breakdown-count {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%); /* vertical tweak */
+  font-size: 14px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  pointer-events: none;
+}

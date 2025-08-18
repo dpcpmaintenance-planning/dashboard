@@ -118,19 +118,23 @@ function updateDiagram() {
 
   for (const group of Object.values(positionGroups)) {
     const sorted = group.sort((a, b) => b.status - a.status);
-    const { name, x, y } = sorted[0];
-    drawStatusIndicator(name, x, y, latestStatusMap, breakdownMap, daysDelayedMap, statusEmoji);
-  }
+    const { name, x, y, status } = sorted[0];
 
-  const legend = document.createElement("div");
-  legend.className = "legend";
-  legend.innerHTML = `
-    <div><span class="legend-dot operational"></span>🟢 Operational</div>
-    <div><span class="legend-dot sustainable"></span>🟡 Sustainable</div>
-    <div><span class="legend-dot breakdown"></span>🔴 Breakdown</div>
-  `;
-  diagram.appendChild(legend);
+    // draw the indicator
+    drawStatusIndicator(name, x, y, latestStatusMap, breakdownMap, daysDelayedMap, statusEmoji);
+
+    // --- Add equipment status circle only ---
+    const statusCircle = document.createElement("div");
+    statusCircle.className = "status-circle";
+    statusCircle.style.left = `${x}px`;
+    statusCircle.style.top = `${y}px`;
+    statusCircle.style.backgroundColor =
+      status === "0" ? "green" : status === "1" ? "gold" : "red";
+
+    diagram.appendChild(statusCircle);
+  }
 }
+
 
 
 
@@ -358,5 +362,3 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
 
   return { latestStatusMap, breakdownMap, daysDelayedMap };
 }
-
-
