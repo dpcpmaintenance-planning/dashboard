@@ -21,7 +21,7 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
 📌 ${label}
 📊 Status: ${readableStatus}
 💥 Breakdowns: ${breakdown}
-⏱️ Days in Queue: ${daysDelayed}
+⏱️ Days in Queue: ${daysDelayed} 
   `.trim();
 
   const emoji = encodeURIComponent(statusEmoji[status]);
@@ -146,53 +146,64 @@ function showEquipmentDetail(label) {
         if (suffixMatch) baseName = label.replace(suffixMatch[0], "").trim();
       }
 
-      // Load saved positions
+      // Load saved positions for this equipment type
       loadSavedPositions(baseName);
 
       const imgPath = `equipments/${encodeURIComponent(baseName)}.jpg`;
       const positions = equipmentPositionMaps[baseName] || {};
       let indicatorsHTML = "";
 
-      const rowParts = (labelParts) => labelParts.split(",").map(p => normalize(p));
+      const rowParts = (labelParts) =>
+        labelParts ? labelParts.split(",").map((p) => normalize(p)) : [];
 
       for (const [part, pos] of Object.entries(positions)) {
-        const eqRows = rows.filter(r => normalize(r["Equipment"]) === normalize(label));
-        const matchingRow = eqRows.find(r => rowParts(r["Parts Needed"]).includes(normalize(part)));
+        // Find all rows for this equipment
+        const eqRows = rows.filter((r) => normalize(r["Equipment"]) === normalize(label));
+        const matchingRow = eqRows.find((r) =>
+          rowParts(r["Parts Needed"]).includes(normalize(part))
+        );
 
+        // Status & breakdown
         let status = matchingRow?.["Current Status"] ?? "0";
         let breakdown = matchingRow?.["Breakdown Count"] ?? "0";
-        let daysDelayed = matchingRow?.["Days in Queue"] ?? "0";
 
+        // Extract only the number of days
+        let daysDelayedRaw = matchingRow?.["Days Delayed"] ?? "0";
+        let daysMatch = daysDelayedRaw.match(/(\d+)\s*days?/i);
+        let daysDelayed = daysMatch ? daysMatch[1] : "0";
+
+        // Status labels & emojis
         const statusLabels = { "0": "Operational", "1": "Sustainable", "2": "Breakdown" };
         const statusEmojis = { "0": "🟢", "1": "🟡", "2": "🔴" };
         const readableStatus = statusLabels[status] || "Unknown";
         const statusEmoji = statusEmojis[status] || "⚪";
 
         indicatorsHTML += `
-          <div class="equip-status-indicator ${status === "1" ? "sustainable" : ""} ${status === "2" ? "breakdown" : ""}"
-               data-tooltip="📌 ${part}
+  <div class="equip-status-indicator ${status === "1" ? "sustainable" : ""} ${status === "2" ? "breakdown" : ""
+          }"
+       data-tooltip="📌 ${part}
 📊 Status: ${readableStatus}
 💥 Breakdowns: ${breakdown}
 ⏱️ Days in Queue: ${daysDelayed}"
-               data-part="${part}"
-               style="position:absolute; left:${pos.x}px; top:${pos.y}px; z-index:${status === "2" ? 3 : status === "1" ? 2 : 1};"
-          >
-            <span class="status-icon">${statusEmoji}</span>
-            <span class="breakdown-count">${breakdown}</span>
-          </div>
-        `;
+       data-part="${part}"
+       style="position:absolute; left:${pos.x}px; top:${pos.y}px; z-index:${status === "2" ? 3 : status === "1" ? 2 : 1
+          };"
+  >
+    <span class="status-icon">${statusEmoji}</span>
+    <span class="breakdown-count">${breakdown}</span>
+  </div>
+`;
+
       }
 
       imageContainer.innerHTML = `
-        <div style="position:relative; display:inline-block;">
-          <img id="equipment-image" src="${imgPath}" alt="Equipment Image" style="max-width:100%; max-height:80vh; object-fit:contain;">
-          ${indicatorsHTML}
-        </div>
-      `;
+      <div style="position:relative; display:inline-block;">
+        <img id="equipment-image" src="${imgPath}" alt="Equipment Image" style="max-width:100%; max-height:80vh; object-fit:contain;">
+        ${indicatorsHTML}
+      </div>
+    `;
 
-      // =============================
       // Make draggable only if enabled
-      // =============================
       if (draggableEnabled) {
         imageContainer.querySelectorAll(".equip-status-indicator").forEach((el) => {
           const partName = el.dataset.part || el.textContent;
@@ -203,13 +214,13 @@ function showEquipmentDetail(label) {
       detailTable.style.display = "none";
       imageContainer.style.display = "block";
       imageBtn.textContent = "Table View";
-
     } else {
       detailTable.style.display = "block";
       imageContainer.style.display = "none";
       imageBtn.textContent = "Equipment Sectional View and Parts List";
     }
   });
+
 
   updateDiagramTableInline();
 
