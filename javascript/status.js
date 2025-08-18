@@ -168,6 +168,8 @@ function showEquipmentDetail(label) {
       }
 
 
+
+
       // Render diagram + indicators
       imageContainer.innerHTML = `
       <div style="position:relative; display:inline-block;">

@@ -10,9 +10,13 @@ const equipmentPositionMaps = {
     },
     "Chain Conveyor": {
         "Roller": { x: 300, y: 100 },
+        "Lock pin": { x: 400, y: 200 },
     },
     "Ash Bin": {
         "Pneumatic Hose": { x: -100, y: 200 },
+        "PU Hose": { x: 0, y: 300 },
+        "PU Hose 10 mm": { x: 100, y: 400 },
+        "Airtac BL4000": { x: 200, y: 500 },
     },
     "Fly Ash Silo": {
         "Plastic strips": { x: 50, y: 100 },
@@ -30,7 +34,15 @@ const equipmentPositionMaps = {
         "PN16 Isolation valve": { x: 200, y: 200 },
     },
     "Screw Air Compressor": {
-        "Metallic Expansion Bellows": { x: 200, y: 100 },
-    }
+        "Metallic Expansion Bellows": { x: 0, y: 0 },
+    },
+    "Boiler Feedwater Pump": {
+        "Motor Cooling Fan": { x: 50, y: 50 },
+        "Flexitallic gasket": { x: 150, y: 50 },
+    },
+    "Loader": {
+        "Hydraulic hose": { x: 100, y: 100 },
+        "Hydraulic Cylinder": { x: 200, y: 200 },
+    },
 
 };
