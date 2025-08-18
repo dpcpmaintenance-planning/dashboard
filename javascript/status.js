@@ -37,10 +37,38 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
   document.getElementById("diagram").appendChild(div);
 }
 
-
+// =============================
+// Global flag to enable/disable dragging
+// =============================
+let draggableEnabled = false; // set false to temporarily disable dragging
 
 // =============================
-// Separated: Equipment Detail
+// Normalize string: lowercase, trim, remove punctuation
+// =============================
+function normalize(str) {
+  return str?.toLowerCase().trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") || "";
+}
+
+// =============================
+// Load saved positions from localStorage into equipmentPositionMaps
+// =============================
+function loadSavedPositions(baseName) {
+  const positions = equipmentPositionMaps[baseName];
+  if (!positions) return;
+
+  Object.keys(positions).forEach(partName => {
+    const saved = localStorage.getItem(`statusPos_${partName}`);
+    if (saved) {
+      try {
+        const { top, left } = JSON.parse(saved);
+        positions[partName] = { x: left, y: top };
+      } catch (e) { }
+    }
+  });
+}
+
+// =============================
+// Show Equipment Detail
 // =============================
 function showEquipmentDetail(label) {
   currentDiagramEquipment = label;
@@ -85,7 +113,7 @@ function showEquipmentDetail(label) {
         </table>
       </div>
 
-      <!-- Image container, hidden by default -->
+      <!-- Image container -->
       <div id="equipment-image-container" style="display:none; text-align:center; padding:20px;">
         <img id="equipment-image" src="" alt="Equipment Image" style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:10px; box-shadow:0 0 10px #ccc;">
       </div>
@@ -97,92 +125,80 @@ function showEquipmentDetail(label) {
   const imageContainer = container.querySelector("#equipment-image-container");
   const imageBtn = container.querySelector("#diagram-export-btn");
 
-  // Initial table view
   imageBtn.textContent = "Equipment Sectional View and Parts List";
   let positioningMode = true;
 
-  // Toggle table ↔ image
-  // Example: your map of equipment parts and positions
-
-
+  // =============================
+  // Toggle Table ↔ Image
+  // =============================
   imageBtn.addEventListener("click", () => {
     if (detailTable.style.display !== "none") {
       let baseName = label.trim();
 
-      // Special case for Belt Conveyor
-      if (label.toLowerCase().startsWith("belt conveyor")) {
+      // Special cases
+      const labelNorm = normalize(label);
+      if (labelNorm.startsWith("belt conveyor")) {
         baseName = "Belt Conveyor";
+      } else if (labelNorm.startsWith("screw air compressor")) {
+        baseName = "Screw Air Compressor";
       } else {
-        // Strip suffix (like "A", "1") for other equipment
         const suffixMatch = label.match(/\s+[A-Z0-9]$/i);
-        if (suffixMatch) {
-          baseName = label.replace(suffixMatch[0], "").trim();
-        }
+        if (suffixMatch) baseName = label.replace(suffixMatch[0], "").trim();
       }
 
+      // Load saved positions
+      loadSavedPositions(baseName);
+
       const imgPath = `equipments/${encodeURIComponent(baseName)}.jpg`;
-
-      // Load positions for this equipment type
-      // Load positions for this equipment type
       const positions = equipmentPositionMaps[baseName] || {};
-
-      // Build indicators
       let indicatorsHTML = "";
 
-      // Split parts in the row by comma and trim spaces
-      const rowParts = (labelParts) => labelParts.split(",").map(p => p.trim());
+      const rowParts = (labelParts) => labelParts.split(",").map(p => normalize(p));
 
       for (const [part, pos] of Object.entries(positions)) {
-        // Find all rows where the equipment matches
         const eqRows = rows.filter(r => normalize(r["Equipment"]) === normalize(label));
-
-        // Check if any of the rows include this part in "Parts Needed"
-        const matchingRow = eqRows.find(r => rowParts(r["Parts Needed"]).includes(part));
+        const matchingRow = eqRows.find(r => rowParts(r["Parts Needed"]).includes(normalize(part)));
 
         let status = matchingRow?.["Current Status"] ?? "0";
         let breakdown = matchingRow?.["Breakdown Count"] ?? "0";
         let daysDelayed = matchingRow?.["Days in Queue"] ?? "0";
 
-        const statusLabels = {
-          "0": "Operational",
-          "1": "Sustainable",
-          "2": "Breakdown",
-        };
-        const statusEmojis = {
-          "0": "🟢",
-          "1": "🟡",
-          "2": "🔴",
-        };
-
+        const statusLabels = { "0": "Operational", "1": "Sustainable", "2": "Breakdown" };
+        const statusEmojis = { "0": "🟢", "1": "🟡", "2": "🔴" };
         const readableStatus = statusLabels[status] || "Unknown";
         const statusEmoji = statusEmojis[status] || "⚪";
 
-        // Build emoji indicator
         indicatorsHTML += `
-    <div class="equip-status-indicator ${status === "1" ? "sustainable" : ""} ${status === "2" ? "breakdown" : ""}"
-         data-tooltip="📌 ${part}
+          <div class="equip-status-indicator ${status === "1" ? "sustainable" : ""} ${status === "2" ? "breakdown" : ""}"
+               data-tooltip="📌 ${part}
 📊 Status: ${readableStatus}
 💥 Breakdowns: ${breakdown}
 ⏱️ Days in Queue: ${daysDelayed}"
-         style="left:${pos.x}px; top:${pos.y}px; z-index:${status === "2" ? 3 : status === "1" ? 2 : 1
-          };">
-      <span class="status-icon">${statusEmoji}</span>
-      <span class="breakdown-count">${breakdown}</span>
-    </div>
-  `;
+               data-part="${part}"
+               style="position:absolute; left:${pos.x}px; top:${pos.y}px; z-index:${status === "2" ? 3 : status === "1" ? 2 : 1};"
+          >
+            <span class="status-icon">${statusEmoji}</span>
+            <span class="breakdown-count">${breakdown}</span>
+          </div>
+        `;
       }
 
-
-
-
-      // Render diagram + indicators
       imageContainer.innerHTML = `
-      <div style="position:relative; display:inline-block;">
-        <img id="equipment-image" src="${imgPath}" alt="Equipment Image"
-             style="max-width:100%; max-height:80vh; object-fit:contain;">
-        ${indicatorsHTML}
-      </div>
-    `;
+        <div style="position:relative; display:inline-block;">
+          <img id="equipment-image" src="${imgPath}" alt="Equipment Image" style="max-width:100%; max-height:80vh; object-fit:contain;">
+          ${indicatorsHTML}
+        </div>
+      `;
+
+      // =============================
+      // Make draggable only if enabled
+      // =============================
+      if (draggableEnabled) {
+        imageContainer.querySelectorAll(".equip-status-indicator").forEach((el) => {
+          const partName = el.dataset.part || el.textContent;
+          makeDraggable(el, partName, true, baseName);
+        });
+      }
 
       detailTable.style.display = "none";
       imageContainer.style.display = "block";
@@ -205,25 +221,20 @@ function showEquipmentDetail(label) {
   });
 }
 
-
-
 // =============================
-// Helper: make draggable emoji with persistent positions
+// makeDraggable helper
 // =============================
-function makeDraggable(el, baseName, positioningMode) {
-  if (!positioningMode || !el) return;
+function makeDraggable(el, partName, positioningMode, baseName) {
+  if (!positioningMode || !el || !draggableEnabled) return;
 
-  // Load saved position if exists
-  const savedPos = localStorage.getItem(`statusPos_${baseName}`);
+  const savedPos = localStorage.getItem(`statusPos_${partName}`);
   if (savedPos) {
     try {
       const { top, left } = JSON.parse(savedPos);
       el.style.position = "absolute";
       el.style.top = `${top}px`;
       el.style.left = `${left}px`;
-    } catch (err) {
-      console.warn("Invalid saved position for", baseName);
-    }
+    } catch (err) { console.warn("Invalid saved position for", partName); }
   }
 
   el.style.position = el.style.position || "absolute";
@@ -242,10 +253,15 @@ function makeDraggable(el, baseName, positioningMode) {
     if (isDown) {
       isDown = false;
       el.style.cursor = "grab";
-      localStorage.setItem(`statusPos_${baseName}`, JSON.stringify({
-        top: parseInt(el.style.top),
-        left: parseInt(el.style.left)
-      }));
+      const top = parseInt(el.style.top);
+      const left = parseInt(el.style.left);
+      localStorage.setItem(`statusPos_${partName}`, JSON.stringify({ top, left }));
+
+      // Update in-memory map
+      if (equipmentPositionMaps[baseName]) {
+        equipmentPositionMaps[baseName][partName] = { x: left, y: top };
+      }
+
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     }
@@ -261,15 +277,8 @@ function makeDraggable(el, baseName, positioningMode) {
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
 
-    // Prevent text selection while dragging
     e.preventDefault();
   });
 }
 
-// =============================
-// Example: make all emojis draggable
-// =============================
-document.querySelectorAll(".equip-status-indicator").forEach((el) => {
-  const partName = el.dataset.part || el.textContent; // unique key for localStorage
-  makeDraggable(el, partName, true);
-});
+

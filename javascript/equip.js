@@ -54,7 +54,10 @@ const equipmentPositionMaps = {
         "PN16 Isolation valve": { x: 200, y: 200 },
     },
     "Screw Air Compressor": {
-        "Metallic Expansion Bellows": { x: 0, y: 0 },
+        "Metallic Expansion Bellows": { x: 10, y: 10 },
+        "Bellow": { x: 100, y: 100 },
+        "Air Compressor Controller": { x: 200, y: 200 },
+        "Expansion bellow": { x: 300, y: 300 }
     },
     "Boiler Feedwater Pump": {
         "Motor Cooling Fan": { x: 50, y: 50 },
