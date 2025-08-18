@@ -109,10 +109,15 @@ function showEquipmentDetail(label) {
     if (detailTable.style.display !== "none") {
       let baseName = label.trim();
 
-      // Strip suffix (like "A", "1")
-      const suffixMatch = label.match(/\s+[A-Z0-9]$/i);
-      if (suffixMatch) {
-        baseName = label.replace(suffixMatch[0], "").trim();
+      // Special case for Belt Conveyor
+      if (label.toLowerCase().startsWith("belt conveyor")) {
+        baseName = "Belt Conveyor";
+      } else {
+        // Strip suffix (like "A", "1") for other equipment
+        const suffixMatch = label.match(/\s+[A-Z0-9]$/i);
+        if (suffixMatch) {
+          baseName = label.replace(suffixMatch[0], "").trim();
+        }
       }
 
       const imgPath = `equipments/${encodeURIComponent(baseName)}.jpg`;
@@ -190,11 +195,6 @@ function showEquipmentDetail(label) {
     }
   });
 
-
-
-
-
-
   updateDiagramTableInline();
 
   // Back to main diagram
@@ -208,26 +208,37 @@ function showEquipmentDetail(label) {
 
 
 // =============================
-// Helper: draggable emoji
+// Helper: make draggable emoji with persistent positions
 // =============================
 function makeDraggable(el, baseName, positioningMode) {
-  if (!positioningMode) return;
-  let offsetX, offsetY, isDown = false;
+  if (!positioningMode || !el) return;
 
-  el.addEventListener("mousedown", (e) => {
-    isDown = true;
-    offsetX = e.clientX - el.offsetLeft;
-    offsetY = e.clientY - el.offsetTop;
-    el.style.cursor = "grabbing";
-  });
+  // Load saved position if exists
+  const savedPos = localStorage.getItem(`statusPos_${baseName}`);
+  if (savedPos) {
+    try {
+      const { top, left } = JSON.parse(savedPos);
+      el.style.position = "absolute";
+      el.style.top = `${top}px`;
+      el.style.left = `${left}px`;
+    } catch (err) {
+      console.warn("Invalid saved position for", baseName);
+    }
+  }
 
-  document.addEventListener("mousemove", (e) => {
+  el.style.position = el.style.position || "absolute";
+  el.style.cursor = "grab";
+
+  let offsetX = 0, offsetY = 0, isDown = false;
+
+  const onMouseMove = (e) => {
     if (!isDown) return;
-    el.style.left = `${e.clientX - offsetX}px`;
-    el.style.top = `${e.clientY - offsetY}px`;
-  });
+    const parentRect = el.parentElement.getBoundingClientRect();
+    el.style.left = `${e.clientX - parentRect.left - offsetX}px`;
+    el.style.top = `${e.clientY - parentRect.top - offsetY}px`;
+  };
 
-  document.addEventListener("mouseup", () => {
+  const onMouseUp = () => {
     if (isDown) {
       isDown = false;
       el.style.cursor = "grab";
@@ -235,6 +246,30 @@ function makeDraggable(el, baseName, positioningMode) {
         top: parseInt(el.style.top),
         left: parseInt(el.style.left)
       }));
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
     }
+  };
+
+  el.addEventListener("mousedown", (e) => {
+    isDown = true;
+    const rect = el.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    el.style.cursor = "grabbing";
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+
+    // Prevent text selection while dragging
+    e.preventDefault();
   });
 }
+
+// =============================
+// Example: make all emojis draggable
+// =============================
+document.querySelectorAll(".equip-status-indicator").forEach((el) => {
+  const partName = el.dataset.part || el.textContent; // unique key for localStorage
+  makeDraggable(el, partName, true);
+});
