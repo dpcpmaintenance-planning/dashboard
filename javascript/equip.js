@@ -79,5 +79,8 @@ const equipmentPositionMaps = {
         "Blind flange": { x: 100, y: 100 },
 
     },
-
+    "Elevator": {
+        "Elevator Control Circuit Board": { x: 100, y: 100 },
+        "V-belt pulley": { x: 200, y: 200 },
+    },
 };
