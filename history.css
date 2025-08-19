@@ -288,3 +288,79 @@ canvas {
     grid-template-columns: repeat(1, 1fr);
   }
 }
+#personnel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+#personnel-wrapper {
+  max-height: 600px; /* vertical scroll if content exceeds */
+  overflow-y: auto;
+  padding: 10px;
+  width: 1200px; /* container width */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+  margin: 20px auto; /* centers horizontally */
+  box-sizing: border-box; /* include padding/border in width */
+}
+
+.person-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 5px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.person-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+
+.person-row:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s;
+}
+
+.person-info {
+  text-align: center;
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.person-info img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #4b7bec;
+  margin-bottom: 8px;
+  transition: transform 0.3s;
+}
+
+.person-info img:hover {
+  transform: scale(1.1);
+}
+
+.person-name {
+  font-weight: bold;
+  font-size: 14px;
+  color: #2f3640;
+}
+
+.bar-chart-container {
+  flex-grow: 1;
+  height: 150px;
+}

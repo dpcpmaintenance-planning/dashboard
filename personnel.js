@@ -1,19 +1,14 @@
-function groupByPersonnel(data, filterManpower = []) {
+function groupByPersonnel(data) {
     const personnelCounts = {};
 
     data.forEach(row => {
         const cell = row["PERSONNEL"] || row["Personnel"] || "";
         if (!cell) return;
 
-        // Split by comma or & and trim
-        const people = cell.split(/[,&]/).map(p => p.trim()).filter(Boolean);
-
+        const people = cell.split(",").map(p => p.trim()).filter(Boolean);
         const rawType = (row["TYPE OF MAINTENANCE"] || row["Type of Maintenance"] || "").toLowerCase().trim();
 
         people.forEach(person => {
-            // ✅ Skip if filter is applied and person not in selected manpower
-            if (filterManpower.length > 0 && !filterManpower.includes(person)) return;
-
             if (!personnelCounts[person]) {
                 personnelCounts[person] = { Preventive: 0, Corrective: 0, Modification: 0, total: 0 };
             }
@@ -33,74 +28,160 @@ function groupByPersonnel(data, filterManpower = []) {
     return Object.entries(personnelCounts)
         .map(([person, counts]) => ({ person, ...counts }))
         .sort((a, b) => b.Preventive - a.Preventive)  // sort by Preventive
-        .slice(0, 20);
-}
 
+
+}
 
 
 let personnelChart = null;
 
+// Map of personnel images
+const personnelImages = {
+    "Botavara": "images/BOTAVARA.png",
+    "Borlagdatan": "images/BORLAGDATAN.png",
+    "Bandiola": "images/BANDIOLA.png",
+    "Aiso": "images/AISO.png",
+    "Sotito": "images/SOTITO.png",
+    "Agravante": "images/AGRAVANTE.png",
+    "Alfeche": "images/ALFECHE.png",
+    "Bacay": "images/BACAY.png",
+    "Bagnate": "images/BAGNATE.png",
+    "Baldivino": "images/BALDIVINO.png",
+    "Biona": "images/BIONA.png",
+    "Bundac": "images/BUNDAC.png",
+    "Caabay": "images/CAABAY.png",
+    "Capuno": "images/CAPUNO.png",
+    "Catbagan": "images/CATBAGAN.png",
+    "Celino": "images/CELINO.png",
+    "Constantino": "images/CONSTANTINO.png",
+    "Cualing": "images/CUALING.png",
+    "Denosta": "images/DENOSTA.png",
+    "Esmenda": "images/ESMENDA.png",
+    "Fabrigas": "images/FABRIGAS.png",
+    "Gattoc": "images/GATTOC.png",
+    "Ilagan": "images/ILAGAN.png",
+    "Juanerio": "images/JUANERIO.png",
+    "Laureano": "images/LAUREANO.png",
+    "Manzano": "images/MANZANO.png",
+    "Mumar": "images/MUMAR.png",
+    "Oaman": "images/OAMAN.png",
+    "Palay": "images/PALAY.png",
+    "Pamittan": "images/PAMITTAN.png",
+    "Parcon": "images/PARCON.png",
+    "Peralta": "images/PERALTA.png",
+    "Rodriguez": "images/RODRIGUEZ.png",
+    "Romero": "images/ROMERO.png",
+    "Salazar": "images/SALAZAR.png",
+    "Salcedo": "images/SALCEDO.png",
+    "Salomon": "images/SALOMON.png",
+    "Santos": "images/SANTOS.png",
+    "Silang": "images/SILANG.png",
+    "Sison": "images/SISON.png",
+    "Simaurio": "images/SIMAURIO.png",
+    "Tagaro": "images/TAGARO.png",
+    "Torregoza": "images/TORREGOZA.png",
+    "Villatura": "images/VILLATURA.png",
+    "Zabala": "images/ZABALA.png",
+    "Zonio": "images/ZONIO.png"
+};
+
 function renderPersonnelChart(groupedData) {
-    const people = groupedData.map(d => d.person);
+    const container = document.getElementById("personnel-container");
+    container.innerHTML = "";
 
-    const preventive = groupedData.map(d => d.Preventive);
-    const corrective = groupedData.map(d => d.Corrective);
-    const modification = groupedData.map(d => d.Modification);
+    if (!groupedData || groupedData.length === 0) return;
 
-    const ctx = document.getElementById("personnelChart").getContext("2d");
-    if (personnelChart) personnelChart.destroy();
+    // Determine the max value across all personnel for proportional X-axis
+    const maxValue = Math.max(...groupedData.flatMap(p => [p.Preventive, p.Corrective, p.Modification]));
 
-    personnelChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: people,
-            datasets: [
-                {
-                    label: "Preventive",
-                    data: preventive,
-                    backgroundColor: "#4caf50",
-                    borderRadius: 4,
+    groupedData.forEach(person => {
+        // Container row
+        const rowDiv = document.createElement("div");
+        rowDiv.style.display = "flex";
+        rowDiv.style.alignItems = "center";
+        rowDiv.style.gap = "20px";
+        rowDiv.style.marginBottom = "20px";
+        rowDiv.style.padding = "10px";
+        rowDiv.style.borderRadius = "8px";
+        rowDiv.style.background = "#fff";
+        rowDiv.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
+        rowDiv.style.transition = "transform 0.2s";
+        rowDiv.addEventListener("mouseenter", () => rowDiv.style.transform = "translateY(-2px)");
+        rowDiv.addEventListener("mouseleave", () => rowDiv.style.transform = "translateY(0)");
+
+        // Left: Image + Name
+        const leftDiv = document.createElement("div");
+        leftDiv.style.textAlign = "center";
+        const img = document.createElement("img");
+        img.src = personnelImages[person.person] || "images/default.jpg";
+        img.style.width = "100px";
+        img.style.height = "100px";
+        img.style.borderRadius = "50%";
+        img.style.objectFit = "cover";
+        img.style.marginBottom = "8px";
+        img.style.border = "2px solid #ddd";
+
+        const name = document.createElement("div");
+        name.textContent = person.person;
+        name.style.fontWeight = "bold";
+        name.style.fontSize = "14px";
+        name.style.textAlign = "center";
+
+        leftDiv.appendChild(img);
+        leftDiv.appendChild(name);
+
+        // Right: Horizontal bar chart
+        const rightDiv = document.createElement("div");
+        rightDiv.style.flex = "1";
+        rightDiv.style.minWidth = "250px";
+        rightDiv.style.height = "100px"; // height per row
+        const canvas = document.createElement("canvas");
+        rightDiv.appendChild(canvas);
+
+        rowDiv.appendChild(leftDiv);
+        rowDiv.appendChild(rightDiv);
+        container.appendChild(rowDiv);
+
+        // Create Chart.js horizontal bar
+        new Chart(canvas.getContext("2d"), {
+            type: "bar",
+            data: {
+                labels: ["Preventive", "Corrective", "Modification"],
+                datasets: [{
+                    label: person.person,
+                    data: [person.Preventive, person.Corrective, person.Modification],
+                    backgroundColor: ["#4caf50", "#f44336", "#2196f3"],
+                    barThickness: 15
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 800, easing: 'easeOutQuart' },
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        anchor: 'center',
+                        align: 'center',
+                        color: '#fff',
+                        font: { weight: 'bold', size: 14 },
+                        formatter: value => value
+                    }
                 },
-                {
-                    label: "Corrective",
-                    data: corrective,
-                    backgroundColor: "#f44336",
-                    borderRadius: 4,
-                },
-                {
-                    label: "Modification",
-                    data: modification,
-                    backgroundColor: "#2196f3",
-                    borderRadius: 4,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: Math.ceil(maxValue / 5) * 5
+                    },
+                    y: {
+                        beginAtZero: true,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.7
+                    }
                 }
-            ],
-        },
-        options: {
-            responsive: true,
-            indexAxis: "x", // side-by-side bars
-            plugins: {
-                legend: { display: true },
-                title: {
-                    display: true,
-                    text: "Manpower",
-                    font: { size: 18, family: "Oswald" },
-                    padding: { top: 10, bottom: 20 },
-                },
-                datalabels: {
-                    anchor: 'center',
-                    align: 'center',
-                    color: '#fff',
-                    font: { weight: 'bold', size: 12 },
-                    rotation: -90, // vertical text
-                    formatter: (value) => value,
-                },
             },
-            scales: {
-                y: { beginAtZero: true }
-            },
-        },
-        plugins: [ChartDataLabels],
+            plugins: [ChartDataLabels]
+        });
     });
 }
-
-
