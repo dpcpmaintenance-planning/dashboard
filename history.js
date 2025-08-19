@@ -229,7 +229,9 @@ function updateChart() {
       .sort((a, b) => b[1].Preventive - a[1].Preventive)?.[0]?.[0];
 
     const groupedProblems = groupProblemsBySystem(filtered);
-    renderProblemChart(groupedProblems, topSystem);
+    const selectedSystems = getSelectedValues("filter-system");
+    renderProblemChart(groupedProblems, selectedSystems);
+
   }
 
   // ✅ Personnel chart updates dynamically with filters

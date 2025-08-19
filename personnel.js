@@ -74,7 +74,7 @@ function renderPersonnelChart(groupedData) {
         },
         options: {
             responsive: true,
-            indexAxis: "x", // vertical bars
+            indexAxis: "x", // side-by-side bars
             plugins: {
                 legend: { display: true },
                 title: {
@@ -83,10 +83,21 @@ function renderPersonnelChart(groupedData) {
                     font: { size: 18, family: "Oswald" },
                     padding: { top: 10, bottom: 20 },
                 },
+                datalabels: {
+                    anchor: 'center',
+                    align: 'center',
+                    color: '#fff',
+                    font: { weight: 'bold', size: 12 },
+                    rotation: -90, // vertical text
+                    formatter: (value) => value,
+                },
             },
             scales: {
                 y: { beginAtZero: true }
             },
         },
+        plugins: [ChartDataLabels],
     });
 }
+
+
