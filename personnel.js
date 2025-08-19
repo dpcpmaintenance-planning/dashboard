@@ -79,7 +79,7 @@ function renderPersonnelChart(groupedData) {
                 legend: { display: true },
                 title: {
                     display: true,
-                    text: "Top 20 Personnel by Maintenance Activities",
+                    text: "Manpower",
                     font: { size: 18, family: "Oswald" },
                     padding: { top: 10, bottom: 20 },
                 },
