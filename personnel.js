@@ -59,16 +59,19 @@ function renderPersonnelChart(groupedData) {
                     label: "Preventive",
                     data: preventive,
                     backgroundColor: "#4caf50",
+                    borderRadius: 4,
                 },
                 {
                     label: "Corrective",
                     data: corrective,
                     backgroundColor: "#f44336",
+                    borderRadius: 4,
                 },
                 {
                     label: "Modification",
                     data: modification,
                     backgroundColor: "#2196f3",
+                    borderRadius: 4,
                 }
             ],
         },

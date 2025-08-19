@@ -68,7 +68,7 @@ function renderGroupedChart(groupedData) {
           backgroundColor: "#4caf50",
           borderColor: "#388e3c",
           borderWidth: 1,
-          borderRadius: 6,
+          borderRadius: 4,
         },
         {
           label: "Corrective",
@@ -76,7 +76,7 @@ function renderGroupedChart(groupedData) {
           backgroundColor: "#FF0000",
           borderColor: "#d32f2f",
           borderWidth: 1,
-          borderRadius: 6,
+          borderRadius: 4,
         },
         {
           label: "Modification",
@@ -84,7 +84,7 @@ function renderGroupedChart(groupedData) {
           backgroundColor: "#2196f3",
           borderColor: "#1976d2",
           borderWidth: 1,
-          borderRadius: 6,
+          borderRadius: 4,
         },
       ],
     },
