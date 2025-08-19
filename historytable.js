@@ -22,6 +22,7 @@ function getSelectedFiltersFromURL() {
     section: params.getAll("section"),
     year: params.getAll("year"),
     quarter: params.getAll("quarter"),
+    manpower: params.getAll("manpower"), // new
   };
 }
 
@@ -32,7 +33,8 @@ function populateFilters(data, selectedFilters = {}) {
     maintenance: new Set(),
     problem: new Set(),
     section: new Set(),
-    year: new Set()
+    year: new Set(),
+    manpower: new Set() // new
   };
 
   data.forEach(row => {
@@ -41,6 +43,16 @@ function populateFilters(data, selectedFilters = {}) {
     if (row["TYPE OF MAINTENANCE"]) sets.maintenance.add(row["TYPE OF MAINTENANCE"]);
     if (row["TYPE OF PROBLEM/ACTIVITY"]) sets.problem.add(row["TYPE OF PROBLEM/ACTIVITY"]);
     if (row["POINT SECTION"]) sets.section.add(row["POINT SECTION"]);
+
+    // handle multiple manpower
+    if (row["PERSONNEL"]) {
+      const names = row["PERSONNEL"]
+        .split(/[,&]/)           // split by comma or &
+        .map(n => n.trim())      // trim spaces
+        .filter(Boolean);        // remove empty strings
+      names.forEach(name => sets.manpower.add(name));
+    }
+
     const date = new Date(row["DATE STARTED"]);
     if (!isNaN(date)) sets.year.add(date.getFullYear().toString());
   });
@@ -52,6 +64,7 @@ function populateFilters(data, selectedFilters = {}) {
   fillSelect("filter-section", Array.from(sets.section), selectedFilters.section);
   fillSelect("filter-year", Array.from(sets.year), selectedFilters.year);
   fillSelect("filter-quarter", ["Q1", "Q2", "Q3", "Q4"], selectedFilters.quarter);
+  fillSelect("filter-manpower", Array.from(sets.manpower), selectedFilters.manpower); // new
 }
 
 function fillSelect(id, values, selected = []) {
@@ -90,6 +103,7 @@ function updateTable() {
   const section = getSelectedValues("filter-section");
   const year = getSelectedValues("filter-year");
   const quarter = getSelectedValues("filter-quarter");
+  const manpower = getSelectedValues("filter-manpower"); // new
 
   const filtered = originalData.filter(row => {
     const date = new Date(row["DATE FINISHED"]);
@@ -98,6 +112,11 @@ function updateTable() {
       (date.getMonth() < 6) ? "Q2" :
         (date.getMonth() < 9) ? "Q3" : "Q4";
 
+    // split manpower in row
+    const rowManpower = row["PERSONNEL"]
+      ? row["PERSONNEL"].split(/[,&]/).map(n => n.trim())
+      : [];
+
     return (
       (system.length === 0 || system.includes(row["SYSTEM"])) &&
       (equipment.length === 0 || equipment.includes(row["EQUIPMENT ID NO."])) &&
@@ -105,7 +124,8 @@ function updateTable() {
       (problem.length === 0 || problem.includes(row["TYPE OF PROBLEM/ACTIVITY"])) &&
       (section.length === 0 || section.includes(row["POINT SECTION"])) &&
       (year.length === 0 || year.includes(rowYear)) &&
-      (quarter.length === 0 || quarter.includes(rowQuarter))
+      (quarter.length === 0 || quarter.includes(rowQuarter)) &&
+      (manpower.length === 0 || rowManpower.some(name => manpower.includes(name))) // match any
     );
   });
 
@@ -188,7 +208,7 @@ function attachDropdownListeners() {
 // Go back to dashboard with filters in URL
 document.getElementById("back-to-dashboard").addEventListener("click", () => {
   const url = new URLSearchParams();
-  ["system", "equipment", "maintenance", "problem", "section", "year", "quarter"].forEach(key => {
+  ["system", "equipment", "maintenance", "problem", "section", "year", "quarter", "manpower"].forEach(key => {
     const values = getSelectedValues(`filter-${key}`);
     values.forEach(v => url.append(key, v));
   });

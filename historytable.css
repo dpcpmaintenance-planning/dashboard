@@ -31,11 +31,9 @@ header h2 {
   position: sticky;
   top: 0;
   z-index: 999;
-  background-color: #ffffff;
   padding: 10px 0;
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #ddd;
 }
 
 /* === Filters Container === */
@@ -156,7 +154,7 @@ header h2 {
 }
 .styled-table thead th {
   position: sticky;
-  top: 100px; /* Adjust based on your filter height */
+  top: 0; /* height of your sticky filter bar */
   background-color: #0288d1;
   color: white;
   z-index: 998;

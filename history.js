@@ -14,12 +14,11 @@ dropdownWrappers.forEach((wrapper) => {
 
 document.querySelectorAll(".dropdown").forEach(dropdown => {
   dropdown.addEventListener("click", (e) => {
-    e.stopPropagation(); // ← This prevents the click from bubbling up and closing it
+    e.stopPropagation();
   });
 });
 document.addEventListener("click", (e) => {
   document.querySelectorAll(".dropdown").forEach((dropdown) => {
-    // If the click is outside the dropdown and its wrapper, close it
     const wrapper = dropdown.closest(".dropdown-wrapper");
     if (!wrapper.contains(e.target)) {
       dropdown.style.display = "none";
@@ -46,22 +45,17 @@ async function loadCSVData() {
 
 function groupProblemsBySystem(data) {
   const result = {};
-
   data.forEach((row) => {
     const system = row["SYSTEM"] || "Unknown System";
     const problem = row["TYPE OF PROBLEM/ACTIVITY"] || "Unspecified";
-
     if (!result[system]) result[system] = {};
     if (!result[system][problem]) result[system][problem] = 0;
-
     result[system][problem]++;
   });
-
   return result;
 }
 
 let problemChart = null;
-
 
 function populateFilters(data, selectedFilters) {
   const systems = new Set();
@@ -70,6 +64,7 @@ function populateFilters(data, selectedFilters) {
   const problems = new Set();
   const section = new Set();
   const years = new Set();
+  const manpower = new Set(); // ✅ new
 
   data.forEach((row) => {
     if (row["SYSTEM"]) systems.add(row["SYSTEM"]);
@@ -77,9 +72,16 @@ function populateFilters(data, selectedFilters) {
     if (row["TYPE OF MAINTENANCE"]) maintenances.add(row["TYPE OF MAINTENANCE"]);
     if (row["TYPE OF PROBLEM/ACTIVITY"]) problems.add(row["TYPE OF PROBLEM/ACTIVITY"]);
     if (row["POINT SECTION"]) section.add(row["POINT SECTION"]);
-
     const date = new Date(row["DATE STARTED"]);
     if (!isNaN(date)) years.add(date.getFullYear().toString());
+
+    // ✅ collect manpower
+    const manpowerRaw = row["PERSONNEL"] || row["Personnel"] || "";
+    manpowerRaw
+      .split(/[,&]/)              // split only by comma or &
+      .map(m => m.trim())         // trim spaces
+      .filter(Boolean)
+      .forEach(m => manpower.add(m));
   });
 
   fillSelect("filter-system", Array.from(systems), selectedFilters.system);
@@ -89,7 +91,7 @@ function populateFilters(data, selectedFilters) {
   fillSelect("filter-section", Array.from(section), selectedFilters.section);
   fillSelect("filter-year", Array.from(years), selectedFilters.year);
   fillSelect("filter-quarter", ["Q1", "Q2", "Q3", "Q4"], selectedFilters.quarter);
-
+  fillSelect("filter-manpower", Array.from(manpower), selectedFilters.manpower); // ✅ new
 }
 
 function fillSelect(id, values, selected = []) {
@@ -102,18 +104,14 @@ function fillSelect(id, values, selected = []) {
 
   const allDiv = document.createElement("div");
   const allChecked = selected.length === 0;
-  allDiv.innerHTML = `
-    <label><input type="checkbox" value="__ALL__" ${allChecked ? "checked" : ""}> All</label>
-  `;
+  allDiv.innerHTML = `<label><input type="checkbox" value="__ALL__" ${allChecked ? "checked" : ""}> All</label>`;
   container.appendChild(allDiv);
 
   values.sort().forEach((value) => {
     const isChecked = selected.includes(value);
     const div = document.createElement("div");
     div.classList.add("dropdown-item");
-    div.innerHTML = `
-      <label><input type="checkbox" value="${value}" ${isChecked ? "checked" : ""}> ${value}</label>
-    `;
+    div.innerHTML = `<label><input type="checkbox" value="${value}" ${isChecked ? "checked" : ""}> ${value}</label>`;
     container.appendChild(div);
   });
 
@@ -142,8 +140,7 @@ function fillSelect(id, values, selected = []) {
 
 function getSelectedValues(containerId) {
   const container = document.getElementById(containerId);
-  const checked = [...container.querySelectorAll('input:checked')]
-    .map(cb => cb.value);
+  const checked = [...container.querySelectorAll('input:checked')].map(cb => cb.value);
   return checked.includes("__ALL__") ? [] : checked;
 }
 
@@ -155,12 +152,20 @@ function applyFilters(data) {
   const selectedSection = getSelectedValues("filter-section");
   const selectedYears = getSelectedValues("filter-year");
   const selectedQuarters = getSelectedValues("filter-quarter");
+  const selectedManpower = getSelectedValues("filter-manpower");
 
   const startDate = document.getElementById("filter-date-start").value;
   const endDate = document.getElementById("filter-date-end").value;
 
   return data.filter((row) => {
     const rowDate = new Date(row["DATE FINISHED"]);
+
+    // ✅ Split manpower only by ',' or '&', keep names intact
+    const manpowerRaw = row["PERSONNEL"] || row["Personnel"] || "";
+    const manpowerList = manpowerRaw
+      .split(/[,&]/)
+      .map(m => m.trim())
+      .filter(Boolean);
 
     const matchSystem = selectedSystems.length === 0 || selectedSystems.includes(row["SYSTEM"]);
     const matchEquipment = selectedEquipment.length === 0 || selectedEquipment.includes(row["EQUIPMENT ID NO."]);
@@ -170,6 +175,9 @@ function applyFilters(data) {
     const matchYear = selectedYears.length === 0 || selectedYears.includes(rowDate.getFullYear().toString());
     const matchStart = !startDate || rowDate >= new Date(startDate);
     const matchEnd = !endDate || rowDate <= new Date(endDate);
+
+    // ✅ check if any selected manpower is in the row's manpower list
+    const matchManpower = selectedManpower.length === 0 || selectedManpower.some(m => manpowerList.includes(m));
 
     let matchQuarter = true;
     if (selectedQuarters.length > 0) {
@@ -186,9 +194,11 @@ function applyFilters(data) {
       });
     }
 
-    return matchSystem && matchEquipment && matchMaintenance && matchProblem && matchStart && matchEnd && matchQuarter && matchSection && matchYear;
+    return matchSystem && matchEquipment && matchMaintenance && matchProblem &&
+      matchStart && matchEnd && matchQuarter && matchSection && matchYear && matchManpower;
   });
 }
+
 
 function updateChart() {
   const selectedFilters = {
@@ -199,6 +209,7 @@ function updateChart() {
     section: getSelectedValues("filter-section"),
     year: getSelectedValues("filter-year"),
     quarter: getSelectedValues("filter-quarter"),
+    manpower: getSelectedValues("filter-manpower"), // ✅ new
   };
 
   const filtered = applyFilters(originalData);
@@ -221,6 +232,16 @@ function updateChart() {
     renderProblemChart(groupedProblems, topSystem);
   }
 
+  // ✅ Personnel chart updates dynamically with filters
+  if (typeof renderPersonnelChart === "function") {
+    const selectedManpower = getSelectedValues("filter-manpower");
+
+    // groupByPersonnel only counts manpower that is in the filtered selection
+    const personnelGrouped = groupByPersonnel(filtered, selectedManpower);
+
+    renderPersonnelChart(personnelGrouped);
+  }
+
   if (typeof renderTable === "function") {
     renderTable(filtered);
   }
@@ -236,6 +257,7 @@ document.getElementById("view-table-btn").addEventListener("click", () => {
     section: getSelectedValues("filter-section"),
     year: getSelectedValues("filter-year"),
     quarter: getSelectedValues("filter-quarter"),
+    manpower: getSelectedValues("filter-manpower"), // ✅ new
     start: document.getElementById("filter-date-start").value,
     end: document.getElementById("filter-date-end").value,
   };
@@ -272,19 +294,17 @@ function getURLFilterParams() {
     section: params.getAll("section"),
     year: params.getAll("year"),
     quarter: params.getAll("quarter"),
+    manpower: params.getAll("manpower"), // ✅ new
     start: params.get("start") || "",
     end: params.get("end") || ""
   };
 }
 
-
 loadCSVData().then((data) => {
   originalData = data;
-
-  const filtersFromURL = getURLFilterParams(); // ✅ get filters from the URL
-  populateFilters(data, filtersFromURL);       // ✅ use those filters to populate checkboxes/inputs
-  updateChart();                               // ✅ trigger chart rendering
-
+  const filtersFromURL = getURLFilterParams();
+  populateFilters(data, filtersFromURL);
+  updateChart();
   document.getElementById("clear-filters").addEventListener("click", clearAllFilters);
 
   [
@@ -294,6 +314,7 @@ loadCSVData().then((data) => {
     "filter-problem",
     "filter-section",
     "filter-year",
+    "filter-manpower", // ✅ new
     "filter-date-start",
     "filter-date-end",
   ].forEach((id) => {
@@ -301,4 +322,3 @@ loadCSVData().then((data) => {
     if (el) el.addEventListener("change", updateChart);
   });
 });
-
