@@ -27,10 +27,9 @@ function groupByPersonnel(data) {
 
     return Object.entries(personnelCounts)
         .map(([person, counts]) => ({ person, ...counts }))
-        .sort((a, b) => b.Preventive - a.Preventive)  // sort by Preventive
-
-
+        .sort((a, b) => b.total - a.total);  // 🔥 sort by total (descending)
 }
+
 
 
 let personnelChart = null;
@@ -95,6 +94,11 @@ function renderPersonnelChart(groupedData) {
     const maxValue = Math.max(...groupedData.flatMap(p => [p.Preventive, p.Corrective, p.Modification]));
 
     groupedData.forEach(person => {
+        // 🔥 Skip if no image available (hide for now)
+        if (!personnelImages[person.person]) {
+            return;
+        }
+
         // Container row
         const rowDiv = document.createElement("div");
         rowDiv.style.display = "flex";
@@ -113,7 +117,7 @@ function renderPersonnelChart(groupedData) {
         const leftDiv = document.createElement("div");
         leftDiv.style.textAlign = "center";
         const img = document.createElement("img");
-        img.src = personnelImages[person.person] || "images/default.jpg";
+        img.src = personnelImages[person.person]; // ✅ safe, only defined ones reach here
         img.style.width = "100px";
         img.style.height = "100px";
         img.style.borderRadius = "50%";
@@ -134,7 +138,7 @@ function renderPersonnelChart(groupedData) {
         const rightDiv = document.createElement("div");
         rightDiv.style.flex = "1";
         rightDiv.style.minWidth = "250px";
-        rightDiv.style.height = "100px"; // height per row
+        rightDiv.style.height = "100px";
         const canvas = document.createElement("canvas");
         rightDiv.appendChild(canvas);
 
@@ -142,42 +146,49 @@ function renderPersonnelChart(groupedData) {
         rowDiv.appendChild(rightDiv);
         container.appendChild(rowDiv);
 
-        // Create Chart.js horizontal bar
+        // Chart.js code (unchanged)...
         new Chart(canvas.getContext("2d"), {
             type: "bar",
             data: {
-                labels: ["Preventive", "Corrective", "Modification"],
-                datasets: [{
-                    label: person.person,
-                    data: [person.Preventive, person.Corrective, person.Modification],
-                    backgroundColor: ["#4caf50", "#f44336", "#2196f3"],
-                    barThickness: 15
-                }]
+                labels: [person.person],
+                datasets: [
+                    { label: "Preventive", data: [person.Preventive], backgroundColor: "#4caf50", stack: "maintenance" },
+                    { label: "Corrective", data: [person.Corrective], backgroundColor: "#f44336", stack: "maintenance" },
+                    { label: "Modification", data: [person.Modification], backgroundColor: "#2196f3", stack: "maintenance" }
+                ]
             },
             options: {
                 indexAxis: "y",
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: { duration: 800, easing: 'easeOutQuart' },
+                animation: { duration: 800, easing: "easeOutQuart" },
                 plugins: {
                     legend: { display: false },
                     datalabels: {
-                        anchor: 'center',
-                        align: 'center',
-                        color: '#fff',
-                        font: { weight: 'bold', size: 14 },
-                        formatter: value => value
+                        anchor: "center",
+                        align: "center",
+                        color: "#fff",
+                        font: { weight: "bold", size: 14 },
+                        formatter: value => value === 0 ? "" : value
                     }
                 },
                 scales: {
                     x: {
+                        stacked: true,
                         beginAtZero: true,
-                        max: Math.ceil(maxValue / 5) * 5
+                        ticks: {
+                            stepSize: 500,
+                            callback: value => value
+                        },
+                        suggestedMax: Math.ceil(maxValue / 500) * 500,
+                        grid: { drawTicks: true, drawBorder: true }
                     },
                     y: {
-                        beginAtZero: true,
+                        stacked: true,
                         barPercentage: 0.6,
-                        categoryPercentage: 0.7
+                        categoryPercentage: 0.7,
+                        ticks: { display: false },
+                        grid: { drawTicks: false, drawBorder: false }
                     }
                 }
             },
@@ -185,3 +196,4 @@ function renderPersonnelChart(groupedData) {
         });
     });
 }
+
