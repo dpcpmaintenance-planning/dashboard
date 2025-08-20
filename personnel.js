@@ -1,11 +1,12 @@
-function groupByPersonnel(data) {
+// ---------------- Group & Sort ----------------
+function groupByPersonnel(data, selectedManpower = []) {
     const personnelCounts = {};
 
     data.forEach(row => {
         const cell = row["PERSONNEL"] || row["Personnel"] || "";
         if (!cell) return;
 
-        const people = cell.split(",").map(p => p.trim()).filter(Boolean);
+        const people = cell.split(/[,&]/).map(p => p.trim()).filter(Boolean);
         const rawType = (row["TYPE OF MAINTENANCE"] || row["Type of Maintenance"] || "").toLowerCase().trim();
 
         people.forEach(person => {
@@ -25,16 +26,21 @@ function groupByPersonnel(data) {
         });
     });
 
-    return Object.entries(personnelCounts)
+    let grouped = Object.entries(personnelCounts)
         .map(([person, counts]) => ({ person, ...counts }))
-        .sort((a, b) => b.total - a.total);  // 🔥 sort by total (descending)
+        // ✅ always sort by TOTAL
+        .sort((a, b) => b.total - a.total);
+
+    // ✅ If manpower filter applied → keep only selected
+    if (selectedManpower.length > 0) {
+        grouped = grouped.filter(p => selectedManpower.includes(p.person));
+    }
+
+    return grouped;
 }
 
 
-
-let personnelChart = null;
-
-// Map of personnel images
+// ---------------- Personnel Images ----------------
 const personnelImages = {
     "Botavara": "images/BOTAVARA.png",
     "Borlagdatan": "images/BORLAGDATAN.png",
@@ -84,22 +90,21 @@ const personnelImages = {
     "Zonio": "images/ZONIO.png"
 };
 
+// ---------------- Render Chart ----------------
 function renderPersonnelChart(groupedData) {
     const container = document.getElementById("personnel-container");
     container.innerHTML = "";
 
     if (!groupedData || groupedData.length === 0) return;
 
-    // Determine the max value across all personnel for proportional X-axis
-    const maxValue = Math.max(...groupedData.flatMap(p => [p.Preventive, p.Corrective, p.Modification]));
+    // 🔥 Get highest total across all for proportional scaling
+    const maxValue = Math.max(...groupedData.map(p => p.total));
 
     groupedData.forEach(person => {
-        // 🔥 Skip if no image available (hide for now)
-        if (!personnelImages[person.person]) {
-            return;
-        }
+        // Skip if no image defined
+        if (!personnelImages[person.person]) return;
 
-        // Container row
+        // --- Container row
         const rowDiv = document.createElement("div");
         rowDiv.style.display = "flex";
         rowDiv.style.alignItems = "center";
@@ -113,11 +118,12 @@ function renderPersonnelChart(groupedData) {
         rowDiv.addEventListener("mouseenter", () => rowDiv.style.transform = "translateY(-2px)");
         rowDiv.addEventListener("mouseleave", () => rowDiv.style.transform = "translateY(0)");
 
-        // Left: Image + Name
+        // --- Left: Image + Name
         const leftDiv = document.createElement("div");
         leftDiv.style.textAlign = "center";
+
         const img = document.createElement("img");
-        img.src = personnelImages[person.person]; // ✅ safe, only defined ones reach here
+        img.src = personnelImages[person.person];
         img.style.width = "100px";
         img.style.height = "100px";
         img.style.borderRadius = "50%";
@@ -134,7 +140,7 @@ function renderPersonnelChart(groupedData) {
         leftDiv.appendChild(img);
         leftDiv.appendChild(name);
 
-        // Right: Horizontal bar chart
+        // --- Right: Chart container
         const rightDiv = document.createElement("div");
         rightDiv.style.flex = "1";
         rightDiv.style.minWidth = "250px";
@@ -146,7 +152,7 @@ function renderPersonnelChart(groupedData) {
         rowDiv.appendChild(rightDiv);
         container.appendChild(rowDiv);
 
-        // Chart.js code (unchanged)...
+        // --- Chart.js
         new Chart(canvas.getContext("2d"), {
             type: "bar",
             data: {
@@ -178,7 +184,7 @@ function renderPersonnelChart(groupedData) {
                         beginAtZero: true,
                         ticks: {
                             stepSize: 500,
-                            callback: value => value
+                            callback: value => value.toLocaleString() // add commas
                         },
                         suggestedMax: Math.ceil(maxValue / 500) * 500,
                         grid: { drawTicks: true, drawBorder: true }
@@ -196,4 +202,3 @@ function renderPersonnelChart(groupedData) {
         });
     });
 }
-
