@@ -28,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Belt Conveyor 1A", "Belt Conveyor 1B", "Belt Conveyor 2A", "Belt Conveyor 2B", "Belt Conveyor 3A", "Belt Conveyor 3B",
                     "Belt Conveyor 1C", "Belt Conveyor 2C", "Belt Conveyor 3C", "Belt Conveyor 4C", "Wet Mixer", "Fuel Unloading Pump",
                     "Circulating Water Pump A", "Circulating Water Pump B", "Circulating Water Pump C", "Steam Drum", "Air Dryer A",
-                    "Air Dryer B", "Screw Air Compressor A", "Screw Air Compressor B", "Coal Crusher A", "Coal Crusher B",
+                    "Air Dryer B", "Screw Air Compressor A", "Screw Air Compressor B", "Coal Crusher A", "Coal Crusher B", "Primary R.O. Tank",
+                    "Dump Truck MDT-77", "Dump Truck MDT-78", "Backhoe 1", "Backhoe 2", "Dump Truck MDT-75"
                 ];
 
                 const filteredRows = rows.filter(row => {
