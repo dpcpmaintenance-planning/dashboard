@@ -120,7 +120,7 @@ const positionMaps = {
     "Primary High Pressure Water Pump B": { x: 1005, y: 283 },
     "Primary R.O. Device A": { x: 1035, y: 364 },
     "Primary R.O. Device B": { x: 1035, y: 455 },
-    "Primary R.O. Production Water Tank": { x: 720, y: 465 },
+    "Primary R.O. Tank": { x: 720, y: 465 },
     "R.O. Flushing Water Pump": { x: 554, y: 358 },
     "Secondary R.O. Booster Pump A": { x: 460, y: 475 },
     "Secondary R.O. Booster Pump B": { x: 585, y: 475 },
