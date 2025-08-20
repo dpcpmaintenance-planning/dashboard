@@ -89,7 +89,7 @@ const equipmentPositionMaps = {
         "Deflector": { x: 10, y: 10 },
         "Oil Seal A": { x: 5, y: 5 },
         "O-Ring D": { x: 2, y: 2 },
-        "Mechanical Seal": { x: 1, y: 1 },
+        "Mechanical Seal": { x: 555, y: 555 },
     },
     "Soot Blower": {
         "Blind flange": { x: 100, y: 100 },
