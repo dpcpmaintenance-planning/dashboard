@@ -40,7 +40,7 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
 // =============================
 // Global flag to enable/disable dragging
 // =============================
-let draggableEnabled = false; // set false to temporarily disable dragging
+let draggableEnabled = true; // set false to temporarily disable dragging
 
 // =============================
 // Normalize string: lowercase, trim, remove punctuation
