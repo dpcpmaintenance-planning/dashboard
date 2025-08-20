@@ -70,7 +70,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 let y = 20;
                 doc.setFontSize(14);
+
+                // Title (left)
                 doc.text("Pending Work Requests", 14, y);
+
+                // Today's date (right)
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const today = new Date().toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                });
+                doc.setFontSize(11);
+                doc.text(`Update as of ${today}`, pageWidth - 14, y, { align: "right" });
+
                 y += 10;
 
                 const sectionOrder = ["MECHANICAL", "ELECTRICAL", "I&C"];
@@ -95,18 +108,36 @@ document.addEventListener("DOMContentLoaded", () => {
                     doc.text(section, 14, y);
                     y += 6;
 
-                    const tableData = sectionRows.map((row, i) => [
-                        i + 1,
-                        row["Timestamp"] || "",
-                        row["Work Order Num"] || "",
-                        row["Equipment"] || "",
-                        row["Sub-Component"] || "",
-                        row["Brief Description of Problem or Work"] || "",
-                        row["*Planning Remarks"] || "",
-                    ]);
+                    const tableData = sectionRows.map((row, i) => {
+                        let days = row["Days Delayed"] || "";
+
+                        // Remove "Pending" text
+                        days = days.replace(/pending\s*for\s*/i, "").replace(/pending\s*/i, "").trim();
+
+                        // Convert to number and clamp negatives to 0
+                        let daysNum = parseInt(days, 10);
+                        if (isNaN(daysNum) || daysNum < 0) {
+                            daysNum = 0;
+                        }
+
+                        // Add "days" label
+                        const daysText = `${daysNum} days`;
+
+                        return [
+                            row["Timestamp"] || "",
+                            row["Work Order Num"] || "",
+                            row["Equipment"] || "",
+                            row["Sub-Component"] || "",
+                            row["Brief Description of Problem or Work"] || "",
+                            row["*Planning Remarks"] || "",
+                            daysText
+                        ];
+                    });
+
+
 
                     doc.autoTable({
-                        head: [["#", "Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description", "Planning Remarks"]],
+                        head: [["Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description", "Planning Remarks", "Days in Queue"]],
                         body: tableData,
                         startY: y,
                         styles: { fontSize: 8 },
@@ -118,8 +149,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 });
 
-                const today = new Date();
-                const formattedDate = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}-${today.getFullYear()}`;
+                const todayFile = new Date();
+                const formattedDate = `${String(todayFile.getMonth() + 1).padStart(2, '0')}-${String(todayFile.getDate()).padStart(2, '0')}-${todayFile.getFullYear()}`;
                 doc.save(`Pending_Work_Requests_${formattedDate}.pdf`);
 
             });
