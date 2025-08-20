@@ -136,13 +136,6 @@ function updateDiagram() {
 }
 
 
-
-
-
-
-
-
-
 function autoRefreshFromSheet() {
   fetch(sheetURL)
     .then((res) => res.text())
