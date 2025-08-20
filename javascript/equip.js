@@ -72,9 +72,9 @@ const equipmentPositionMaps = {
         "Water separator.": { x: 200, y: 200 },
     },
     "Condensate Pump": {
-        "PN16 OS": { x: 1000, y: 500 },
-        "Y Gate valve.": { x: 555, y: 555 },
-        /*"Seal Cover": { x: 300, y: 300 },
+        "PN16 OS": { x: 100, y: 100 },
+        "Y Gate valve.": { x: 200, y: 200 },
+        "Seal Cover": { x: 300, y: 300 },
         "Impeller": { x: 400, y: 400 },
         "Bearing Case": { x: 500, y: 500 },
         "Plug F": { x: 600, y: 600 },
@@ -91,7 +91,7 @@ const equipmentPositionMaps = {
         "Deflector": { x: 10, y: 10 },
         "Oil Seal A": { x: 5, y: 5 },
         "O-Ring D": { x: 2, y: 2 },
-        "Mechanical Seal": { x: 1, y: 1 },*/
+        "Mechanical Seal": { x: 1, y: 1 },
     },
     "Soot Blower": {
         "Blind flange": { x: 100, y: 100 },
