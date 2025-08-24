@@ -31,7 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Air Dryer B", "Screw Air Compressor A", "Screw Air Compressor B", "Coal Crusher A", "Coal Crusher B", "Primary R.O. Tank",
                     "Dump Truck MDT-77", "Dump Truck MDT-78", "Backhoe 1", "Backhoe 2", "Dump Truck MDT-75", "Star Feeder/Limestone Feeder",
                     "Underground Hopper B", "Underground Hopper A", "Primary Air Fan A", "Primary Air Fan B", "Induced Draft Fan A",
-                    "Induced Draft Fan B", "Secondary Air Fan A", "Secondary Air Fan B"
+                    "Induced Draft Fan B", "Secondary Air Fan A", "Secondary Air Fan B", "Secondary R.O. Booster Pump A", "Secondary R.O. Booster Pump B",
+
                 ];
 
                 const filteredRows = rows.filter(row => {
