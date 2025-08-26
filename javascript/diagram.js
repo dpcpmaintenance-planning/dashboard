@@ -136,7 +136,7 @@ function updateDiagram() {
 }
 
 
-function autoRefreshFromSheet() {
+/*function autoRefreshFromSheet() {
   fetch(sheetURL)
     .then((res) => res.text())
     .then((csvText) => {
@@ -175,7 +175,7 @@ function autoRefreshFromSheet() {
     });
 }
 
-setInterval(autoRefreshFromSheet, 300000); // Refresh every 5 minutes
+setInterval(autoRefreshFromSheet, 300000); // Refresh every 5 minutes */
 
 
 function showSystemEquipmentList(systemTabId, wrStatus = "") {
