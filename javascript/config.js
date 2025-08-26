@@ -1,5 +1,5 @@
 const sheetURL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRI4YerzHu4mr6hT73gPjJDaWV1BNncnXPl8dzEyPl-R0TYaJc4NLI8a_36KgJ61N64dnYPJ3Auob3U/pub?gid=698619125&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSuFBR8gPxFN2pln1o8_d1yFroAo5ZIFqvK8XJHYmx7EfVhwTx_xZ06twOd3xct65mf8JEc_7yfZh0n/pub?gid=0&single=true&output=csv";
 
 const systemGroups = {
   equipments: [],
