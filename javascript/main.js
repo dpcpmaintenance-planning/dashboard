@@ -5,7 +5,7 @@ let selectedSystemTab = "equipments";
 let currentDiagramEquipment = "";
 let diagramWRStatus = "";
 
-fetch("data.csv")
+fetch(sheetURL)
   .then((res) => res.text())
   .then((csvText) => {
     const parsed = Papa.parse(csvText, { header: true });
