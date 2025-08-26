@@ -143,7 +143,10 @@ const positionMaps = {
   sws: {
     "Steam Drum": { x: 90, y: 171 },
     "Continuous Blowdown Tank": { x: 20, y: 220 },
-    "Periodic Blowdown Flash Tank": { x: 20, y: 515 },
+    "Boiler Blowdown System": [
+      { name: "Periodic Blowdown Valve", x: 20, y: 515 },
+      { name: "Periodic Blowdown Flash Tank", x: 20, y: 515 },
+    ],
     "Boiler Water Tube": { x: 180, y: 400 },
     "HT Superheater": { x: 353, y: 278 },
     "MT Superheater": { x: 353, y: 323 },
