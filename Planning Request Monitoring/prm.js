@@ -1,5 +1,5 @@
 const csvUrl =
-    "prm.csv";
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJsdbqvJZosavRLmcTpv6POWOtrWlQLSb5hNEttqh4eRAnng2itnoxNqo-KTawzIllbVsBv4huHdOQ/pub?gid=0&single=true&output=csv";
 
 let allData = [];
 
