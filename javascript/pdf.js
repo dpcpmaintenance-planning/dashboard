@@ -1,4 +1,29 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Helper: parse Timestamp strings like Date(2025,0,29,18,18,21)
+    function parseRowTimestamp(ts) {
+        if (!ts) return null;
+        if (ts instanceof Date) return ts;
+
+        const match = ts.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+        if (match) {
+            const [_, year, month, day, hour, min, sec] = match.map(Number);
+            return new Date(year, month, day, hour, min, sec);
+        }
+
+        const d = new Date(ts);
+        return isNaN(d) ? null : d;
+    }
+
+    // Helper: format date as "August 26, 2025 at 07:07"
+    function formatDateTime(date) {
+        if (!date) return "";
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        const dateStr = date.toLocaleDateString("en-US", options);
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        return `${dateStr} at ${hours}:${minutes}`;
+    }
+
     const checkDataReady = setInterval(() => {
         if (typeof rows !== "undefined" && Array.isArray(rows) && rows.length > 0) {
             clearInterval(checkDataReady);
@@ -23,23 +48,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Heat Exchanger B", "Sprinkler", "Auxiliary Control Oil Pump",
                     "Loader 1", "Loader 2", "Elevator", "Electrostatic Precipitator",
                     "Primary High Pressure Water Pump B", "Primary High Pressure Water Pump A",
-                    "Ash Bin 1", "Ash Bin 2", "Ash Bin 3", "Ash Bin 4", "Ash Bin 5", "Ash Bin 6", "Ash Bin 7", "Ash Bin 8",
-                    "Ash Bin 9", "Ash Bin 10", "Bucket Elevator A", "Bucket Elevator B", "Sea Water Intake Pump A", "Sea Water Intake Pump B",
-                    "Belt Conveyor 1A", "Belt Conveyor 1B", "Belt Conveyor 2A", "Belt Conveyor 2B", "Belt Conveyor 3A", "Belt Conveyor 3B",
-                    "Belt Conveyor 1C", "Belt Conveyor 2C", "Belt Conveyor 3C", "Belt Conveyor 4C", "Wet Mixer", "Fuel Unloading Pump",
-                    "Circulating Water Pump A", "Circulating Water Pump B", "Circulating Water Pump C", "Steam Drum", "Air Dryer A",
-                    "Air Dryer B", "Screw Air Compressor A", "Screw Air Compressor B", "Coal Crusher A", "Coal Crusher B", "Primary R.O. Tank",
-                    "Dump Truck MDT-77", "Dump Truck MDT-78", "Backhoe 1", "Backhoe 2", "Dump Truck MDT-75", "Star Feeder/Limestone Feeder",
-                    "Underground Hopper B", "Underground Hopper A", "Primary Air Fan A", "Primary Air Fan B", "Induced Draft Fan A",
-                    "Induced Draft Fan B", "Secondary Air Fan A", "Secondary Air Fan B", "Secondary R.O. Booster Pump A", "Secondary R.O. Booster Pump B",
-
+                    "Ash Bin 1", "Ash Bin 2", "Ash Bin 3", "Ash Bin 4", "Ash Bin 5", "Ash Bin 6",
+                    "Ash Bin 7", "Ash Bin 8", "Ash Bin 9", "Ash Bin 10",
+                    "Bucket Elevator A", "Bucket Elevator B",
+                    "Belt Conveyor 1A", "Belt Conveyor 1B", "Belt Conveyor 2A", "Belt Conveyor 2B",
+                    "Belt Conveyor 3A", "Belt Conveyor 3B", "Belt Conveyor 1C", "Belt Conveyor 2C",
+                    "Belt Conveyor 3C", "Belt Conveyor 4C", "Wet Mixer",
+                    "Circulating Water Pump A", "Circulating Water Pump B", "Circulating Water Pump C",
+                    "Steam Drum", "Air Dryer A", "Air Dryer B", "Screw Air Compressor A",
+                    "Screw Air Compressor B", "Coal Crusher A", "Coal Crusher B", "Primary R.O. Tank",
+                    "Dump Truck MDT-77", "Dump Truck MDT-78", "Backhoe 1", "Backhoe 2",
+                    "Dump Truck MDT-75", "Star Feeder/Limestone Feeder", "Underground Hopper B",
+                    "Underground Hopper A", "Primary Air Fan A", "Primary Air Fan B",
+                    "Induced Draft Fan A", "Induced Draft Fan B", "Secondary Air Fan A",
+                    "Secondary Air Fan B", "Secondary R.O. Booster Pump A", "Secondary R.O. Booster Pump B"
                 ];
 
+                // Filter rows
                 const filteredRows = rows.filter(row => {
                     const status = (row["WR Status"] || "").toLowerCase();
                     const section = (row["Maintenance Section"] || "").toUpperCase();
                     const equipment = row["Equipment"] || "";
-                    const rowDate = row["Timestamp"] ? new Date(row["Timestamp"]) : null;
+                    const rowDate = parseRowTimestamp(row["Timestamp"]);
 
                     const withinDateRange =
                         (!startDate || (rowDate && rowDate >= startDate)) &&
@@ -56,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                // Group rows by Maintenance Section
+                // Group rows by section
                 const grouped = {};
                 filteredRows.forEach(row => {
                     const section = (row["Maintenance Section"] || "UNKNOWN").toUpperCase();
@@ -65,28 +95,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({
-                    orientation: "portrait",
-                    unit: "mm",
-                    format: "a4"
-                });
+                const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
                 let y = 20;
                 doc.setFontSize(14);
 
-                // Title (left)
+                // Title
                 doc.text("Pending Work Requests", 14, y);
 
-                // Today's date (right)
+                // Today's date
                 const pageWidth = doc.internal.pageSize.getWidth();
-                const today = new Date().toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric"
-                });
+                const todayStr = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
                 doc.setFontSize(11);
-                doc.text(`Update as of ${today}`, pageWidth - 14, y, { align: "right" });
-
+                doc.text(`Update as of ${todayStr}`, pageWidth - 14, y, { align: "right" });
                 y += 10;
 
                 const sectionOrder = ["MECHANICAL", "ELECTRICAL", "I&C"];
@@ -100,7 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     if (index !== 0) y += 10;
                     const pageHeight = doc.internal.pageSize.height;
-
                     if (y + 20 >= pageHeight) {
                         doc.addPage();
                         y = 20;
@@ -111,23 +131,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     doc.text(section, 14, y);
                     y += 6;
 
-                    const tableData = sectionRows.map((row, i) => {
+                    const tableData = sectionRows.map(row => {
                         let days = row["Days Delayed"] || "";
-
-                        // Remove "Pending" text
                         days = days.replace(/pending\s*for\s*/i, "").replace(/pending\s*/i, "").trim();
-
-                        // Convert to number and clamp negatives to 0
                         let daysNum = parseInt(days, 10);
-                        if (isNaN(daysNum) || daysNum < 0) {
-                            daysNum = 0;
-                        }
-
-                        // Add "days" label
+                        if (isNaN(daysNum) || daysNum < 0) daysNum = 0;
                         const daysText = `${daysNum} days`;
 
+                        const tsDate = parseRowTimestamp(row["Timestamp"]);
+                        const tsFormatted = formatDateTime(tsDate);
+
                         return [
-                            row["Timestamp"] || "",
+                            tsFormatted,
                             row["Work Order Num"] || "",
                             row["Equipment"] || "",
                             row["Sub-Component"] || "",
@@ -137,8 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         ];
                     });
 
-
-
                     doc.autoTable({
                         head: [["Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description", "Planning Remarks", "Days in Queue"]],
                         body: tableData,
@@ -146,16 +159,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         styles: { fontSize: 8 },
                         headStyles: { fillColor: [41, 128, 185] },
                         margin: { left: 14, right: 14 },
-                        didDrawPage: (data) => {
-                            y = data.cursor.y;
-                        }
+                        didDrawPage: (data) => { y = data.cursor.y; }
                     });
                 });
 
                 const todayFile = new Date();
                 const formattedDate = `${String(todayFile.getMonth() + 1).padStart(2, '0')}-${String(todayFile.getDate()).padStart(2, '0')}-${todayFile.getFullYear()}`;
                 doc.save(`Pending_Work_Requests_${formattedDate}.pdf`);
-
             });
         }
     }, 300);

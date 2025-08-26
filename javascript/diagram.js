@@ -1,3 +1,21 @@
+
+function parseGvizDate(value) {
+  if (typeof value === "string" && value.startsWith("Date(")) {
+    const match = value.match(/Date\((\d+),(\d+),(\d+),?(\d*)?,?(\d*)?,?(\d*)?\)/);
+    if (match) {
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10);
+      const day = parseInt(match[3], 10);
+      const hour = parseInt(match[4] || "0", 10);
+      const minute = parseInt(match[5] || "0", 10);
+      const second = parseInt(match[6] || "0", 10);
+      return new Date(year, month, day, hour, minute, second);
+    }
+  }
+  return new Date(value);
+}
+
+// --- Update updateDiagramTableInline ---
 function updateDiagramTableInline() {
   const tbody = document.getElementById("diagram-table-body");
 
@@ -12,7 +30,7 @@ function updateDiagramTableInline() {
         ? r["WR Status"]?.toLowerCase() === diagramWRStatus.toLowerCase()
         : true
     )
-    .sort((a, b) => new Date(b["Timestamp"]) - new Date(a["Timestamp"]));
+    .sort((a, b) => parseGvizDate(b["Timestamp"]) - parseGvizDate(a["Timestamp"])); // ✅ latest first
 
   tbody.innerHTML = filtered.map(row => {
     const rawImageURL = row[imageColumnKey]?.trim();
@@ -136,48 +154,63 @@ function updateDiagram() {
 }
 
 
-/*function autoRefreshFromSheet() {
-  fetch(sheetURL)
+function autoRefreshFromSheet() {
+  if (!gvizURL) return console.error("GViz URL not defined");
+
+  fetch(gvizURL)
     .then((res) => res.text())
-    .then((csvText) => {
-      Papa.parse(csvText, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-          rows = results.data;
+    .then((gvizText) => {
+      // GViz returns a JS function wrapper, strip it
+      const jsonText = gvizText
+        .replace(/^.*?(\{.+\});?$/, "$1"); // extract the JSON object
+      const data = JSON.parse(jsonText);
 
-          // Update the diagram display
-          if (typeof updateDiagram === "function") {
-            updateDiagram();
+      // Convert GViz rows to plain objects
+      rows = data.table.rows.map((r) => {
+        const obj = {};
+        data.table.cols.forEach((col, i) => {
+          let value = r.c[i]?.v ?? "";
+          // Optional: parse dates
+          if (col.type === "date" || col.type === "datetime") {
+            value = new Date(value);
           }
-
-          const modal = document.getElementById("diagram-modal");
-          const isModalOpen = modal && !modal.classList.contains("hidden");
-
-          if (isModalOpen) {
-            if (currentDiagramEquipment && typeof updateDiagramModalTable === "function") {
-              updateDiagramModalTable();
-            } else if (typeof showSystemEquipmentList === "function") {
-              showSystemEquipmentList(selectedSystemTab, currentSystemFilter);
-            }
-          }
-
-          // Optional: Update "Last Updated" display
-          const updatedEl = document.getElementById("last-updated");
-          if (updatedEl) {
-            updatedEl.textContent = "Last updated: " + new Date().toLocaleTimeString();
-          }
-        },
+          obj[col.label] = value;
+        });
+        return obj;
       });
+
+      // Update the diagram display
+      if (typeof updateDiagram === "function") {
+        updateDiagram();
+      }
+
+      const modal = document.getElementById("diagram-modal");
+      const isModalOpen = modal && !modal.classList.contains("hidden");
+
+      if (isModalOpen) {
+        if (currentDiagramEquipment && typeof updateDiagramModalTable === "function") {
+          updateDiagramModalTable();
+        } else if (typeof showSystemEquipmentList === "function") {
+          showSystemEquipmentList(selectedSystemTab, currentSystemFilter);
+        }
+      }
+
+      // Optional: Update "Last Updated" display
+      const updatedEl = document.getElementById("last-updated");
+      if (updatedEl) {
+        updatedEl.textContent = "Last updated: " + new Date().toLocaleTimeString();
+      }
     })
     .catch((error) => {
       console.error("Error auto-refreshing data:", error);
     });
 }
 
-setInterval(autoRefreshFromSheet, 300000); // Refresh every 5 minutes */
+setInterval(autoRefreshFromSheet, 300000); // Refresh every 5 minutes
 
 
+
+// --- Update showSystemEquipmentList ---
 function showSystemEquipmentList(systemTabId, wrStatus = "") {
   const systemNames = systemGroups[systemTabId] || [];
   const tbody = document.getElementById("diagram-table-body");
@@ -194,7 +227,7 @@ function showSystemEquipmentList(systemTabId, wrStatus = "") {
     .filter((r) =>
       wrStatus ? r["WR Status"]?.toLowerCase() === wrStatus.toLowerCase() : true
     )
-    .sort((a, b) => new Date(b["Timestamp"]) - new Date(a["Timestamp"]));
+    .sort((a, b) => parseGvizDate(b["Timestamp"]) - parseGvizDate(a["Timestamp"])); // ✅ latest first
 
   tbody.innerHTML = filtered
     .map((row) => {
@@ -289,64 +322,56 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
     hasUnresolvedBreakdown[eq] = false;
   }
 
-  const seenLatestStatus = new Set();
-
   for (let i = dataRows.length - 1; i >= 0; i--) {
     const row = dataRows[i];
     const eq = normalize(row["Equipment"]);
     if (!equipmentSet.has(eq)) continue;
 
-    const currentStatus = row["Current Status"];
-    const wrStatus = (row["WR Status"] || "").trim().toLowerCase();
-    const delayText = (row["Days Delayed"] || "").toLowerCase();
-    const breakdownCount = row["Breakdown Count"];
+    // --- Normalize current status ---
+    const currentStatusStr = (row["Current Status"] ?? "").toString();
+    const currentStatusNum = parseInt(currentStatusStr, 10);
+    if (![0, 1, 2].includes(currentStatusNum)) continue;
 
-    // ✅ Get latest Current Status
-    if (["0", "1", "2"].includes(currentStatus)) {
-      const current = parseInt(currentStatus);
-      const prev = parseInt(latestStatusMap[eq] ?? "0");
-
-      // Prioritize breakdown > sustainable > operational
-      if (current > prev) {
-        latestStatusMap[eq] = currentStatus;
-      }
-
-      seenLatestStatus.add(eq);
+    const prevStatusNum = parseInt(latestStatusMap[eq] ?? "0", 10);
+    if (currentStatusNum > prevStatusNum) {
+      latestStatusMap[eq] = currentStatusStr; // store as string for drawing logic
     }
 
-    // ✅ Track breakdowns
-    if (breakdownCount?.toString().trim() === "1") {
-      breakdownMap[eq] = (breakdownMap[eq] || 0) + 1;
-    }
+    // --- Normalize WR Status ---
+    const wrStatus = (row["WR Status"] ?? "").toLowerCase().trim();
 
-    // ✅ Check if there's any pending sustainable status
-    if (currentStatus === "1" && wrStatus !== "done") {
+    // --- Track unresolved statuses ---
+    if (currentStatusNum === 1 && wrStatus !== "done") {
       hasUnresolvedSustainable[eq] = true;
     }
-
-    // ✅ Check if there's any pending breakdown status
-    if (currentStatus === "2" && wrStatus !== "done") {
+    if (currentStatusNum === 2 && wrStatus !== "done") {
       hasUnresolvedBreakdown[eq] = true;
     }
 
-    // ✅ Update max delay
+    // --- Track breakdown count ---
+    if ((row["Breakdown Count"]?.toString().trim() ?? "") === "1") {
+      breakdownMap[eq] = (breakdownMap[eq] || 0) + 1;
+    }
+
+    // --- Track max days delayed ---
+    const delayText = (row["Days Delayed"] ?? "").toLowerCase();
     if (!wrStatus.includes("done") && (delayText.includes("pending") || delayText.includes("delayed"))) {
       const match = delayText.match(/(\d+)/);
-      const delay = match ? parseInt(match[1]) : 0;
+      const delay = match ? parseInt(match[1], 10) : 0;
       if (!isNaN(delay) && delay > (daysDelayedMap[eq] || 0)) {
         daysDelayedMap[eq] = delay;
       }
     }
   }
 
-  // ✅ Override green to yellow if any unresolved sustainable WR exists
+  // --- Override green to yellow if any unresolved sustainable ---
   for (const eq of Object.keys(latestStatusMap)) {
     if (latestStatusMap[eq] === "0" && hasUnresolvedSustainable[eq]) {
       latestStatusMap[eq] = "1";
     }
   }
 
-  // ✅ Override to breakdown if any pending breakdown WR exists (even if not latest)
+  // --- Override to red if any pending breakdown ---
   for (const eq of Object.keys(latestStatusMap)) {
     if (hasUnresolvedBreakdown[eq]) {
       latestStatusMap[eq] = "2";

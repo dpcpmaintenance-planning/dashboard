@@ -1,20 +1,33 @@
-// === Cleaned & Improved system.js ===
 let rows = [];
 let imageColumnKey = "";
 let selectedSystemTab = "equipments";
 let currentDiagramEquipment = "";
 let diagramWRStatus = "";
 
-fetch(sheetURL)
-  .then((res) => res.text())
-  .then((csvText) => {
-    const parsed = Papa.parse(csvText, { header: true });
-    rows = parsed.data;
-    imageColumnKey = parsed.meta.fields.find((c) =>
-      c.toLowerCase().includes("image")
-    );
+// Replace this with your GViz URL (published sheet as CSV or JSON)
+
+// Load Google Sheet via GViz JSON
+fetch(gvizURL)
+  .then(res => res.text())
+  .then((gvizText) => {
+    // GViz returns some JS padding, need to clean it
+    const jsonText = gvizText.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
+    const data = JSON.parse(jsonText);
+
+    // Convert GViz table to array of objects
+    const cols = data.table.cols.map(c => c.label);
+    rows = data.table.rows.map(r => {
+      const obj = {};
+      r.c.forEach((cell, i) => {
+        obj[cols[i]] = cell ? cell.v : "";
+      });
+      return obj;
+    });
+
+    imageColumnKey = cols.find(c => c.toLowerCase().includes("image"));
     updateDiagram();
   });
+
 
 function showTab(event, tabId) {
   document.querySelectorAll(".tab-button").forEach((btn) =>
@@ -66,6 +79,22 @@ function setupEquipmentListFilters() {
       ).join("");
   }
 
+  function parseGvizDate(value) {
+    if (typeof value === "string" && value.startsWith("Date(")) {
+      const match = value.match(/Date\((\d+),(\d+),(\d+),?(\d*)?,?(\d*)?,?(\d*)?\)/);
+      if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        const day = parseInt(match[3], 10);
+        const hour = parseInt(match[4] || "0", 10);
+        const minute = parseInt(match[5] || "0", 10);
+        const second = parseInt(match[6] || "0", 10);
+        return new Date(year, month, day, hour, minute, second);
+      }
+    }
+    return new Date(value);
+  }
+
   function renderTable() {
     const selectedSystem = systemFilter.value.trim();
     const selectedEquipment = equipmentFilter.value.trim();
@@ -92,8 +121,9 @@ function setupEquipmentListFilters() {
         return combinedText.includes(keyword);
       });
 
+    // Sort by timestamp descending (latest first)
     filtered.sort(
-      (a, b) => new Date(b["Timestamp"]) - new Date(a["Timestamp"])
+      (a, b) => parseGvizDate(b["Timestamp"]) - parseGvizDate(a["Timestamp"])
     );
 
     tbody.innerHTML = filtered
@@ -129,6 +159,7 @@ function setupEquipmentListFilters() {
       })
       .join("");
   }
+
 
 
   systemFilter.addEventListener("change", () => {

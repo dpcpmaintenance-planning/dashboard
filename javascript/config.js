@@ -1,5 +1,5 @@
-const sheetURL =
-  "data.csv";
+const gvizURL =
+  "https://docs.google.com/spreadsheets/d/1px0fxxtRmS9-otYRjlgUF2eBUvqbKBE3Y1HDPn6v200/gviz/tq?tqx=out:json&gid=698619125";
 
 const systemGroups = {
   equipments: [],
@@ -13,7 +13,7 @@ const systemGroups = {
   ],
   combustion: ["Combustion System", "Coal Pipe System", "Biomass Handling System"],
   wts: ["Water Treatment System"],
-  sws: ["Steam and Water", "Feedwater System", "Deaerator System", "Turbine Condensation Water System", "Main Steam System", "Boiler Blowdown System"],
+  sws: ["Steam and Water", "Feedwater System", "Deaerator System", "Turbine Condensation Water System", "Main Steam System"],
   sccws: ["Seawater Instake and Drainage System", "Circulating Water System", "Close Circulating Cooling Water System", "Closed Circulating Cooling Water System"],
   cbhs: ["Coal Handling System", "Biomass Handling System"],
   cas: ["Compressed Air System"],
@@ -120,7 +120,7 @@ const positionMaps = {
     "Primary High Pressure Water Pump B": { x: 1005, y: 283 },
     "Primary R.O. Device A": { x: 1035, y: 364 },
     "Primary R.O. Device B": { x: 1035, y: 455 },
-    "Primary R.O. Tank": { x: 720, y: 465 },
+    "Primary R.O. Production Water Tank": { x: 720, y: 465 },
     "R.O. Flushing Water Pump": { x: 554, y: 358 },
     "Secondary R.O. Booster Pump A": { x: 460, y: 475 },
     "Secondary R.O. Booster Pump B": { x: 585, y: 475 },
@@ -143,10 +143,7 @@ const positionMaps = {
   sws: {
     "Steam Drum": { x: 90, y: 171 },
     "Continuous Blowdown Tank": { x: 20, y: 220 },
-    "Boiler Blowdown System": [
-      { name: "Periodic Blowdown Valve", x: 20, y: 515 },
-      { name: "Periodic Blowdown Flash Tank", x: 20, y: 515 },
-    ],
+    "Periodic Blowdown Flash Tank": { x: 20, y: 515 },
     "Boiler Water Tube": { x: 180, y: 400 },
     "HT Superheater": { x: 353, y: 278 },
     "MT Superheater": { x: 353, y: 323 },
