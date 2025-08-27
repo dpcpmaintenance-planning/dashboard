@@ -13,7 +13,7 @@ const systemGroups = {
   ],
   combustion: ["Combustion System", "Coal Pipe System", "Biomass Handling System"],
   wts: ["Water Treatment System"],
-  sws: ["Steam and Water", "Feedwater System", "Deaerator System", "Turbine Condensation Water System", "Main Steam System"],
+  sws: ["Steam and Water", "Feedwater System", "Deaerator System", "Turbine Condensation Water System", "Main Steam System", "Boiler Blowdown System"],
   sccws: ["Seawater Instake and Drainage System", "Circulating Water System", "Close Circulating Cooling Water System", "Closed Circulating Cooling Water System"],
   cbhs: ["Coal Handling System", "Biomass Handling System"],
   cas: ["Compressed Air System"],
@@ -143,7 +143,10 @@ const positionMaps = {
   sws: {
     "Steam Drum": { x: 90, y: 171 },
     "Continuous Blowdown Tank": { x: 20, y: 220 },
-    "Periodic Blowdown Flash Tank": { x: 20, y: 515 },
+    "Boiler Blowdown System": [
+      { name: "Periodic Blowdown Flash Tank", x: 20, y: 515 },
+      { name: "Periodic Blowdown Valve", x: 20, y: 515 },
+    ],
     "Boiler Water Tube": { x: 180, y: 400 },
     "HT Superheater": { x: 353, y: 278 },
     "MT Superheater": { x: 353, y: 323 },
