@@ -1,4 +1,4 @@
-const csvUrl = "history.csv";
+const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSiM1ofNlmX7G3SspVaIMA04UG0fPE3ZX3AokB_CywZfP6AqypXIhUR3bhZkZuH402cdVG3InU5x94i/pub?gid=0&single=true&output=csv";
 let originalData = [];
 
 async function loadData() {
