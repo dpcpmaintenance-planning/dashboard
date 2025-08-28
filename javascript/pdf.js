@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Soot Blower 5", "Soot Blower 6", "Soot Blower 7", "Soot Blower 8",
                     "Belt Conveyor 1A", "Belt Conveyor 1B", "Belt Conveyor 2A", "Belt Conveyor 2B",
                     "Belt Conveyor 3A", "Belt Conveyor 3B", "Belt Conveyor 1C", "Belt Conveyor 2C",
-                    "Belt Conveyor 3C", "Belt Conveyor 4C", "Wet Mixer",
+                    "Belt Conveyor 3C", "Belt Conveyor 4C", "Wet Mixer", "Metal Detector A", "Metal Detector B",
                     "Circulating Water Pump A", "Circulating Water Pump B", "Circulating Water Pump C",
                     "Steam Drum", "Air Dryer A", "Air Dryer B", "Screw Air Compressor A",
                     "Screw Air Compressor B", "Coal Crusher A", "Coal Crusher B", "Primary R.O. Tank",
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Underground Hopper A", "Primary Air Fan A", "Primary Air Fan B",
                     "Induced Draft Fan A", "Induced Draft Fan B", "Secondary Air Fan A",
                     "Secondary Air Fan B", "Secondary R.O. Booster Pump A", "Secondary R.O. Booster Pump B",
-                    "Closed Cooling Water Pump A", "Closed Cooling Water Pump B"
+                    "Closed Cooling Water Pump A", "Closed Cooling Water Pump B", "44ZKKE",
                 ];
 
                 // Filter rows
