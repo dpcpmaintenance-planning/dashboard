@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ["fps", "Fire Protection"],
         ["tls", "Turbine Lubrication"],
         ["cs", "Chlorination System"],
-        ["electrical", "MV & LV Electrical"],
+        ["electrical", "MV and LV Electrical System"],
         ["substation", "Substation"],
         ["heavy-equipment", "Heavy Equipment"],
         ["switchyard", "Switchyard"],

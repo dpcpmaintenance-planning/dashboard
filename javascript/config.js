@@ -20,7 +20,7 @@ const systemGroups = {
   fps: ["Fire Fighting System", "Fire Detection & Alarm System"],
   tls: ["Turbine Lubrication System", "Turbine Oil System"],
   cs: ["Electro-Chlorination Water System"],
-  electrical: ["MV & LV Electrical"],
+  electrical: ["MV and LV Electrical System"],
   substation: ["Substation"],
   "heavy-equipment": ["Heavy Equipment"],
   switchyard: ["Switchyard"],
