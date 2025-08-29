@@ -154,62 +154,6 @@ function updateDiagram() {
 }
 
 
-function autoRefreshFromSheet() {
-  if (!gvizURL) return console.error("GViz URL not defined");
-
-  fetch(gvizURL)
-    .then((res) => res.text())
-    .then((gvizText) => {
-      // GViz returns a JS function wrapper, strip it
-      const jsonText = gvizText
-        .replace(/^.*?(\{.+\});?$/, "$1"); // extract the JSON object
-      const data = JSON.parse(jsonText);
-
-      // Convert GViz rows to plain objects
-      rows = data.table.rows.map((r) => {
-        const obj = {};
-        data.table.cols.forEach((col, i) => {
-          let value = r.c[i]?.v ?? "";
-          // Optional: parse dates
-          if (col.type === "date" || col.type === "datetime") {
-            value = new Date(value);
-          }
-          obj[col.label] = value;
-        });
-        return obj;
-      });
-
-      // Update the diagram display
-      if (typeof updateDiagram === "function") {
-        updateDiagram();
-      }
-
-      const modal = document.getElementById("diagram-modal");
-      const isModalOpen = modal && !modal.classList.contains("hidden");
-
-      if (isModalOpen) {
-        if (currentDiagramEquipment && typeof updateDiagramModalTable === "function") {
-          updateDiagramModalTable();
-        } else if (typeof showSystemEquipmentList === "function") {
-          showSystemEquipmentList(selectedSystemTab, currentSystemFilter);
-        }
-      }
-
-      // Optional: Update "Last Updated" display
-      const updatedEl = document.getElementById("last-updated");
-      if (updatedEl) {
-        updatedEl.textContent = "Last updated: " + new Date().toLocaleTimeString();
-      }
-    })
-    .catch((error) => {
-      console.error("Error auto-refreshing data:", error);
-    });
-}
-
-setInterval(autoRefreshFromSheet, 300000); // Refresh every 5 minutes
-
-
-
 // --- Update showSystemEquipmentList ---
 function showSystemEquipmentList(systemTabId, wrStatus = "") {
   const systemNames = systemGroups[systemTabId] || [];
@@ -298,6 +242,7 @@ function resetDiagramModal() {
   currentSystemFilter = "";
   updateFilterButtonStates();
 }
+
 
 function getLatestStatusAndBreakdown(dataRows, systemNames) {
   const equipmentSet = new Set(
