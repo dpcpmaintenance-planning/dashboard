@@ -228,7 +228,7 @@ const positionMaps = {
     "Air Storage Tank": { x: 377, y: 230 },
     "Air Dryer A": { x: 512, y: 255 },
     "Air Dryer B": { x: 510, y: 407 },
-    "Air Storage tank 1M^3": { x: 510, y: 640 },
+    "Air Storage tank 10M^3": { x: 510, y: 640 },
     "Air Storage tank 20M^3": { x: 680, y: 380 },
     "Air Storage tank 4M^3": { x: 940, y: 200 },
     "Air Storage tank 2M^3": { x: 940, y: 380 },

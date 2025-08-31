@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Induced Draft Fan A", "Induced Draft Fan B", "Secondary Air Fan A",
                     "Secondary Air Fan B", "Secondary R.O. Booster Pump A", "Secondary R.O. Booster Pump B",
                     "Closed Cooling Water Pump A", "Closed Cooling Water Pump B", "44ZKKE", "Demineralized Tank",
+                    "Air Storage tank 10M^3", "Multi-Media Filter B", "Multi-Media Filter A",
                 ];
 
                 // Filter rows
