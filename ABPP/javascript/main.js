@@ -1,20 +1,33 @@
-// === Cleaned & Improved system.js ===
 let rows = [];
 let imageColumnKey = "";
 let selectedSystemTab = "equipments";
 let currentDiagramEquipment = "";
 let diagramWRStatus = "";
 
-fetch(sheetURL)
-  .then((res) => res.text())
-  .then((csvText) => {
-    const parsed = Papa.parse(csvText, { header: true });
-    rows = parsed.data;
-    imageColumnKey = parsed.meta.fields.find((c) =>
-      c.toLowerCase().includes("image")
-    );
+// Replace this with your GViz URL (published sheet as CSV or JSON)
+
+// Load Google Sheet via GViz JSON
+fetch(gvizURL)
+  .then(res => res.text())
+  .then((gvizText) => {
+    // GViz returns some JS padding, need to clean it
+    const jsonText = gvizText.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/)[1];
+    const data = JSON.parse(jsonText);
+
+    // Convert GViz table to array of objects
+    const cols = data.table.cols.map(c => c.label);
+    rows = data.table.rows.map(r => {
+      const obj = {};
+      r.c.forEach((cell, i) => {
+        obj[cols[i]] = cell ? cell.v : "";
+      });
+      return obj;
+    });
+
+    imageColumnKey = cols.find(c => c.toLowerCase().includes("image"));
     updateDiagram();
   });
+
 
 function showTab(event, tabId) {
   document.querySelectorAll(".tab-button").forEach((btn) =>
@@ -66,6 +79,22 @@ function setupEquipmentListFilters() {
       ).join("");
   }
 
+  function parseGvizDate(value) {
+    if (typeof value === "string" && value.startsWith("Date(")) {
+      const match = value.match(/Date\((\d+),(\d+),(\d+),?(\d*)?,?(\d*)?,?(\d*)?\)/);
+      if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        const day = parseInt(match[3], 10);
+        const hour = parseInt(match[4] || "0", 10);
+        const minute = parseInt(match[5] || "0", 10);
+        const second = parseInt(match[6] || "0", 10);
+        return new Date(year, month, day, hour, minute, second);
+      }
+    }
+    return new Date(value);
+  }
+
   function renderTable() {
     const selectedSystem = systemFilter.value.trim();
     const selectedEquipment = equipmentFilter.value.trim();
@@ -82,40 +111,56 @@ function setupEquipmentListFilters() {
       .filter((r) => {
         if (!keyword) return true;
         const combinedText = `
-          ${r["Work Order Num"] || ""}
-          ${r["Equipment"] || ""}
-          ${r["Sub-Component"] || ""}
-          ${r["Brief Description of Problem or Work"] || ""}
-          ${r["Detailed Description"] || ""}
-          ${r["*Planning Remarks"] || ""}
-        `.toLowerCase();
+        ${r["Work Order Num"] || ""}
+        ${r["Equipment"] || ""}
+        ${r["Sub-Component"] || ""}
+        ${r["Brief Description of Problem or Work"] || ""}
+        ${r["Detailed Description"] || ""}
+        ${r["*Planning Remarks"] || ""}
+      `.toLowerCase();
         return combinedText.includes(keyword);
       });
 
+    // Sort by timestamp descending (latest first)
     filtered.sort(
-      (a, b) => new Date(b["Timestamp"]) - new Date(a["Timestamp"])
+      (a, b) => parseGvizDate(b["Timestamp"]) - parseGvizDate(a["Timestamp"])
     );
 
     tbody.innerHTML = filtered
       .map((row) => {
-        const imageURL = row[imageColumnKey]?.trim();
-        return `
-          <tr>
-            <td>${formatDate(row["Timestamp"])}</td>
-            <td>${row["Work Order Num"] || ""}</td>
-            <td>${row["Equipment"] || ""}</td>
-            <td>${row["Sub-Component"] || ""}</td>
-            <td>${row["Brief Description of Problem or Work"] || ""}</td>
-            <td>${row["Detailed Description"] || ""}</td>
-            <td>${row["Severity"] || ""}</td>
-            <td>${row["*Planning Remarks"] || ""}</td>
-            <td>${row["WR Status"] || ""}</td>
-            <td>${formatImageLink(imageURL)}</td>
-          </tr>
+        const rawImageURL = row[imageColumnKey]?.trim();
+        let imageCell = "No image";
+
+        if (rawImageURL) {
+          const thumbURL = convertGoogleDriveLink(rawImageURL);
+          imageCell = `
+          <a href="${rawImageURL}" target="_blank" rel="noopener noreferrer">
+            <img src="${thumbURL}" 
+                 alt="Work Request Image" 
+                 style="width:80px; height:auto; border:1px solid #ccc; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.1);" />
+          </a>
         `;
+        }
+
+        return `
+        <tr>
+          <td>${formatDate(row["Timestamp"])}</td>
+          <td>${row["Work Order Num"] || ""}</td>
+          <td>${row["Equipment"] || ""}</td>
+          <td>${row["Sub-Component"] || ""}</td>
+          <td>${row["Brief Description of Problem or Work"] || ""}</td>
+          <td>${row["Detailed Description"] || ""}</td>
+          <td>${row["Severity"] || ""}</td>
+          <td>${row["*Planning Remarks"] || ""}</td>
+          <td>${row["WR Status"] || ""}</td>
+          <td>${imageCell}</td>
+        </tr>
+      `;
       })
       .join("");
   }
+
+
 
   systemFilter.addEventListener("change", () => {
     updateEquipmentOptions();
@@ -225,11 +270,12 @@ document.getElementById("equipment-modal-close").addEventListener("click", () =>
 });
 
 document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("image-popup-link")) {
+  const link = e.target.closest(".image-popup-link");
+  if (link) {
     e.preventDefault();
     const modal = document.getElementById("image-modal");
     const modalImg = document.getElementById("image-modal-img");
-    modalImg.src = e.target.href;
+    modalImg.src = link.dataset.full;
     modal.classList.remove("hidden");
   }
 });
@@ -238,3 +284,4 @@ document.getElementById("image-modal-close").addEventListener("click", () => {
   document.getElementById("image-modal").classList.add("hidden");
   document.getElementById("image-modal-img").src = "";
 });
+

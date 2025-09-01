@@ -153,7 +153,7 @@ const positionMaps = {
     "LT Superheater": { x: 353, y: 373 },
     "Economizer": { x: 353, y: 420 },
     "Terminal Header": { x: 488, y: 290 },
-    "Auxiliary Steam System": { x: 673, y: 115 },
+    "Turbine Auxiliary Steam": { x: 673, y: 115 },
     "Bypass System": { x: 673, y: 175 },
     "Steam Turbine": { x: 655, y: 250 },
     "Condenser": { x: 812, y: 270 },
@@ -224,7 +224,7 @@ const positionMaps = {
   cas: {
     "Screw Air Compressor A": { x: 145, y: 230 },
     "Screw Air Compressor B": { x: 145, y: 380 },
-    "Mobile Air Compressor": { x: 200, y: 597 },
+    "Mobile Compressor": { x: 200, y: 597 },
     "Air Storage Tank": { x: 377, y: 230 },
     "Air Dryer A": { x: 512, y: 255 },
     "Air Dryer B": { x: 510, y: 407 },
