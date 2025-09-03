@@ -30,8 +30,12 @@ const positionMaps = {
   fos2: {
     "HFO Supplying Pump": { x: 305, y: 420 },
     "HFO Separator": { x: 315, y: 647 },
+    "HFO Day Tank": { x: 620, y: 510 },
+    "HFO Buffer Tank": { x: 792, y: 510 }
   },
   fos3: {
+    "Fuel Oil Circulating Booster Pump 1": { x: 632, y: 190 },
+    "Fuel Oil Circulating Booster Pump 2": { x: 632, y: 490 }
 
   },
   los: {
