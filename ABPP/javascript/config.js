@@ -22,6 +22,8 @@ const positionMaps = {
     "MAN 1": { x: 217, y: 195 },
     "MAN 2": { x: 217, y: 575 },
     "Maintenance Water Tank": { x: 803, y: 60 },
+    "HT Water Expansion Tank 1": { x: 677, y: 55 },
+    "HT Water Expansion Tank 2": { x: 677, y: 430 },
   },
   es: {
     "Exhaust Gas Boiler 1": { x: 533, y: 125 },
