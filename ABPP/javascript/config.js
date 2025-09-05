@@ -5,10 +5,10 @@ const systemGroups = {
   equipments: [],
   cs: ["Cooling Water System", "Engine"],
   es: ["Exhaust System", "Steam"],
-  fos1: ["Fuel Oil System 1",],
-  fos2: ["Fuel Oil System 2"],
-  fos3: ["Fuel Oil System 3"],
-  los: ["Lube Oil System"],
+  fos1: ["Fuel Oil System 1", "Fuel Oil"],
+  fos2: ["Fuel Oil System 2", "Fuel Oil"],
+  fos3: ["Fuel Oil System 3", "Fuel Oil"],
+  los: ["Lube Oil System", "Lube Oil"],
 };
 
 const positionMaps = {
