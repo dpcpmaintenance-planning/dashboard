@@ -21,10 +21,17 @@ const positionMaps = {
     "Nozzle Cooling Water Pump 2": { x: 392, y: 545 },
     "MAN 1": { x: 217, y: 195 },
     "MAN 2": { x: 217, y: 575 },
+    "Maintenance Water Tank": { x: 803, y: 60 },
   },
   es: {
     "Exhaust Gas Boiler 1": { x: 533, y: 125 },
-    "Exhaust Gas Boiler 2": { x: 533, y: 465 },
+    "Exhaust Gas Boiler 2": { x: 533, y: 467 },
+    "Exhaust Silencer 1": { x: 840, y: 95 },
+    "Exhaust Silencer 2": { x: 840, y: 437 },
+    "Chimney 1": { x: 847, y: 300 },
+    "Chimney 2": { x: 847, y: 640 },
+    "Intake Air Filter 1": { x: 590, y: 210 },
+    "Intake Air Filter 2": { x: 590, y: 550 },
   },
   fos1: {
     "LFO Supplying Pump": { x: 385, y: 550 },
@@ -37,7 +44,8 @@ const positionMaps = {
     "HFO Separator": { x: 315, y: 647 },
     "HFO Day Tank": { x: 620, y: 510 },
     "HFO Buffer Tank": { x: 792, y: 510 },
-    "HFO Storage Tank": { x: 410, y: 167 },
+    "HFO Storage Tank 1": { x: 410, y: 167 },
+    "HFO Storage Tank 2": { x: 866, y: 165 },
     "HFO Unloading Pump": { x: 180, y: 162 },
     "HFO Transfer Pump": { x: 530, y: 162 },
 
