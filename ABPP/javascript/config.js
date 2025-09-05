@@ -40,11 +40,12 @@ const positionMaps = {
     "HFO Storage Tank": { x: 410, y: 167 },
     "HFO Unloading Pump": { x: 180, y: 162 },
     "HFO Transfer Pump": { x: 530, y: 162 },
+
   },
   fos3: {
-    "Fuel Oil Circulating Booster Pump 1": { x: 632, y: 190 },
-    "Fuel Oil Circulating Booster Pump 2": { x: 632, y: 490 }
-
+    "Booster Pump 1": { x: 632, y: 190 },
+    "Booster Pump 2": { x: 632, y: 490 },
+    "Fuel Oil Leakage Transfer Pump": { x: 180, y: 427 }
   },
   los: {
     "Oil Mist Separator 1": { x: 235, y: 115 },
