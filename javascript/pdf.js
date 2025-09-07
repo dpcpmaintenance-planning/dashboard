@@ -65,7 +65,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Secondary Air Fan B", "Secondary R.O. Booster Pump A", "Secondary R.O. Booster Pump B",
                     "Closed Cooling Water Pump A", "Closed Cooling Water Pump B", "44ZKKE", "Demineralized Tank",
                     "Air Storage tank 10M^3", "Multi-Media Filter B", "Multi-Media Filter A", "EDI A", "EDI B",
-                    "Vibrating Coal Screen B", "Vibrating Coal Screen A",
+                    "Vibrating Coal Screen B", "Vibrating Coal Screen A", "Secondary Safety Filter B",
+                    "Secondary Safety Filter A", "Bag Dust Collector 1", "Bag Dust Collector 2", "Dust Collector 4",
+                    "Dust Collector 3", "Coal Feeder A", "Coal Feeder B", "Coal Feeder C", "Mobile Compressor", "Periodic Blowdown Valve",
+                    "Periodic Blowdown Tank",
                 ];
 
                 // Filter rows
