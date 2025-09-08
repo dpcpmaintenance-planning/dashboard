@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     y += 6;
 
                     const tableData = sectionRows.map(row => {
-                        let days = row["Days Delayed"] || "";
+                        let days = row["Days in Queue"] || "";
                         days = days.replace(/pending\s*for\s*/i, "").replace(/pending\s*/i, "").trim();
                         let daysNum = parseInt(days, 10);
                         if (isNaN(daysNum) || daysNum < 0) daysNum = 0;
