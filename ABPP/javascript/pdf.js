@@ -107,10 +107,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     y += 6;
 
                     const tableData = sectionRows.map(row => {
-                        let days = row["Days in Queue"] || "";
-                        days = days.replace(/pending\s*for\s*/i, "").replace(/pending\s*/i, "").trim();
-                        let daysNum = parseInt(days, 10);
-                        if (isNaN(daysNum) || daysNum < 0) daysNum = 0;
+                        let daysRaw = row["Days in Queue"] || "";
+
+                        // Extract first number from the string (e.g. "pending for 5 days" → 5)
+                        const match = daysRaw.match(/(\d+)/);
+                        let daysNum = match ? parseInt(match[1], 10) : 0;
+
                         const daysText = `${daysNum} days`;
 
                         const tsDate = parseRowTimestamp(row["Timestamp"]);
@@ -126,6 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             daysText
                         ];
                     });
+
+
 
                     doc.autoTable({
                         head: [["Timestamp", "WR Number", "Equipment", "Sub-Component", "Brief Description", "Planning Remarks", "Days in Queue"]],
