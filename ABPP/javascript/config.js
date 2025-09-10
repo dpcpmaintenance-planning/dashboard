@@ -43,7 +43,8 @@ const positionMaps = {
   },
   fos2: {
     "HFO Supplying Pump": { x: 305, y: 420 },
-    "HFO Separator": { x: 315, y: 647 },
+    "HFO Separator 1": { x: 315, y: 647 },
+    "HFO Separator 2": { x: 315, y: 647 },
     "HFO Day Tank": { x: 620, y: 510 },
     "HFO Buffer Tank": { x: 792, y: 510 },
     "HFO Storage Tank 1": { x: 410, y: 167 },
@@ -64,6 +65,7 @@ const positionMaps = {
     "Used Lube Oil Tank": { x: 90, y: 575 },
     "Fuel Oil Purifier 1": { x: 490, y: 600 },
     "Fuel Oil Purifier 2": { x: 895, y: 600 },
+    "Lube Oil Service Tank": { x: 90, y: 470 },
     "Lube Oil Service Tank 1": { x: 280, y: 437 },
     "Lube Oil Service Tank 2": { x: 740, y: 437 },
   },
