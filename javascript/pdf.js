@@ -68,7 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Vibrating Coal Screen B", "Vibrating Coal Screen A", "Secondary Safety Filter B",
                     "Secondary Safety Filter A", "Bag Dust Collector 1", "Bag Dust Collector 2", "Dust Collector 4",
                     "Dust Collector 3", "Coal Feeder A", "Coal Feeder B", "Coal Feeder C", "Mobile Compressor", "Periodic Blowdown Valve",
-                    "Periodic Blowdown Tank", "Mobile Oil Purification Device", "Primary Air Preheater"
+                    "Periodic Blowdown Tank", "Mobile Oil Purification Device", "Primary Air Preheater", "Industrial Water Pump A",
+                    "Industrial Water Pump B"
                 ];
 
                 // Filter rows
