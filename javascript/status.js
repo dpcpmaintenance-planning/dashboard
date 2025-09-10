@@ -5,17 +5,25 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
   const breakdown = breakdownMap[eqNorm] ?? 0;
   const daysDelayed = daysDelayedMap[eqNorm] || 0;
 
-  const statusLabels = { "0": "Operational", "1": "Sustainable", "2": "Breakdown" };
+  const statusLabels = {
+    "0": "Operational",
+    "1": "Sustainable",
+    "2": "Breakdown",
+    "3": "Modification"   // ✅ added
+  };
   const readableStatus = statusLabels[status] || "Unknown";
 
   const div = document.createElement("div");
   div.className =
     "status-indicator " +
-    (status === "2" ? "breakdown" : status === "1" ? "sustainable" : "operational");
+    (status === "2" ? "breakdown"
+      : status === "1" ? "sustainable"
+        : status === "3" ? "modification"   // ✅ added
+          : "operational");
 
   div.style.left = `${x}px`;
   div.style.top = `${y}px`;
-  div.style.zIndex = status === "2" ? 3 : status === "1" ? 2 : 1;
+  div.style.zIndex = status === "2" ? 3 : status === "1" ? 2 : status === "3" ? 2 : 1;
 
   div.title = `
 📌 ${label}
@@ -36,6 +44,7 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
 
   document.getElementById("diagram").appendChild(div);
 }
+
 
 // =============================
 // Global flag to enable/disable dragging
@@ -182,20 +191,20 @@ function showEquipmentDetail(label) {
         const statusEmoji = statusEmojis[status] || "⚪";
 
         indicatorsHTML += `
-  <div class="equip-status-indicator ${status === "1" ? "sustainable" : ""} ${status === "2" ? "breakdown" : ""
+          <div class="equip-status-indicator ${status === "1" ? "sustainable" : ""} ${status === "2" ? "breakdown" : ""
           }"
-       data-tooltip="📌 ${part}
-📊 Status: ${readableStatus}
-💥 Breakdowns: ${breakdown}
-⏱️ Days in Queue: ${daysDelayed}"
-       data-part="${part}"
-       style="position:absolute; left:${pos.x}px; top:${pos.y}px; z-index:${status === "2" ? 3 : status === "1" ? 2 : 1
+              data-tooltip="📌 ${part}
+        📊 Status: ${readableStatus}
+        💥 Breakdowns: ${breakdown}
+        ⏱️ Days in Queue: ${daysDelayed}"
+              data-part="${part}"
+              style="position:absolute; left:${pos.x}px; top:${pos.y}px; z-index:${status === "2" ? 3 : status === "1" ? 2 : 1
           };"
-  >
-    <span class="status-icon">${statusEmoji}</span>
-    <span class="breakdown-count">${breakdown}</span>
-  </div>
-`;
+          >
+            <span class="status-icon">${statusEmoji}</span>
+            <span class="breakdown-count">${breakdown}</span>
+          </div>
+        `;
 
       }
 

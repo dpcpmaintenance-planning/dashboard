@@ -14,7 +14,6 @@ function parseGvizDate(value) {
   }
   return new Date(value);
 }
-
 // --- Update updateDiagramTableInline ---
 function updateDiagramTableInline() {
   const tbody = document.getElementById("diagram-table-body");
@@ -80,7 +79,6 @@ function updateDiagramTableInline() {
   updateFilterButtonStates();
 }
 
-
 function updateDiagram() {
   const diagram = document.getElementById("diagram");
   const container = document.querySelector(".diagram-container");
@@ -113,7 +111,7 @@ function updateDiagram() {
   const systemNames = systemGroups[selectedSystemTab] || [];
   const { latestStatusMap, breakdownMap, daysDelayedMap } = getLatestStatusAndBreakdown(rows, systemNames);
   const currentPositionMap = positionMaps[selectedSystemTab] || {};
-  const statusEmoji = { 0: "🟢", 1: "🟡", 2: "🔴" };
+  const statusEmoji = { 0: "🟢", 1: "🟡", 2: "🔴", 3: "🔵" };
 
   const positionGroups = {};
   for (const [key, value] of Object.entries(currentPositionMap)) {
@@ -143,16 +141,47 @@ function updateDiagram() {
 
     // --- Add equipment status circle only ---
     const statusCircle = document.createElement("div");
-    statusCircle.className = "status-circle";
+    statusCircle.className = "status-indicator"; // ✅ important
     statusCircle.style.left = `${x}px`;
     statusCircle.style.top = `${y}px`;
-    statusCircle.style.backgroundColor =
-      status === "0" ? "green" : status === "1" ? "gold" : "red";
+
+    if (status === "0") {
+      statusCircle.classList.add("operational");
+    } else if (status === "1") {
+      statusCircle.classList.add("sustainable");
+    } else if (status === "2") {
+      statusCircle.classList.add("breakdown");
+    } else if (status === "3") {
+      statusCircle.classList.add("modification"); // ✅ will blink now
+    }
 
     diagram.appendChild(statusCircle);
-  }
-}
 
+  }
+  renderLegend();
+}
+function renderLegend() {
+  // Remove old legend if it exists
+  const oldLegend = document.getElementById("legend");
+  if (oldLegend) oldLegend.remove();
+
+  const legend = document.createElement("div");
+  legend.id = "legend";
+  legend.style.position = "absolute";
+  legend.style.bottom = "10px";   // stick to bottom of diagram
+  legend.style.left = "50%";
+  legend.style.transform = "translateX(-50%)";
+  legend.style.textAlign = "center";
+  legend.style.fontFamily = "Arial, sans-serif";
+  legend.style.fontSize = "18px";
+  legend.style.background = "rgba(255,255,255,0.8)";
+  legend.style.padding = "5px 10px";
+  legend.style.borderRadius = "8px";
+
+  legend.textContent = "🟢 Operational   🟡 Sustainable   🔴 Breakdown   🔵 Modification";
+
+  document.getElementById("diagram").appendChild(legend);
+}
 
 // --- Update showSystemEquipmentList ---
 function showSystemEquipmentList(systemTabId, wrStatus = "") {
@@ -222,7 +251,6 @@ function showSystemEquipmentList(systemTabId, wrStatus = "") {
   updateFilterButtonStates();
 }
 
-
 function updateFilterButtonStates() {
   const pendingBtn = document.getElementById("diagram-pending-btn");
   const doneBtn = document.getElementById("diagram-done-btn");
@@ -235,14 +263,12 @@ function updateFilterButtonStates() {
   }
 }
 
-
 function resetDiagramModal() {
   currentDiagramEquipment = "";
   diagramWRStatus = "";
   currentSystemFilter = "";
   updateFilterButtonStates();
 }
-
 
 function getLatestStatusAndBreakdown(dataRows, systemNames) {
   const equipmentSet = new Set(
@@ -256,21 +282,32 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
   const daysDelayedMap = {};
   const hasUnresolvedSustainable = {};
   const hasUnresolvedBreakdown = {};
+  const hasUnresolvedModification = {}; // ✅ added
 
   const currentPositionMap = positionMaps[selectedSystemTab] || {};
   for (const key of Object.keys(currentPositionMap)) {
     const eq = normalize(key);
-    latestStatusMap[eq] = "0"; // default to operational
+    latestStatusMap[eq] = "0"; // default operational
     breakdownMap[eq] = 0;
     daysDelayedMap[eq] = 0;
     hasUnresolvedSustainable[eq] = false;
     hasUnresolvedBreakdown[eq] = false;
+    hasUnresolvedModification[eq] = false;
   }
 
   for (let i = dataRows.length - 1; i >= 0; i--) {
     const row = dataRows[i];
     const eq = normalize(row["Equipment"]);
     if (!equipmentSet.has(eq)) continue;
+
+    // --- Track Type = Modification ---
+    const type = (row["Type"] || "").toLowerCase().trim();
+    const wrStatus = (row["WR Status"] ?? "").toLowerCase().trim();
+
+    if (type === "modification" && wrStatus !== "done") {
+      hasUnresolvedModification[eq] = true;
+      continue; // skip normal status check
+    }
 
     // --- Normalize current status ---
     const currentStatusStr = (row["Current Status"] ?? "").toString();
@@ -279,13 +316,10 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
 
     const prevStatusNum = parseInt(latestStatusMap[eq] ?? "0", 10);
     if (currentStatusNum > prevStatusNum) {
-      latestStatusMap[eq] = currentStatusStr; // store as string for drawing logic
+      latestStatusMap[eq] = currentStatusStr;
     }
 
-    // --- Normalize WR Status ---
-    const wrStatus = (row["WR Status"] ?? "").toLowerCase().trim();
-
-    // --- Track unresolved statuses ---
+    // --- Track unresolved sustainable/breakdown ---
     if (currentStatusNum === 1 && wrStatus !== "done") {
       hasUnresolvedSustainable[eq] = true;
     }
@@ -320,6 +354,13 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
   for (const eq of Object.keys(latestStatusMap)) {
     if (hasUnresolvedBreakdown[eq]) {
       latestStatusMap[eq] = "2";
+    }
+  }
+
+  // --- Override to blue if any pending modification ---
+  for (const eq of Object.keys(latestStatusMap)) {
+    if (hasUnresolvedModification[eq]) {
+      latestStatusMap[eq] = "3"; // 🔵
     }
   }
 
