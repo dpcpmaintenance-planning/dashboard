@@ -311,6 +311,7 @@ const positionMaps = {
     "44ZKKE": { x: 220, y: 585 },
   },
   substation: {
+    "Transmission Line": { x: 90, y: 200 },
     "Surge Arrester": { x: 305, y: 480 },
     "Disconnection Switch": { x: 490, y: 460 },
     "Current Transformer": { x: 568, y: 460 },
