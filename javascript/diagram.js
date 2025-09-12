@@ -171,17 +171,33 @@ function renderLegend() {
   legend.style.bottom = "10px";   // stick to bottom of diagram
   legend.style.left = "50%";
   legend.style.transform = "translateX(-50%)";
-  legend.style.textAlign = "center";
+  legend.style.display = "flex";
+  legend.style.gap = "1.5rem"; // space between items
+  legend.style.justifyContent = "center";
+  legend.style.alignItems = "center";
   legend.style.fontFamily = "Arial, sans-serif";
-  legend.style.fontSize = "18px";
+  legend.style.fontSize = "1rem";
   legend.style.background = "rgba(255,255,255,0.8)";
-  legend.style.padding = "5px 10px";
+  legend.style.padding = "6px 12px";
   legend.style.borderRadius = "8px";
 
-  legend.textContent = "🟢 Operational   🟡 Sustainable   🔴 Breakdown   🔵 Modification";
+  // Each item separately
+  const items = [
+    "🟢 Operational",
+    "🟡 Sustainable",
+    "🔴 Breakdown",
+    "🔵 Modification"
+  ];
+
+  items.forEach(text => {
+    const span = document.createElement("span");
+    span.textContent = text;
+    legend.appendChild(span);
+  });
 
   document.getElementById("diagram").appendChild(legend);
 }
+
 
 // --- Update showSystemEquipmentList ---
 function showSystemEquipmentList(systemTabId, wrStatus = "") {

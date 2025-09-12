@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Secondary Safety Filter A", "Bag Dust Collector 1", "Bag Dust Collector 2", "Dust Collector 4",
                     "Dust Collector 3", "Coal Feeder A", "Coal Feeder B", "Coal Feeder C", "Mobile Compressor", "Periodic Blowdown Valve",
                     "Periodic Blowdown Tank", "Mobile Oil Purification Device", "Primary Air Preheater", "Industrial Water Pump A",
-                    "Industrial Water Pump B", "Rundown Tank"
+                    "Industrial Water Pump B", "Rundown Tank", "Envidas",
                 ];
 
                 // Filter rows

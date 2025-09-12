@@ -11,7 +11,7 @@ const systemGroups = {
     "Combustion System",
     "Industrial Water Reuse System"
   ],
-  combustion: ["Combustion System", "Coal Pipe System", "Biomass Handling System"],
+  combustion: ["Combustion System", "Coal Pipe System", "Biomass Handling System", "Continuous Emission Monitoring System"],
   wts: ["Water Treatment System"],
   sws: ["Steam and Water", "Feedwater System", "Deaerator System", "Turbine Condensation Water System", "Main Steam System", "Boiler Blowdown System"],
   sccws: ["Seawater Instake and Drainage System", "Circulating Water System", "Close Circulating Cooling Water System", "Closed Circulating Cooling Water System"],
@@ -79,7 +79,12 @@ const positionMaps = {
     "Induced Draft Fan A": { x: 900, y: 484 },
     "Induced Draft Fan B": { x: 900, y: 554 },
     "Smoke Stack": { x: 990, y: 500 },
-    "CEMS": { x: 990, y: 680 },
+    "Continuous Emission Monitoring System": [
+      { name: "Envidas", x: 990, y: 680 },
+      { name: "Portable Compressor", x: 990, y: 680 },
+      { name: "Analyzer", x: 990, y: 680 },
+      { name: "Sampling line", x: 990, y: 680 },
+    ],
     "ESP": { x: 724, y: 610 },
     "HT Superheater": { x: 700, y: 220 },
     "MT Superheater": { x: 700, y: 264 },
