@@ -151,6 +151,46 @@ function updateDiagram() {
 
     diagram.appendChild(statusCircle);
   }
+  renderLegend();
+}
+
+
+function renderLegend() {
+  // Remove old legend if it exists
+  const oldLegend = document.getElementById("legend");
+  if (oldLegend) oldLegend.remove();
+
+  const legend = document.createElement("div");
+  legend.id = "legend";
+  legend.style.position = "absolute";
+  legend.style.bottom = "10px";   // stick to bottom of diagram
+  legend.style.left = "50%";
+  legend.style.transform = "translateX(-50%)";
+  legend.style.display = "flex";
+  legend.style.gap = "1.5rem"; // space between items
+  legend.style.justifyContent = "center";
+  legend.style.alignItems = "center";
+  legend.style.fontFamily = "Arial, sans-serif";
+  legend.style.fontSize = "1rem";
+  legend.style.background = "rgba(255,255,255,0.8)";
+  legend.style.padding = "6px 12px";
+  legend.style.borderRadius = "8px";
+
+  // Each item separately
+  const items = [
+    "🟢 Operational",
+    "🟡 Sustainable",
+    "🔴 Breakdown",
+    "🔵 Modification"
+  ];
+
+  items.forEach(text => {
+    const span = document.createElement("span");
+    span.textContent = text;
+    legend.appendChild(span);
+  });
+
+  document.getElementById("diagram").appendChild(legend);
 }
 
 
