@@ -359,26 +359,19 @@ function getLatestStatusAndBreakdown(dataRows, systemNames) {
     }
   }
 
-  // --- Override green to yellow if any unresolved sustainable ---
-  for (const eq of Object.keys(latestStatusMap)) {
-    if (latestStatusMap[eq] === "0" && hasUnresolvedSustainable[eq]) {
-      latestStatusMap[eq] = "1";
-    }
-  }
-
-  // --- Override to red if any pending breakdown ---
+  // --- Apply priority overrides ---
   for (const eq of Object.keys(latestStatusMap)) {
     if (hasUnresolvedBreakdown[eq]) {
-      latestStatusMap[eq] = "2";
+      latestStatusMap[eq] = "2"; // 🔴 Breakdown has highest priority
+    } else if (hasUnresolvedSustainable[eq]) {
+      latestStatusMap[eq] = "1"; // 🟡 Sustainable is next
+    } else if (hasUnresolvedModification[eq]) {
+      latestStatusMap[eq] = "3"; // 🔵 Modification if no breakdown/sustainable
+    } else if (!["1", "2", "3"].includes(latestStatusMap[eq])) {
+      latestStatusMap[eq] = "0"; // 🟢 default operational
     }
   }
 
-  // --- Override to blue if any pending modification ---
-  for (const eq of Object.keys(latestStatusMap)) {
-    if (hasUnresolvedModification[eq]) {
-      latestStatusMap[eq] = "3"; // 🔵
-    }
-  }
 
   return { latestStatusMap, breakdownMap, daysDelayedMap };
 }
