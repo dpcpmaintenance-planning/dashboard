@@ -24,6 +24,8 @@ fetch(gvizURL)
       return obj;
     });
 
+    window.equipmentData = rows;
+
     imageColumnKey = cols.find(c => c.toLowerCase().includes("image"));
     updateDiagram();
   });

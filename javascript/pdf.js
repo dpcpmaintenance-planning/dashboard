@@ -69,7 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Secondary Safety Filter A", "Bag Dust Collector 1", "Bag Dust Collector 2", "Dust Collector 4",
                     "Dust Collector 3", "Coal Feeder A", "Coal Feeder B", "Coal Feeder C", "Mobile Compressor", "Periodic Blowdown Valve",
                     "Periodic Blowdown Tank", "Mobile Oil Purification Device", "Primary Air Preheater", "Industrial Water Pump A",
-                    "Industrial Water Pump B", "Rundown Tank", "Envidas", "Biomass Shredder",
+                    "Industrial Water Pump B", "Rundown Tank", "Envidas", "Biomass Shredder", "Sodium Hypochlorite Generator B",
+                    "Sodium Hypochlorite Generator A", "40DL", "41DL", "42DL", "Service Water Pump", "Demineralized Water Pump A", "Demineralized Water Pump B"
                 ];
 
                 // Filter rows
@@ -77,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const status = (row["WR Status"] || "").toLowerCase();
                     const section = (row["Maintenance Section"] || "").toUpperCase();
                     const equipment = row["Equipment"] || "";
+                    const planningRemarks = (row["*Planning Remarks"] || "").trim();
                     const rowDate = parseRowTimestamp(row["Timestamp"]);
 
                     const withinDateRange =
@@ -86,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return status === "pending" &&
                         section !== "TSD" &&
                         allowedEquipment.includes(equipment) &&
+                        planningRemarks === "" &&
                         withinDateRange;
                 });
 

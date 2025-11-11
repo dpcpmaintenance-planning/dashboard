@@ -1,0 +1,343 @@
+<!-- ✅ START OF UPDATED FULL HTML WITH FIXED PIE CHART LOGIC -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equipment Status</title>
+    <link rel="icon" type="image/png" href="DMCIlogo.png" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="mobile.css" />
+    <link rel="stylesheet" href="equipment-status.css" />
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="footer.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <script
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"
+  integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer">
+</script>
+
+</script>
+
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+  </head>
+
+  <body class="equipment-status-page">
+    <header>
+      <!-- NAVBAR -->
+      <div class="navbar" id="navbar">
+        <div class="nav-left">
+          <!-- Hamburger Menu Icon -->
+          <div class="hamburger" id="hamburger">
+            &#9776;
+            <!-- Unicode hamburger icon -->
+          </div>
+          <a href="index.html">
+            <img
+              src="https://www.dmciholdings.com/storage/app/media/2023/Investment/New/fdmci-powertransparentnew0331.png"
+              alt="logo"
+            />
+          </a>
+          <span class="nav-title">PALAWAN MAINTENANCE</span>
+        </div>
+
+        <!-- Navbar Items -->
+        <div class="nav-right">
+          <div class="nav-item">
+            <a href="index.html" class="nav-item">Home</a>
+          </div>
+
+          <div class="nav-item dropdown-wrapper">
+            <a class="nav-item" href="#">NARRA THERMAL 1 ▼</a>
+            <div class="dropdown">
+              <p>
+                <a class="nav-item" href="equipment-status.html"
+                  >Equipment Status</a
+                >
+              </p>
+              <p><a class="nav-item" href="#">Maintenance Schedule</a></p>
+              <p><a class="nav-item" href="history.html">History Records</a></p>
+              <p>
+                <a class="nav-item" href="techinfo.html"
+                  >Technical Information</a
+                >
+              </p>
+              <p><a class="nav-item" href="#">DPTPP PMS 2025</a></p>
+            </div>
+          </div>
+          <div class="nav-item">
+            <a class="nav-item" href="aborlan-bunker1.html">ABORLAN BUNKER 1</a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-item" href="hs-diesel.html">HS DIESEL PP</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="equipment-status-page">
+      <div class="page-title">NARRA THERMAL 1 EQUIPMENT STATUS</div>
+      <div class="tabs">
+        <script>
+          const tabs = [
+            ["equipments", "Equipment List"],
+            ["bottom-ash", "Bottom Ash System"],
+            ["combustion", "Combustion System"],
+            ["wts", "Water Treatment"],
+            ["sws", "Steam and Water"],
+            ["sccws", "Seawater & CCW"],
+            ["cbhs", "Coal & Biomass Handling"],
+            ["cas", "Compressed Air"],
+            ["fps", "Fire Protection"],
+            ["tls", "Turbine Lubrication"],
+            ["cs", "Chlorination System"],
+            ["electrical", "MV & LV Electrical"],
+            ["substation", "Substation"],
+            ["heavy-equipment", "Heavy Equipment"],
+            ["switchyard", "Switchyard"],
+          ];
+          document.write(
+            tabs
+              .map(
+                ([id, label], i) =>
+                  `<button class="tab-button${
+                    i === 0 ? " active" : ""
+                  }" onclick="showTab(event, '${id}')">${label}</button>`
+              )
+              .join("")
+          );
+        </script>
+      </div>
+    </main>
+
+    <script>
+      // Dropdown behavior
+      const dropdownWrappers = document.querySelectorAll(".dropdown-wrapper");
+      dropdownWrappers.forEach((wrapper) => {
+        const dropdown = wrapper.querySelector(".dropdown");
+
+        wrapper.addEventListener("click", (e) => {
+          e.stopPropagation();
+          document.querySelectorAll(".dropdown").forEach((d) => {
+            if (d !== dropdown) d.style.display = "none";
+          });
+          dropdown.style.display =
+            dropdown.style.display === "block" ? "none" : "block";
+        });
+      });
+
+      document.addEventListener("click", () => {
+        document.querySelectorAll(".dropdown").forEach((dropdown) => {
+          dropdown.style.display = "none";
+        });
+      });
+
+      const reports = {
+        equipments: "d352150b-4e89-4001-81b2-de867e297a8c/page/FgoMF",
+        "bottom-ash": "599ffaca-2a41-4b85-85ec-b821f6d9eb67/page/0LnXE",
+        combustion: "8a75e5d6-13b7-4909-8b21-527b4b881899/page/JFkXE",
+        wts: "8bc2ea88-3237-4067-8038-ddedcf518d6b/page/S7lXE",
+        sws: "31550e49-593a-4bb1-b28c-5976f832ca89/page/3GmXE",
+        sccws: "3181bb17-0a4d-495e-a528-636473d8f8e7/page/RODZE",
+        cbhs: "b97c0586-c398-400e-b9c1-29d5ca202213/page/FWCZE",
+        cas: "91d45cc4-a71f-46c9-8994-7728efbcd351/page/5yQLF",
+        fps: "cb17ee56-455f-4d73-94aa-1348c7bfc14e/page/9c4LF",
+        tls: "bfff5852-d4ad-4fbe-ac5b-7eb5969b177e/page/oIRLF",
+        cs: "d310dc9c-d490-4894-8758-a48105b8d032/page/HRiMF",
+        electrical: "5ddd0d24-ba27-4418-bc1d-267f032e79de/page/ikhMF",
+        substation: "2082eb80-412b-48db-b980-42e440ca6715/page/Q8hMF",
+        "heavy-equipment": "5a0e602c-1a7d-438f-8b3f-45f0e49072dd/page/QLiMF",
+        switchyard: "20812fba-d4d9-4284-9c8d-334792647c69/page/RmAPF",
+      };
+
+      for (const [id, path] of Object.entries(reports)) {
+        document.write(`
+          <div class="tab-content" id="${id}" style="display: ${
+          id === "equipments" ? "block" : "none"
+        };">
+            <iframe
+              src="https://lookerstudio.google.com/embed/reporting/${path}?hl=en&locale=en_US"
+              width="100%"
+              height="1000"
+              style="border:1px solid #ccc; border-radius:12px"
+              allowfullscreen>
+            </iframe>
+            <div class="status-overview-container">
+              <div class="chart-count-summary">
+                <div class="card operational">🟢 Operational: <span id="${id}-operational">0</span></div>
+                <div class="card sustainable">🟡 Sustainable: <span id="${id}-sustainable">0</span></div>
+                <div class="card breakdown">🔴 Breakdown: <span id="${id}-breakdown">0</span></div>
+              </div>
+              <div class="pie-chart-wrapper">
+                <div id="${id}-pie" class="pie-chart-div"></div>
+              </div>
+            </div>
+          </div>
+        `);
+      }
+    </script>
+
+    <script>
+      const csvUrl =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vRI4YerzHu4mr6hT73gPjJDaWV1BNncnXPl8dzEyPl-R0TYaJc4NLI8a_36KgJ61N64dnYPJ3Auob3U/pub?gid=698619125&single=true&output=csv";
+
+      const tabSystemGroups = {
+        equipments: null,
+        "bottom-ash": [
+          "Bottom Ash System",
+          "Fly Ash System",
+          "Limestone Handling System",
+          "Industrial Water Reuse System",
+        ],
+        combustion: ["Combustion System", "Coal Pipe System"],
+        wts: ["Water Treatment System"],
+        sws: [
+          "Feedwater System",
+          "Boiler Blowdown System",
+          "Deaerator System",
+          "Turbine Condensation Water System",
+        ],
+        sccws: [
+          "Circulating Water System",
+          "Close Circulating Water System",
+          "Closed Circulating Water System",
+        ],
+        cbhs: ["Coal Handling System", "Biomass Handling System"],
+        cas: ["Compressed Air System"],
+        fps: ["Fire Fighting System", "Fire Detection & Alarm System"],
+        tls: ["Turbine Oil System"],
+        cs: ["Electro-Chlorination Water System"],
+        electrical: ["MV & LV Electrical"],
+        substation: ["Substation"],
+        "heavy-equipment": ["Heavy Equipment"],
+        switchyard: ["Switchyard"],
+      };
+
+      let parsedCSV = [];
+
+      async function loadCSV() {
+        const res = await fetch(csvUrl);
+        const text = await res.text();
+        parsedCSV = Papa.parse(text, {
+          header: true,
+          skipEmptyLines: true,
+        }).data;
+      }
+
+      function getLatestStatusCounts(tabKey) {
+        const groups = tabSystemGroups[tabKey];
+        const seen = new Set();
+        const counts = { Operational: 0, Sustainable: 0, Breakdown: 0 };
+
+        for (let i = parsedCSV.length - 1; i >= 0; i--) {
+          const row = parsedCSV[i];
+          const id = row["Equipment"];
+          const system = row["System"];
+          const status = row["Current Status"];
+
+          if (!id || seen.has(id)) continue;
+          const match = !groups || groups.includes(system?.trim());
+
+          if (match) {
+            seen.add(id);
+            if (status === "0") counts.Operational++;
+            else if (status === "1") counts.Sustainable++;
+            else if (status === "2") counts.Breakdown++;
+          }
+        }
+
+        return counts;
+      }
+
+      function drawPieChart(tabId) {
+        const counts = getLatestStatusCounts(tabId);
+        document.getElementById(`${tabId}-operational`).textContent =
+          counts.Operational;
+        document.getElementById(`${tabId}-sustainable`).textContent =
+          counts.Sustainable;
+        document.getElementById(`${tabId}-breakdown`).textContent =
+          counts.Breakdown;
+
+        const data = google.visualization.arrayToDataTable([
+          ["Status", "Count"],
+          ["Operational", counts.Operational],
+          ["Sustainable", counts.Sustainable],
+          ["Breakdown", counts.Breakdown],
+        ]);
+
+        const chart = new google.visualization.PieChart(
+          document.getElementById(`${tabId}-pie`)
+        );
+        chart.draw(data, {
+          title: "Equipment Status Overview",
+          pieHole: 0.4,
+          width: 700, // Explicit width
+          height: 500, // Explicit height
+          chartArea: { width: "90%", height: "90%" },
+          colors: ["#28a745", "#ffc107", "#dc3545"],
+          legend: { position: "bottom" },
+        });
+      }
+
+      function showTab(event, tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((div) => (div.style.display = "none"));
+        document
+          .querySelectorAll(".tab-button")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById(tabId).style.display = "block";
+        event.target.classList.add("active");
+        setTimeout(() => drawPieChart(tabId), 200);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(async () => {
+          await loadCSV();
+          drawPieChart("equipments");
+        });
+      });
+    </script>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <h3>Palawan Maintenance</h3>
+          <p>Narra Thermal 1, Aborlan Bunker 1, HS Diesel PP</p>
+          <p>DMCI Power Corporation – Palawan Operations</p>
+        </div>
+
+        <div class="footer-center">
+          <p><strong>Email:</strong> maintenance@dmcipower.com</p>
+          <p><strong>Phone:</strong> +63 (48) 123-4567</p>
+          <p><strong>Office Hours:</strong> Mon–Fri, 8:00AM–5:00PM</p>
+        </div>
+
+        <div class="footer-right">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="equipment-status.html">Equipment Status</a></li>
+            <li><a href="#">Maintenance Schedule</a></li>
+            <li><a href="#">History Records</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Palawan Maintenance. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
