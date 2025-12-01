@@ -1,0 +1,149 @@
+.tab-section {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  font-family: "Oswald", sans-serif;
+  margin-top: 100px;
+}
+
+.tab-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center; /* Center all buttons */
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.tab-btn {
+  flex: 1 1 200px; /* Equal width, min 200px */
+  max-width: 200px;
+  padding: 10px 18px;
+  background-color: #004a80;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab-btn.active,
+.tab-btn:hover {
+  background-color: #007acc;
+}
+
+.iframe-container {
+  position: relative;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+  height: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.iframe-container.fade-in {
+  opacity: 0;
+}
+
+.iframe-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Spinner styling */
+.iframe-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #004a80;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: none;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+iframe {
+  width: 100%;
+  border: none;
+  display: block;
+}
+
+.chart-wrapper {
+  margin: 40px auto;
+  width: 90%;
+}
+
+#bar-chart-container,
+#bar-chart-labor,
+#bar-chart-parts {
+  width: 100%;
+  height: 600px; /* uniform chart height */
+}
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.modal-backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 80%;
+  overflow-y: auto;
+}
+#closeModal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.modal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.modal-table th,
+.modal-table td {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+.modal-table th {
+  background: #f2f2f2;
+  font-weight: bold;
+}
+
+.modal-table tr:nth-child(even) {
+  background-color: #fafafa;
+}

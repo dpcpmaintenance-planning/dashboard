@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Schedule</title>
+    <style>
+      body {
+        font-family: "Oswald", sans-serif;
+        padding: 20px;
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <h2>Schedule</h2>
+    <label for="sheet-select"></label>
+    <select id="sheet-select">
+      <option value="">-- Choose a document --</option>
+      <option
+        value="https://drive.google.com/file/d/1YEoffG_AZr8Kj7YJmpW6GDQFkTMy8Ic6/preview"
+      >
+        ALL LEVELS
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1lOSgfkwKc2sJ7iqEkk4SIyD7-Nfxw4G6/preview"
+      >
+        LEVEL 3
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1FWLascxLzui3MmDTx9AS3C9aDL1Wq6Ma/preview"
+      >
+        LEVEL 4
+      </option>
+      <option
+        value="https://drive.google.com/file/d/1r2eBhweZylrzXcC_ZXqq9xkyGzI51BQl/preview"
+      >
+        LEVEL 5
+      </option>
+    </select>
+
+    <div class="sheet-viewer" style="margin-top: 20px">
+      <iframe
+        id="sheet-frame"
+        width="100%"
+        height="600"
+        frameborder="0"
+        style="border: 1px solid #ccc"
+      ></iframe>
+    </div>
+  </body>
+  <script>
+    const sheetSelect = document.getElementById("sheet-select");
+    const sheetFrame = document.getElementById("sheet-frame");
+
+    sheetSelect.addEventListener("change", () => {
+      const url = sheetSelect.value;
+      sheetFrame.src = url || "";
+    });
+  </script>
+</html>
