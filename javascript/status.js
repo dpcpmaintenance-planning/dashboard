@@ -149,16 +149,27 @@ function showEquipmentDetail(label) {
 
       // Special cases
       const labelNorm = normalize(label);
+
       if (labelNorm.startsWith("belt conveyor")) {
         baseName = "Belt Conveyor";
+
       } else if (labelNorm.startsWith("screw air compressor")) {
         baseName = "Screw Air Compressor";
+
       } else if (labelNorm.startsWith("condensate pump")) {
         baseName = "Condensate Pump";
+
+      } else if (labelNorm.startsWith("edi booster pump")) {
+        baseName = "EDI Booster Pump";
+
+      } else if (labelNorm.startsWith("secondary ro booster pump")) {
+        baseName = "Secondary R.O. Booster Pump";
+
       } else {
         const suffixMatch = label.match(/\s+[A-Z0-9]$/i);
         if (suffixMatch) baseName = label.replace(suffixMatch[0], "").trim();
       }
+
 
 
       // Load saved positions for this equipment type
