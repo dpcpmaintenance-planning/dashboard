@@ -52,7 +52,7 @@ ${status === "3" ? `🛠️ Modification Queue: ${modificationDays}` : ""}
 // =============================
 // Global flag to enable/disable dragging
 // =============================
-let draggableEnabled = true; // set false to temporarily disable dragging
+let draggableEnabled = false; // set false to temporarily disable dragging
 
 // =============================
 // Normalize string: lowercase, trim, remove punctuation
@@ -247,6 +247,7 @@ function showEquipmentDetail(label) {
   });
 }
 
+/*
 // =============================
 // makeDraggable helper
 // =============================
@@ -306,5 +307,4 @@ function makeDraggable(el, partName, positioningMode, baseName) {
     e.preventDefault();
   });
 }
-
-
+*/

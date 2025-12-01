@@ -1,9 +1,10 @@
-/* Navbar */
+/* ========================================= */
+/* Navbar base styles */
+/* ========================================= */
 .navbar {
   position: fixed;
   top: 0;
-  width: 100vw; /* full viewport width */
-  box-sizing: border-box;
+  width: 100vw;
   z-index: 999;
   display: flex;
   align-items: center;
@@ -13,7 +14,7 @@
   color: white;
   backdrop-filter: blur(10px);
   transition: background-color 0.3s ease, color 0.3s ease;
-  height: 70px;
+  height: 50px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -21,9 +22,13 @@
   background-color: rgba(0, 0, 0, 0.9); /* Dark when scrolled */
 }
 
+/* ========================================= */
+/* Navbar left side */
+/* ========================================= */
 .nav-left {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .nav-left img {
@@ -36,6 +41,9 @@
   font-weight: bold;
 }
 
+/* ========================================= */
+/* Navbar right side */
+/* ========================================= */
 .nav-right {
   display: flex;
   gap: 18px;
@@ -49,23 +57,28 @@
   cursor: pointer;
   font-size: 16px;
   text-decoration: none;
+  user-select: none;
 }
 
 .nav-item:hover {
   color: #00bcd4;
 }
 
+/* ========================================= */
+/* Main dropdown wrapper */
+/* ========================================= */
 .dropdown-wrapper {
   position: relative;
-  display: inline-block; /* Ensures dropdown is based on text width */
+  display: inline-block;
 }
 
+/* Main dropdown content */
 .dropdown {
   display: none;
   position: absolute;
   top: 100%;
-  left: 50%; /* Move the dropdown horizontally */
-  transform: translateX(-50%); /* Center it under the trigger */
+  left: 50%;
+  transform: translateX(-50%);
   background-color: #2a2a2a;
   border-radius: 4px;
   padding: 10px 0;
@@ -75,6 +88,7 @@
   text-align: center;
 }
 
+/* Dropdown items */
 .dropdown p {
   margin: 0;
   padding: 10px 20px;
@@ -88,6 +102,47 @@
   color: #00bcd4;
 }
 
-/*.dropdown-wrapper:hover .dropdown {
+/* ========================================= */
+/* Submenu inside main dropdown (hover) */
+/* ========================================= */
+.submenu-wrapper {
+  position: relative;
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%; /* appear to the right of parent */
+  background-color: #3a3a3a;
+  min-width: 160px;
+  padding: 5px 0;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  text-align: left;
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.submenu p {
+  margin: 0;
+  padding: 8px 20px;
+  white-space: nowrap;
+}
+
+.submenu p:hover {
+  color: #00bcd4;
+}
+
+/* ========================================= */
+/* SHOW SUBMENU ON HOVER */
+/* ========================================= */
+.submenu-wrapper:hover .submenu {
   display: block;
-} */
+}
+
+/* Optional: smooth transition for main dropdowns */
+.dropdown-content,
+.submenu {
+  transition: all 0.2s ease;
+}

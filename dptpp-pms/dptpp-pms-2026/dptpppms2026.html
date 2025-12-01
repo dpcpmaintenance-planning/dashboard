@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Palawan Maintenance</title>
+    <link rel="icon" type="image/png" href="DMCIlogo.png" />
+    <link rel="stylesheet" href="../../style.css" />
+    <link rel="stylesheet" href="../../header.css" />
+    <link rel="stylesheet" href="../../footer.css" />
+    <link rel="stylesheet" href="../../mobile.css" />
+    <link rel="stylesheet" href="../dptpp-pms.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <header id="main-header"></header>
+<!-- Modal -->
+<div id="detailsModal" class="modal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-content">
+    <span id="closeModal">&times;</span>
+    <h4 id="modalTitle"></h4>
+    <ul id="modalList"></ul>
+  </div>
+</div>
+<main>
+  <div class="chart-wrapper" id="chart-overview-container">
+    <div id="bar-chart-container"></div>
+  </div>
+
+  <div class="chart-wrapper" id="chart-labor-container">
+    <h2>PMS 2026 LABOR</h2>
+    <div id="bar-chart-labor"></div>
+  </div>
+
+  <div class="chart-wrapper" id="chart-parts-container">
+    <h2>PMS 2026 PARTS</h2>
+    <div id="bar-chart-parts"></div>
+  </div>
+</main>
+
+
+
+
+
+    <footer id="main-footer" class="footer"></footer>
+
+    <!-- Load Google Charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <!-- Load PapaParse -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+    <!-- Your chart script -->
+    <script src="dptpp-pms-2026.js"></script>
+
+    <!-- Other scripts -->
+    <script src="../../js/header.js"></script>
+</body>
+</html>
