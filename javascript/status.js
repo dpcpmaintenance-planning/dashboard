@@ -218,13 +218,13 @@ function showEquipmentDetail(label) {
       </div>
     `;
 
-      // Make draggable only if enabled
-      if (draggableEnabled) {
-        imageContainer.querySelectorAll(".equip-status-indicator").forEach((el) => {
-          const partName = el.dataset.part || el.textContent;
-          makeDraggable(el, partName, true, baseName);
-        });
-      }
+      /*   // Make draggable only if enabled
+         if (draggableEnabled) {
+           imageContainer.querySelectorAll(".equip-status-indicator").forEach((el) => {
+             const partName = el.dataset.part || el.textContent;
+             makeDraggable(el, partName, true, baseName);
+           });
+         }*/
 
       detailTable.style.display = "none";
       imageContainer.style.display = "block";
