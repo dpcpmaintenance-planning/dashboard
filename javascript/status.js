@@ -1,33 +1,33 @@
 // Draw status indicator on diagram
 function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDelayedMap, statusEmoji, modificationQueueMap) {
-    const eqNorm = normalize(label);
-    const status = latestStatusMap[eqNorm] ?? "0";
-    const breakdown = breakdownMap[eqNorm] ?? 0;
-    const daysDelayed = daysDelayedMap[eqNorm] || 0;
-    const modificationDays = modificationQueueMap?.[eqNorm] || 0;
+  const eqNorm = normalize(label);
+  const status = latestStatusMap[eqNorm] ?? "0";
+  const breakdown = breakdownMap[eqNorm] ?? 0;
+  const daysDelayed = daysDelayedMap[eqNorm] || 0;
+  const modificationDays = modificationQueueMap?.[eqNorm] || 0;
 
-    const statusLabels = {
-        "0": "Operational",
-        "1": "Sustainable",
-        "2": "Breakdown",
-        "3": "Modification"
-    };
-    const readableStatus = statusLabels[status] || "Unknown";
+  const statusLabels = {
+    "0": "Operational",
+    "1": "Sustainable",
+    "2": "Breakdown",
+    "3": "Modification"
+  };
+  const readableStatus = statusLabels[status] || "Unknown";
 
-    const div = document.createElement("div");
-    div.className =
-        "status-indicator " +
-        (status === "2" ? "breakdown"
-            : status === "1" ? "sustainable"
-                : status === "3" ? "modification"
-                    : "operational");
+  const div = document.createElement("div");
+  div.className =
+    "status-indicator " +
+    (status === "2" ? "breakdown"
+      : status === "1" ? "sustainable"
+        : status === "3" ? "modification"
+          : "operational");
 
-    div.style.left = `${x}px`;
-    div.style.top = `${y}px`;
-    div.style.zIndex = status === "2" ? 3 : (status === "1" || status === "3") ? 2 : 1;
+  div.style.left = `${x}px`;
+  div.style.top = `${y}px`;
+  div.style.zIndex = status === "2" ? 3 : (status === "1" || status === "3") ? 2 : 1;
 
-    // Tooltip with conditional Modification Queue
-    div.title = `
+  // Tooltip with conditional Modification Queue
+  div.title = `
 📌 ${label}
 📊 Status: ${readableStatus}
 💥 Breakdowns: ${breakdown}
@@ -35,17 +35,17 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
 ${status === "3" ? `🛠️ Modification Queue: ${modificationDays}` : ""}
   `.trim();
 
-    const emoji = encodeURIComponent(statusEmoji[status]);
-    div.style.backgroundImage = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28'>${emoji}</text></svg>")`;
+  const emoji = encodeURIComponent(statusEmoji[status]);
+  div.style.backgroundImage = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28'>${emoji}</text></svg>")`;
 
-    div.innerHTML = `<div class="count">${breakdown || 0}</div>`;
+  div.innerHTML = `<div class="count">${breakdown || 0}</div>`;
 
-    // Clicking opens detail view
-    div.addEventListener("click", () => {
-        showEquipmentDetail(label);
-    });
+  // Clicking opens detail view
+  div.addEventListener("click", () => {
+    showEquipmentDetail(label);
+  });
 
-    document.getElementById("diagram").appendChild(div);
+  document.getElementById("diagram").appendChild(div);
 }
 
 
@@ -69,7 +69,7 @@ function loadSavedPositions(baseName) {
   if (!positions) return;
 
   Object.keys(positions).forEach(partName => {
-    const saved = localStorage.getItem(`statusPos_${partName}`);
+    const saved = localStorage.getItem(`statusPos_${baseName}_${partName}`);
     if (saved) {
       try {
         const { top, left } = JSON.parse(saved);
@@ -247,14 +247,15 @@ function showEquipmentDetail(label) {
   });
 }
 
-/*
+
 // =============================
 // makeDraggable helper
 // =============================
 function makeDraggable(el, partName, positioningMode, baseName) {
   if (!positioningMode || !el || !draggableEnabled) return;
 
-  const savedPos = localStorage.getItem(`statusPos_${partName}`);
+  const savedPos = localStorage.getItem(`statusPos_${baseName}_${partName}`);
+
   if (savedPos) {
     try {
       const { top, left } = JSON.parse(savedPos);
@@ -282,7 +283,8 @@ function makeDraggable(el, partName, positioningMode, baseName) {
       el.style.cursor = "grab";
       const top = parseInt(el.style.top);
       const left = parseInt(el.style.left);
-      localStorage.setItem(`statusPos_${partName}`, JSON.stringify({ top, left }));
+      localStorage.setItem(`statusPos_${baseName}_${partName}`, JSON.stringify({ top, left }));
+
 
       // Update in-memory map
       if (equipmentPositionMaps[baseName]) {
@@ -307,4 +309,4 @@ function makeDraggable(el, partName, positioningMode, baseName) {
     e.preventDefault();
   });
 }
-*/
+
