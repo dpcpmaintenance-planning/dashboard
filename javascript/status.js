@@ -1,33 +1,32 @@
 // Draw status indicator on diagram
-function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDelayedMap, statusEmoji, modificationQueueMap) {
-  const eqNorm = normalize(label);
-  const status = latestStatusMap[eqNorm] ?? "0";
-  const breakdown = breakdownMap[eqNorm] ?? 0;
-  const daysDelayed = daysDelayedMap[eqNorm] || 0;
-  const modificationDays = modificationQueueMap?.[eqNorm] || 0;
+function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDelayedMap, statusEmoji, modificationQueueMap) {     const eqNorm = normalize(label);
+    const status = latestStatusMap[eqNorm] ?? "0";
+    const breakdown = breakdownMap[eqNorm] ?? 0;
+    const daysDelayed = daysDelayedMap[eqNorm] || 0;
+    const modificationDays = modificationQueueMap?.[eqNorm] || 0;
 
-  const statusLabels = {
-    "0": "Operational",
-    "1": "Sustainable",
-    "2": "Breakdown",
-    "3": "Modification"
-  };
-  const readableStatus = statusLabels[status] || "Unknown";
+    const statusLabels = {
+        "0": "Operational",
+        "1": "Sustainable",
+        "2": "Breakdown",
+        "3": "Modification"
+    };
+    const readableStatus = statusLabels[status] || "Unknown";
 
-  const div = document.createElement("div");
-  div.className =
-    "status-indicator " +
-    (status === "2" ? "breakdown"
-      : status === "1" ? "sustainable"
-        : status === "3" ? "modification"
-          : "operational");
+    const div = document.createElement("div");
+    div.className =
+        "status-indicator " +
+        (status === "2" ? "breakdown"
+            : status === "1" ? "sustainable"
+                : status === "3" ? "modification"
+                    : "operational");
 
-  div.style.left = `${x}px`;
-  div.style.top = `${y}px`;
-  div.style.zIndex = status === "2" ? 3 : (status === "1" || status === "3") ? 2 : 1;
+    div.style.left = `${x}px`;
+    div.style.top = `${y}px`;
+    div.style.zIndex = status === "2" ? 3 : (status === "1" || status === "3") ? 2 : 1;
 
-  // Tooltip with conditional Modification Queue
-  div.title = `
+    // Tooltip with conditional Modification Queue
+    div.title = `
 📌 ${label}
 📊 Status: ${readableStatus}
 💥 Breakdowns: ${breakdown}
@@ -35,17 +34,17 @@ function drawStatusIndicator(label, x, y, latestStatusMap, breakdownMap, daysDel
 ${status === "3" ? `🛠️ Modification Queue: ${modificationDays}` : ""}
   `.trim();
 
-  const emoji = encodeURIComponent(statusEmoji[status]);
-  div.style.backgroundImage = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28'>${emoji}</text></svg>")`;
+    const emoji = encodeURIComponent(statusEmoji[status]);
+    div.style.backgroundImage = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28'>${emoji}</text></svg>")`;
 
-  div.innerHTML = `<div class="count">${breakdown || 0}</div>`;
+    div.innerHTML = `<div class="count">${breakdown || 0}</div>`;
 
-  // Clicking opens detail view
-  div.addEventListener("click", () => {
-    showEquipmentDetail(label);
-  });
+    // Clicking opens detail view
+    div.addEventListener("click", () => {
+        showEquipmentDetail(label);
+    });
 
-  document.getElementById("diagram").appendChild(div);
+    document.getElementById("diagram").appendChild(div);
 }
 
 
@@ -69,7 +68,7 @@ function loadSavedPositions(baseName) {
   if (!positions) return;
 
   Object.keys(positions).forEach(partName => {
-    const saved = localStorage.getItem(`statusPos_${baseName}_${partName}`);
+    const saved = localStorage.getItem(`statusPos_${baseName}${partName}`);
     if (saved) {
       try {
         const { top, left } = JSON.parse(saved);
@@ -126,9 +125,9 @@ function showEquipmentDetail(label) {
       </div>
 
       <!-- Image container -->
-      <div id="equipment-image-container" style="display:none; text-align:center; padding:20px;">
-        <img id="equipment-image" src="" alt="Equipment Image" style="max-width:100%; max-height:80vh; object-fit:contain; border-radius:10px; box-shadow:0 0 10px #ccc;">
-      </div>
+<div id="equipment-image-container" class="detail-image-container">
+        <img id="equipment-image" src="" alt="Equipment Image">
+      </div>
     </div>
   `;
 
@@ -169,7 +168,6 @@ function showEquipmentDetail(label) {
         const suffixMatch = label.match(/\s+[A-Z0-9]$/i);
         if (suffixMatch) baseName = label.replace(suffixMatch[0], "").trim();
       }
-
 
 
       // Load saved positions for this equipment type
@@ -229,13 +227,13 @@ function showEquipmentDetail(label) {
       </div>
     `;
 
-      /*   // Make draggable only if enabled
-         if (draggableEnabled) {
-           imageContainer.querySelectorAll(".equip-status-indicator").forEach((el) => {
-             const partName = el.dataset.part || el.textContent;
-             makeDraggable(el, partName, true, baseName);
-           });
-         }*/
+      // Make draggable only if enabled
+    /*  if (draggableEnabled) {
+        imageContainer.querySelectorAll(".equip-status-indicator").forEach((el) => {
+          const partName = el.dataset.part || el.textContent;
+          makeDraggable(el, partName, true, baseName);
+        });
+      } */
 
       detailTable.style.display = "none";
       imageContainer.style.display = "block";
@@ -265,8 +263,7 @@ function showEquipmentDetail(label) {
 function makeDraggable(el, partName, positioningMode, baseName) {
   if (!positioningMode || !el || !draggableEnabled) return;
 
-  const savedPos = localStorage.getItem(`statusPos_${baseName}_${partName}`);
-
+  const savedPos = localStorage.getItem(`statusPos${baseName}_${partName}`);
   if (savedPos) {
     try {
       const { top, left } = JSON.parse(savedPos);
@@ -294,8 +291,7 @@ function makeDraggable(el, partName, positioningMode, baseName) {
       el.style.cursor = "grab";
       const top = parseInt(el.style.top);
       const left = parseInt(el.style.left);
-      localStorage.setItem(`statusPos_${baseName}_${partName}`, JSON.stringify({ top, left }));
-
+      localStorage.setItem(`statusPos${baseName}${partName}`, JSON.stringify({ top, left }));
 
       // Update in-memory map
       if (equipmentPositionMaps[baseName]) {
