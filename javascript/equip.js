@@ -1,6 +1,33 @@
 const equipmentPositionMaps = {
 
 //Water Treatment System
+    "Raw Water Pump": {
+        "Casing Cover": { x: 372, y: 103 },
+        "Impeller": { x: 303, y: 120 },
+        "Washer": { x: 261, y: 143 },
+        "Wire Thread Insert": { x: 241, y: 180 },
+        "Front Wear Ring": { x: 224, y: 236 },
+        "Cap Nut": { x: 217, y: 316 },
+        "Volute Casing": { x: 196, y: 485 },
+        "Washer 2": { x: 207, y: 523 },
+        "Gasket": { x: 264, y: 610 },
+        "Mechanical Seal": { x: 421, y: 637 },
+        "Seal-Single Sleeve": { x: 436, y: 672 },
+        "Deflector": { x: 483, y: 695 },
+        "Bearing": { x: 637, y: 128 },
+        "Air Release Filter": { x: 676, y: 157 },
+        "Constant Level Oiler": { x: 738, y: 188 },
+        "Shaft": { x: 795, y: 217 },
+        "Bearing Cover 2": { x: 833, y: 249 },
+        "Support Board": { x: 862, y: 541 },
+        "Key": { x: 927, y: 326 },
+        "Foot": { x: 865, y: 598 },
+        "Bearing 2": { x: 812, y: 643 },
+        "Bearing Frame": { x: 744, y: 667 },
+        "Oil Level Sight Glass": { x: 686, y: 689 },
+        "Bearing Cover": { x: 614, y: 706 },
+    },
+
     "Secondary R.O. Booster Pump": {
         "Casing Cover": { x: 366, y: 91 },
         "Impeller": { x: 300, y: 118 },

@@ -86,14 +86,17 @@ a {
   align-items: center;
 }
 
+.detail-image-container {
+  display: none;
+}
 .detail-image-container img {
   /* Set fixed dimensions relative to the container (which is fixed) */
-  width: 100%; 
+  width: 100%;
   height: 100%;
 
   /* --- CRUCIAL OVERRIDES FOR FIXED SIZE --- */
   /* These lines disable the responsiveness that causes resizing */
-  max-width: none !important; 
+  max-width: none !important;
   max-height: none !important;
   /* --- END CRUCIAL OVERRIDES --- */
 
@@ -110,7 +113,7 @@ a {
 .detail-image-container > div {
   width: 100%;
   height: 100%;
-  overflow: hidden; 
+  overflow: hidden;
 }
 /* === Status Indicators === */
 .status-indicator {
